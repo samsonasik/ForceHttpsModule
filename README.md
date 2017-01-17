@@ -49,8 +49,9 @@ return [
         'enable'                => true,
         'force_all_routes'      => true,
         'force_specific_routes' => [
-            // a lists of specific routes to be https
-            // only works if previous config 'force_all_routes' => false
+            // only works if previous's config 'force_all_routes' => false
+            'checkout',
+            'payment'
         ],
     ],
 ];
