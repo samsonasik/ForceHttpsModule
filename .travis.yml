@@ -1,0 +1,21 @@
+language: php
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+
+matrix:
+  fast_finish: true
+
+before_script:
+  - composer self-update
+  - composer install --prefer-source --no-interaction
+  - composer dump-autoload -o
+
+script:
+  - bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml
+  - if [[ $TRAVIS_PHP_VERSION = 7.1 ]]; then bin/coveralls -v --exclude-no-stmt; fi
+
+notifications:
+    email: false

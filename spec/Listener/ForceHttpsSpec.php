@@ -1,0 +1,5 @@
+<?php
+
+describe('ForceHttps', function () {
+
+});
