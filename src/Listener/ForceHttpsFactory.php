@@ -9,9 +9,7 @@ class ForceHttpsFactory
         $config = $container->get('config');
         if (empty($config['force-https-module'])) {
             $forceHttpsModuleConfig = [
-                'enable'                => true,
-                'force_all_routes'      => true,
-                'force_specific_routes' => [],
+                'enable'                => false,
             ];
             return new ForceHttps($forceHttpsModuleConfig);
         }

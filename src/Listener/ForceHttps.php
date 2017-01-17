@@ -30,45 +30,40 @@ class ForceHttps extends AbstractListenerAggregate
      */
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        if (Console::isConsole()) {
+        if (Console::isConsole() || ! $this->config['enable']) {
             return;
         }
 
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttpsScheme']);
     }
 
+    /**
+     * Force Https Scheme handle.
+     *
+     * @param  MvcEvent         $e
+     */
     public function forceHttpsScheme(MvcEvent $e)
     {
-        if (! $this->config['enable']) {
-            return;
-        }
-
         $uri       = $e->getRequest()->getUri();
         $uriScheme = $uri->getScheme();
         if ($uriScheme === 'https') {
             return;
         }
 
-        $httpsRequestUri = $uri->setScheme('https')->toString();
-        if ($this->config['force_all_routes']) {
-            return $this->redirectWithHttps($e, $httpsRequestUri);
-        }
-
-        $routeName = $e->getRouteMatch()->getMatchedRouteName();
-        if (! in_array($routeName, $this->config['force_specific_routes'])) {
+        if (! $this->config['force_all_routes'] &&
+            ! in_array(
+                $e->getRouteMatch()->getMatchedRouteName(),
+                $this->config['force_specific_routes']
+            )
+        ) {
             return;
         }
 
-        return $this->redirectWithHttps($e, $httpsRequestUri);
-    }
+        $httpsRequestUri = $uri->setScheme('https')->toString();
 
-    private function redirectWithHttps(MvcEvent $e, $httpsRequestUri)
-    {
         $response = $e->getResponse();
         $response->setStatusCode(302);
         $response->getHeaders()
                  ->addHeaderLine('Location', $httpsRequestUri);
-
-        return $response;
     }
 }
