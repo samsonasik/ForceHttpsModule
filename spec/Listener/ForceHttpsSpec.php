@@ -6,8 +6,8 @@ use ForceHttpsModule\Listener\ForceHttps;
 use Kahlan\Plugin\Double;
 use Zend\Console\Console;
 use Zend\EventManager\EventManagerInterface;
-use Zend\Http\PhpEnvironment\Response;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Uri\Uri;
 
