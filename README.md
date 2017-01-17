@@ -24,7 +24,7 @@ Installation
 **1. Require this module uses [composer](https://getcomposer.org/).**
 
 ```sh
-composer require samsonasik/force-https-module:dev-master
+composer require samsonasik/force-https-module
 ```
 
 **2. Copy `force-https-module.local.php.dist` config to your local's autoload and configure it**
