@@ -6,7 +6,6 @@ use Zend\Console\Console;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\Uri\Uri;
 
 class ForceHttps extends AbstractListenerAggregate
 {
