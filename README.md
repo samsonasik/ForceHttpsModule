@@ -24,10 +24,10 @@ Installation
 **1. Require this module uses [composer](https://getcomposer.org/).**
 
 ```sh
-composer require samsonasik/force-https-module
+composer require samsonasik/force-https-module:dev-master
 ```
 
-**4. Copy `force-https-module.local.php.dist` config to your local's autoload and configure it**
+**2. Copy `force-https-module.local.php.dist` config to your local's autoload and configure it**
 
 | source                                                                       | destination                                 |
 |------------------------------------------------------------------------------|---------------------------------------------|
@@ -56,7 +56,7 @@ return [
 ];
 ```
 
-**5. Lastly, enable it**
+**3. Lastly, enable it**
 ```php
 // config/modules.config.php or config/application.config.php
 return [

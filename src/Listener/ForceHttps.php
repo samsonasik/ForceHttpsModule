@@ -3,7 +3,6 @@
 namespace ForceHttpsModule\Listener;
 
 use Zend\Console\Console;
-use Zend\Console\Console;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
@@ -35,10 +34,10 @@ class ForceHttps extends AbstractListenerAggregate
             return;
         }
 
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttps']);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttpsScheme']);
     }
 
-    public function forceHttps(MvcEvent $e)
+    public function forceHttpsScheme(MvcEvent $e)
     {
         if (! $this->config['enable']) {
             return;
@@ -50,9 +49,9 @@ class ForceHttps extends AbstractListenerAggregate
             return;
         }
 
-        $httpsRequestUri = $uri->setScheme('https')->getRequestUri();
+        $httpsRequestUri = $uri->setScheme('https')->toString();
         if ($this->config['force_all_routes']) {
-            return $this->redirectWithHttps($e);
+            return $this->redirectWithHttps($e, $httpsRequestUri);
         }
 
         $routeName = $e->getRouteMatch()->getMatchedRouteName();
@@ -60,10 +59,10 @@ class ForceHttps extends AbstractListenerAggregate
             return;
         }
 
-        return $this->redirectWithHttps($e);
+        return $this->redirectWithHttps($e, $httpsRequestUri);
     }
 
-    private function redirectWithHttps(MvcEvent $e)
+    private function redirectWithHttps(MvcEvent $e, $httpsRequestUri)
     {
         $response = $e->getResponse();
         $response->setStatusCode(302);

@@ -5,10 +5,10 @@ namespace ForceHttpsModule;
 return [
     'service_manager' => [
         'factories' => [
-            Listener\ForceListener::class => Listener\ForceHttpsFactory::class,
+            Listener\ForceHttps::class => Listener\ForceHttpsFactory::class,
         ],
     ],
     'listeners' => [
-        Listener\ForceListener::class,
+        Listener\ForceHttps::class,
     ],
 ];

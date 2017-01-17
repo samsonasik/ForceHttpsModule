@@ -2,10 +2,10 @@
 
 namespace ForceHttpsModule\Listener;
 
-class ForceHttpsListenerFactory
+class ForceHttpsFactory
 {
     public function __invoke($container)
     {
-        return new ForceHttpsListener($container->get('config')['force-https-module'])
+        return new ForceHttps($container->get('config')['force-https-module']);
     }
 }
