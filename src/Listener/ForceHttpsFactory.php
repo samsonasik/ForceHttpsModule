@@ -6,6 +6,18 @@ class ForceHttpsFactory
 {
     public function __invoke($container)
     {
-        return new ForceHttps($container->get('config')['force-https-module']);
+        $config = $container->get('config');
+        if (empty($config['force-https-module'])) {
+            $forceHttpsModuleConfig = [
+                'force-https-module' => [
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'force_specific_routes' => [],
+                ],
+            ];
+            return new ForceHttps($forceHttpsModuleConfig);
+        }
+
+        return new ForceHttps($config['force-https-module']);
     }
 }

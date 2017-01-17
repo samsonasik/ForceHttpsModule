@@ -69,6 +69,6 @@ class ForceHttps extends AbstractListenerAggregate
         $response->getHeaders()
                  ->addHeaderLine('Location', $httpsRequestUri);
 
-        return $e->stopPropagation();
+        return $response;
     }
 }
