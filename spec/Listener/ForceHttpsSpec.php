@@ -125,6 +125,7 @@ describe('ForceHttps', function () {
             allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
             allow($response)->toReceive('setStatusCode')->with(302)->andReturn($response);
             allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
+            allow($response)->toReceive('send');
 
             expect($mvcEvent)->toReceive('getResponse');
 
