@@ -78,6 +78,7 @@ class ForceHttps extends AbstractListenerAggregate
             $client->setRawBody($content);
 
             // keep headers with clean up "Origin" and re-set headers
+            /* @var $requestHeaders \Zend\Http\Headers */
             $requestHeaders = $request->getHeaders();
             $headers        = $requestHeaders->toArray();
             unset($headers['Origin']);
