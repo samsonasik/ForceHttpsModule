@@ -61,7 +61,8 @@ class ForceHttps extends AbstractListenerAggregate
         }
 
         $response        = $e->getResponse();
-        $httpsRequestUri = $uri->setScheme('https')->toString();
+        $uriWithScheme   = $uri->setScheme('https');
+        $httpsRequestUri = $uriWithScheme->toString();
 
         // if has request body, then
         //    a.keep headers, request method, and body
@@ -75,13 +76,14 @@ class ForceHttps extends AbstractListenerAggregate
             $client->setRawBody($content);
 
             $headers = $request->getHeaders();
+            $clientHeaders = [];
             foreach ($headers->toArray() as $key => $value) {
-                echo $key. '->' . $value;
-                echo '<br/>';
+                if ($key === 'Origin') {
+                    $value = $uriWithScheme->getScheme() . '://' . $uriWithScheme->getHost();
+                }
+                $clientHeaders[$key] = $value;
             }
-            die;
-
-            $client->setHeaders($request->getHeaders());
+            $client->setHeaders($clientHeaders);
 
             $result  = $client->send();
             $response->setContent($result->getBody());
