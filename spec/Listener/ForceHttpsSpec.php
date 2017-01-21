@@ -5,6 +5,8 @@ namespace ForceHttpsModuleSpec;
 use ForceHttpsModule\Listener\ForceHttps;
 use Kahlan\Arg;
 use Kahlan\Plugin\Double;
+use Kahlan\Plugin\Quit;
+use Kahlan\QuitException;
 use Zend\Console\Console;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Client;
@@ -139,6 +141,7 @@ describe('ForceHttps', function () {
         it('keep request and method and re-call uri with httpsed scheme for non-empty request body', function () {
 
             skipIf(PHP_MAJOR_VERSION < 7);
+            Quit::disable();
 
             Console::overrideIsConsole(false);
             $listener = new ForceHttps([
@@ -181,7 +184,10 @@ describe('ForceHttps', function () {
 
             expect($mvcEvent)->toReceive('getResponse');
 
-            $listener->forceHttpsScheme($mvcEvent);
+            $closure = function() use ($listener, $mvcEvent){
+                $listener->forceHttpsScheme($mvcEvent);
+            };
+            expect($closure)->toThrow(new QuitException());
 
         });
 

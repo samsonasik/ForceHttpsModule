@@ -90,7 +90,7 @@ class ForceHttps extends AbstractListenerAggregate
             $response->setStatusCode($result->getStatusCode());
 
             $response->send();
-            return;
+            exit(0);
         }
 
         $response->setStatusCode(302);
