@@ -10,6 +10,7 @@ use Kahlan\QuitException;
 use Zend\Console\Console;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Client;
+use Zend\Http\Header\Origin;
 use Zend\Http\Headers;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;

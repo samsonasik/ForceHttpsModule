@@ -79,10 +79,11 @@ class ForceHttps extends AbstractListenerAggregate
             $clientHeaders = [];
             foreach ($headers->toArray() as $key => $value) {
                 if ($key === 'Origin') {
-                    $value = $uriWithScheme->getScheme() . '://' . $uriWithScheme->getHost();
+                //    $value = $uriWithScheme->getScheme() . '://' . $uriWithScheme->getHost();
                 }
                 $clientHeaders[$key] = $value;
             }
+            var_dump($clientHeaders);die;
             $client->setHeaders($clientHeaders);
 
             $result  = $client->send();
