@@ -7,6 +7,7 @@ use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Client;
 use Zend\Mvc\MvcEvent;
+use Zend\Uri\UriFactory;
 
 class ForceHttps extends AbstractListenerAggregate
 {
@@ -67,6 +68,9 @@ class ForceHttps extends AbstractListenerAggregate
         //    a.keep headers, request method, and body
         //    b.call uri with https
         if (! empty($content = $request->getContent())) {
+            // handle chrome extension like Postman
+            UriFactory::registerScheme('chrome-extension', 'Zend\Uri\Http');
+
             $requestMethod = $request->getMethod();
             $client = new Client();
             $client->setUri($httpsRequestUri);
@@ -79,7 +83,7 @@ class ForceHttps extends AbstractListenerAggregate
             $response->setStatusCode($result->getStatusCode());
 
             $response->send();
-            return;            
+            return;
         }
 
         $response->setStatusCode(302);
