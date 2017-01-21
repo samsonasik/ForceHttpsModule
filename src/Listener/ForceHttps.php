@@ -75,16 +75,15 @@ class ForceHttps extends AbstractListenerAggregate
             $client->setMethod($requestMethod);
             $client->setRawBody($content);
 
-            $headers = $request->getHeaders();
+            $headers = $request->getHeaders()->toArray();
             $clientHeaders = [];
-            foreach ($headers->toArray() as $key => $value) {
+            foreach ($headers as $key => $value) {
                 if ($key === 'Origin') {
-                //    $value = $uriWithScheme->getScheme() . '://' . $uriWithScheme->getHost();
+                    unset($headers[$key]);
                 }
-                $clientHeaders[$key] = $value;
             }
-            var_dump($clientHeaders);die;
-            $client->setHeaders($clientHeaders);
+            var_dump($headers);die;
+            $client->setHeaders($headers);
 
             $result  = $client->send();
             $response->setContent($result->getBody());
