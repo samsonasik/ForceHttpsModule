@@ -3,7 +3,6 @@
 namespace ForceHttpsModuleSpec;
 
 use ForceHttpsModule\Listener\ForceHttps;
-use Kahlan\Arg;
 use Kahlan\Plugin\Double;
 use Kahlan\Plugin\Quit;
 use Kahlan\QuitException;
