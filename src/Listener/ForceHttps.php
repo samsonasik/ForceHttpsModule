@@ -82,12 +82,13 @@ class ForceHttps extends AbstractListenerAggregate
                     unset($headers[$key]);
                 }
             }
-            var_dump($headers);die;
             $client->setHeaders($headers);
 
             $result  = $client->send();
             $response->setContent($result->getBody());
             $response->setStatusCode($result->getStatusCode());
+            $response->getHeaders()
+                     ->addHeaderLine('Content-Type', $headers['Content-Type']);
 
             $response->send();
             exit(0);
