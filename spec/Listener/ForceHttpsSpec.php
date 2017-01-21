@@ -167,6 +167,11 @@ describe('ForceHttps', function () {
             allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
 
             $headers = new Headers();
+            allow($headers)->toReceive('toArray')->andReturn([
+                'Origin' => 'chrome-extension://random',
+                'Content-Type' => 'application/json',
+            ]);
+
             allow($request)->toReceive('getContent')->andReturn('{"foo":"fooValue"}');
             allow($request)->toReceive('getMethod')->andReturn('POST');
             allow($request)->toReceive('getHeaders')->andReturn($headers);
