@@ -138,6 +138,8 @@ describe('ForceHttps', function () {
 
         it('keep request and method and re-call uri with httpsed scheme for non-empty request body', function () {
 
+            skipIf(PHP_MAJOR_VERSION < 7);
+
             Console::overrideIsConsole(false);
             $listener = new ForceHttps([
                 'enable'                => true,
