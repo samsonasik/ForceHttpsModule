@@ -64,7 +64,7 @@ class ForceHttps extends AbstractListenerAggregate
         $httpsRequestUri = $uri->setScheme('https')->toString();
 
         // if has request body, then
-        //    a.keep request method
+        //    a.keep headers, request method, and body
         //    b.call uri with https
         if (! empty($content = $request->getContent())) {
             $requestMethod = $request->getMethod();
@@ -79,7 +79,7 @@ class ForceHttps extends AbstractListenerAggregate
             $response->setStatusCode($result->getStatusCode());
 
             $response->send();
-            return;
+            return;            
         }
 
         $response->setStatusCode(302);
