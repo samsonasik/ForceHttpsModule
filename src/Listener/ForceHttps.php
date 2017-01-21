@@ -5,6 +5,7 @@ namespace ForceHttpsModule\Listener;
 use Zend\Console\Console;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
+use Zend\Http\Client;
 use Zend\Mvc\MvcEvent;
 
 class ForceHttps extends AbstractListenerAggregate
@@ -43,7 +44,8 @@ class ForceHttps extends AbstractListenerAggregate
      */
     public function forceHttpsScheme(MvcEvent $e)
     {
-        $uri       = $e->getRequest()->getUri();
+        $request   = $e->getRequest();
+        $uri       = $request->getUri();
         $uriScheme = $uri->getScheme();
         if ($uriScheme === 'https') {
             return;
@@ -58,9 +60,28 @@ class ForceHttps extends AbstractListenerAggregate
             return;
         }
 
+        $response        = $e->getResponse();
         $httpsRequestUri = $uri->setScheme('https')->toString();
 
-        $response = $e->getResponse();
+        // if has request body, then
+        //    a.keep request method
+        //    b.call uri with https
+        if (! empty($content = $request->getContent())) {
+            $requestMethod = $request->getMethod();
+            $client = new Client();
+            $client->setUri($httpsRequestUri);
+            $client->setMethod($requestMethod);
+            $client->setRawBody($content);
+            $client->setHeaders($request->getHeaders());
+
+            $result  = $client->send();
+            $response->setContent($result->getBody());
+            $response->setStatusCode($result->getStatusCode());
+
+            $response->send();
+            return;
+        }
+
         $response->setStatusCode(302);
         $response->getHeaders()
                  ->addHeaderLine('Location', $httpsRequestUri);
