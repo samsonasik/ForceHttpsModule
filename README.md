@@ -18,6 +18,7 @@ Features
 - [x] enable/disable force https
 - [x] Force Https to All routes
 - [x] Force Https to specific routes only
+- [x] Keep header, request method, request body if http request has content (eg: on POST request method)
 
 Installation
 ------------
