@@ -45,6 +45,7 @@ class ForceHttps extends AbstractListenerAggregate
      */
     public function forceHttpsScheme(MvcEvent $e)
     {
+        /** @var $request \Zend\Http\PhpEnvironment\Request */
         $request   = $e->getRequest();
         $uri       = $request->getUri();
         $uriScheme = $uri->getScheme();
@@ -61,6 +62,7 @@ class ForceHttps extends AbstractListenerAggregate
             return;
         }
 
+        /** @var $response \Zend\Http\PhpEnvironment\Response */
         $response        = $e->getResponse();
         $uriWithScheme   = $uri->setScheme('https');
         $httpsRequestUri = $uriWithScheme->toString();
