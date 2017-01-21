@@ -64,8 +64,7 @@ class ForceHttps extends AbstractListenerAggregate
 
         /** @var $response \Zend\Http\PhpEnvironment\Response */
         $response        = $e->getResponse();
-        $uriWithScheme   = $uri->setScheme('https');
-        $httpsRequestUri = $uriWithScheme->toString();
+        $httpsRequestUri = $uri->setScheme('https')->toString();
 
         // if has request body, then
         //    a.keep headers, request method, and body
