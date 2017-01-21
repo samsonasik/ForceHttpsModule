@@ -4,8 +4,13 @@ namespace ForceHttpsModuleSpec;
 
 use ForceHttpsModule\Listener\ForceHttps;
 use Kahlan\Plugin\Double;
+use Kahlan\Plugin\Quit;
+use Kahlan\QuitException;
 use Zend\Console\Console;
 use Zend\EventManager\EventManagerInterface;
+use Zend\Http\Client;
+use Zend\Http\Header\Origin;
+use Zend\Http\Headers;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\MvcEvent;
@@ -130,6 +135,63 @@ describe('ForceHttps', function () {
             expect($mvcEvent)->toReceive('getResponse');
 
             $listener->forceHttpsScheme($mvcEvent);
+
+        });
+
+        it('keep request and method and re-call uri with httpsed scheme for non-empty request body', function () {
+
+            skipIf(PHP_MAJOR_VERSION < 7);
+            Quit::disable();
+
+            Console::overrideIsConsole(false);
+            $listener = new ForceHttps([
+                'enable'                => true,
+                'force_all_routes'      => true,
+                'force_specific_routes' => [],
+            ]);
+
+            $mvcEvent       = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
+            $response       = Double::instance(['extends' => Response::class]);
+            $request        = Double::instance(['extends' => Request::class]);
+            $uri            = Double::instance(['extends' => Uri::class]);
+            $client         = Double::instance(['extends' => Client::class]);
+            $clientResponse = Double::instance(['extends' => Response::class]);
+
+            allow($mvcEvent)->toReceive('getRequest')->andReturn($request);
+            allow($request)->toReceive('getUri')->andReturn($uri);
+            allow($uri)->toReceive('getScheme')->andReturn('http');
+            allow($mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('api');
+            allow($uri)->toReceive('setScheme')->with('https')->andReturn($uri);
+            allow($uri)->toReceive('toString')->andReturn('https://example.com/api');
+            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
+
+            $headers = new Headers();
+            allow($headers)->toReceive('toArray')->andReturn([
+                'Origin' => 'chrome-extension: //random',
+                'Content-Type' => 'application/json',
+            ]);
+
+            allow($request)->toReceive('getContent')->andReturn('{"foo":"fooValue"}');
+            allow($request)->toReceive('getMethod')->andReturn('POST');
+            allow($request)->toReceive('getHeaders')->andReturn($headers);
+
+            allow($client)->toReceive('setUri')->with('https://example.com/about');
+            allow($client)->toReceive('setMethod')->with('POST');
+            allow($client)->toReceive('setRawBody')->with('{"foo":"fooValue"}');
+            allow($client)->toReceive('setHeaders')->with($request->getHeaders());
+
+            allow($clientResponse)->toReceive('getBody')->andReturn('{}');
+            allow($clientResponse)->toReceive('getStatusCode')->andReturn(200);
+            allow($client)->toReceive('send')->andReturn($clientResponse);
+
+            allow($response)->toReceive('setStatusCode')->with(200)->andReturn($response);
+            allow($response)->toReceive('send');
+
+            expect($mvcEvent)->toReceive('getResponse');
+            $closure = function() use ($listener, $mvcEvent){
+                $listener->forceHttpsScheme($mvcEvent);
+            };
+            expect($closure)->toThrow(new QuitException());
 
         });
 
