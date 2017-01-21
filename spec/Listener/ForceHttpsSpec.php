@@ -168,7 +168,7 @@ describe('ForceHttps', function () {
 
             $headers = new Headers();
             allow($headers)->toReceive('toArray')->andReturn([
-                'Origin' => 'chrome-extension://random',
+                'Origin' => 'chrome-extension: //random',
                 'Content-Type' => 'application/json',
             ]);
 
@@ -189,7 +189,6 @@ describe('ForceHttps', function () {
             allow($response)->toReceive('send');
 
             expect($mvcEvent)->toReceive('getResponse');
-
             $closure = function() use ($listener, $mvcEvent){
                 $listener->forceHttpsScheme($mvcEvent);
             };
