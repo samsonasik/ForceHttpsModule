@@ -67,11 +67,20 @@ class ForceHttps extends AbstractListenerAggregate
         //    a.keep headers, request method, and body
         //    b.call uri with https
         if (! empty($content = $request->getContent())) {
+
             $requestMethod = $request->getMethod();
             $client = new Client();
             $client->setUri($httpsRequestUri);
             $client->setMethod($requestMethod);
             $client->setRawBody($content);
+
+            $headers = $request->getHeaders();
+            foreach ($headers->toArray() as $key => $value) {
+                echo $key. '->' . $value;
+                echo '<br/>';
+            }
+            die;
+
             $client->setHeaders($request->getHeaders());
 
             $result  = $client->send();
