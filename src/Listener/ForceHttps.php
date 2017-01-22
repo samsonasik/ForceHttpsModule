@@ -44,17 +44,23 @@ class ForceHttps extends AbstractListenerAggregate
      */
     public function setHttpStrictTransportSecurity(MvcEvent $e)
     {
-        if (! $this->isBeingForcedHttps($uriScheme, $e)) {
+        /** @var $request \Zend\Http\PhpEnvironment\Request */
+        $request   = $e->getRequest();
+        $uri       = $request->getUri();
+        $uriScheme = $uri->getScheme();
+
+        if (! $this->isGoingToBeForcedToHttps($uriScheme, $e)) {
             return;
         }
 
-        if (empty($this->config['strict-transport-security'])) {
+        if (empty($this->config['strict_transport_security'])) {
             return;
         }
 
+        /** @var $response \Zend\Http\PhpEnvironment\Response */
         $response = $e->getResponse();
         $response->getHeaders()
-                 ->addHeaderLine('strict-transport-security: ' . $this->config['strict-transport-security']);
+                 ->addHeaderLine('Strict-Transport-Security: ' . $this->config['strict_transport_security']);
     }
 
     /**
@@ -69,7 +75,7 @@ class ForceHttps extends AbstractListenerAggregate
         $uri       = $request->getUri();
         $uriScheme = $uri->getScheme();
 
-        if (! $this->isBeingForcedHttps($uriScheme, $e)) {
+        if (! $this->isGoingToBeForcedToHttps($uriScheme, $e)) {
             return;
         }
 
@@ -91,7 +97,7 @@ class ForceHttps extends AbstractListenerAggregate
      * @param  MvcEvent $e
      * @return bool
      */
-    private function isBeingForcedHttps($uriScheme, $e)
+    private function isGoingToBeForcedToHttps($uriScheme, $e)
     {
         if ($uriScheme === 'https') {
             return false;
