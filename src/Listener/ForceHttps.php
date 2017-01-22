@@ -64,6 +64,7 @@ class ForceHttps extends AbstractListenerAggregate
             return;
         }
 
+        // set max-age = 0 to strictly expire it,
         $response->getHeaders()
                  ->addHeaderLine('Strict-Transport-Security: max-age=0');
     }
