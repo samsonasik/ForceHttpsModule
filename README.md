@@ -15,10 +15,11 @@ ForceHttpsModule is a configurable module for force https in your ZF2/ZF3 Mvc Ap
 Features
 --------
 
-- [x] enable/disable force https.
+- [x] Enable/disable force https.
 - [x] Force Https to All routes.
 - [x] Force Https to specific routes only.
 - [x] Keep headers, request method, and request body.
+- [x] Enable/disable HTTP Strict Transport Security Header and set its value.
 
 Installation
 ------------
@@ -54,6 +55,11 @@ return [
             // only works if previous's config 'force_all_routes' => false
             'checkout',
             'payment'
+        ],
+        // set HTTP Strict Transport Security Header
+        'strict_transport_security' => [
+            'enable' => true, // set to false to disable it
+            'value'  => 'max-age=31536000',
         ],
     ],
 ];

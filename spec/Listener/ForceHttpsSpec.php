@@ -27,6 +27,7 @@ describe('ForceHttps', function () {
             ]);
 
             $eventManager = Double::instance(['implements' => EventManagerInterface::class]);
+            expect($eventManager)->toReceive('attach')->with(MvcEvent::EVENT_BOOTSTRAP, [$listener, 'setHttpStrictTransportSecurity']);
             expect($eventManager)->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
 
             $listener->attach($eventManager);
@@ -43,6 +44,7 @@ describe('ForceHttps', function () {
             ]);
 
             $eventManager = Double::instance(['implements' => EventManagerInterface::class]);
+            expect($eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_BOOTSTRAP, [$listener, 'setHttpStrictTransportSecurity']);
             expect($eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
 
             $listener->attach($eventManager);
@@ -57,9 +59,110 @@ describe('ForceHttps', function () {
             ]);
 
             $eventManager = Double::instance(['implements' => EventManagerInterface::class]);
+            expect($eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_BOOTSTRAP, [$listener, 'setHttpStrictTransportSecurity']);
             expect($eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
 
             $listener->attach($eventManager);
+
+        });
+
+    });
+
+    describe('->setHttpStrictTransportSecurity', function () {
+
+        it('add Strict Transport Security Header with max-age=0 (expire) if uri scheme is http and no "strict_transport_security" defined/empty', function () {
+
+            Console::overrideIsConsole(false);
+            $listener = new ForceHttps([
+                'enable'                => true,
+                'force_all_routes'      => true,
+                'force_specific_routes' => [],
+            ]);
+
+            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
+            $response = Double::instance(['extends' => Response::class]);
+
+            allow($mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('http');
+            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
+            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
+
+            expect($mvcEvent)->toReceive('getResponse');
+
+            $listener->setHttpStrictTransportSecurity($mvcEvent);
+
+        });
+
+        it('add Strict Transport Security Header with max-age=0 (expire) if uri scheme is https and no "strict_transport_security" defined/empty', function () {
+
+            Console::overrideIsConsole(false);
+            $listener = new ForceHttps([
+                'enable'                => true,
+                'force_all_routes'      => true,
+                'force_specific_routes' => [],
+            ]);
+
+            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
+            $response = Double::instance(['extends' => Response::class]);
+
+            allow($mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
+            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
+            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
+
+            expect($mvcEvent)->toReceive('getResponse');
+
+            $listener->setHttpStrictTransportSecurity($mvcEvent);
+
+        });
+
+        it('add Strict Transport Security Header if uri scheme is http and "strict_transport_security" defined', function () {
+
+            Console::overrideIsConsole(false);
+            $listener = new ForceHttps([
+                'enable'                    => true,
+                'force_all_routes'          => true,
+                'force_specific_routes'     => [],
+                'strict_transport_security' => [
+                    'enable' => true,
+                    'value'  => 'max-age=31536000',
+                ],
+            ]);
+
+            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
+            $response = Double::instance(['extends' => Response::class]);
+
+            allow($mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('http');
+            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
+            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
+
+            expect($mvcEvent)->toReceive('getResponse');
+
+            $listener->setHttpStrictTransportSecurity($mvcEvent);
+
+        });
+
+        it('add Strict Transport Security Header if uri scheme is https and "strict_transport_security" defined', function () {
+
+            Console::overrideIsConsole(false);
+            $listener = new ForceHttps([
+                'enable'                    => true,
+                'force_all_routes'          => true,
+                'force_specific_routes'     => [],
+                'strict_transport_security' => [
+                    'enable' => true,
+                    'value'  => 'max-age=31536000',
+                ],
+            ]);
+
+            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
+            $response = Double::instance(['extends' => Response::class]);
+
+            allow($mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
+            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
+            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
+
+            expect($mvcEvent)->toReceive('getResponse');
+
+            $listener->setHttpStrictTransportSecurity($mvcEvent);
 
         });
 
