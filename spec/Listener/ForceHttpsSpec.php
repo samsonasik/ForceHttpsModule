@@ -70,7 +70,7 @@ describe('ForceHttps', function () {
 
     describe('->setHttpStrictTransportSecurity', function () {
 
-        it('not add Strict Transport Security Header if uri scheme is http', function () {
+        it('add Strict Transport Security Header with max-age=0 (disable) if uri scheme is http and no "strict_transport_security" defined/empty', function () {
 
             Console::overrideIsConsole(false);
             $listener = new ForceHttps([
@@ -80,14 +80,19 @@ describe('ForceHttps', function () {
             ]);
 
             $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
+            $response = Double::instance(['extends' => Response::class]);
+
             allow($mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('http');
-            expect($mvcEvent)->not->toReceive('getResponse');
+            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
+            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
+
+            expect($mvcEvent)->toReceive('getResponse');
 
             $listener->setHttpStrictTransportSecurity($mvcEvent);
 
         });
 
-        it('not add Strict Transport Security Header if no "strict_transport_security" defined/empty', function () {
+        it('add Strict Transport Security Header with max-age=0 (disable) if uri scheme is https and no "strict_transport_security" defined/empty', function () {
 
             Console::overrideIsConsole(false);
             $listener = new ForceHttps([
@@ -97,8 +102,13 @@ describe('ForceHttps', function () {
             ]);
 
             $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
-            allow($mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('http');
-            expect($mvcEvent)->not->toReceive('getResponse');
+            $response = Double::instance(['extends' => Response::class]);
+
+            allow($mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
+            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
+            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
+
+            expect($mvcEvent)->toReceive('getResponse');
 
             $listener->setHttpStrictTransportSecurity($mvcEvent);
 

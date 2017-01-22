@@ -48,6 +48,9 @@ class ForceHttps extends AbstractListenerAggregate
         $request   = $e->getRequest();
         $uriScheme = $request->getUri()->getScheme();
 
+        /** @var $response \Zend\Http\PhpEnvironment\Response */
+        $response = $e->getResponse();
+
         if (
             ($this->isSchemeHttps($uriScheme) || $this->isGoingToBeForcedToHttps($e)) &&
             isset(
@@ -56,11 +59,13 @@ class ForceHttps extends AbstractListenerAggregate
             ) &&
             $this->config['strict_transport_security']['enable'] === true
         ) {
-            /** @var $response \Zend\Http\PhpEnvironment\Response */
-            $response = $e->getResponse();
             $response->getHeaders()
                      ->addHeaderLine('Strict-Transport-Security: ' . $this->config['strict_transport_security']['value']);
+            return;
         }
+
+        $response->getHeaders()
+                     ->addHeaderLine('Strict-Transport-Security: max-age=0');
     }
 
     /**
