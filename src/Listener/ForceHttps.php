@@ -5,6 +5,7 @@ namespace ForceHttpsModule\Listener;
 use Zend\Console\Console;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
+use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\MvcEvent;
 
 class ForceHttps extends AbstractListenerAggregate
@@ -33,24 +34,18 @@ class ForceHttps extends AbstractListenerAggregate
             return;
         }
 
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_BOOTSTRAP, [$this, 'setHttpStrictTransportSecurity']);
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttpsScheme']);
     }
 
     /**
      * Set The HTTP Strict Transport Security.
      *
-     * @param  MvcEvent $e
+     * @param string $uriScheme
+     * @param MvcEvent $e
+     * @param Response $response
      */
-    public function setHttpStrictTransportSecurity(MvcEvent $e)
+    private function setHttpStrictTransportSecurity($uriScheme, MvcEvent $e, Response $response)
     {
-        /** @var $request \Zend\Http\PhpEnvironment\Request */
-        $request   = $e->getRequest();
-        $uriScheme = $request->getUri()->getScheme();
-
-        /** @var $response \Zend\Http\PhpEnvironment\Response */
-        $response = $e->getResponse();
-
         if (
             ($this->isSchemeHttps($uriScheme) || $this->isGoingToBeForcedToHttps($e)) &&
             isset(
@@ -70,6 +65,23 @@ class ForceHttps extends AbstractListenerAggregate
     }
 
     /**
+     * Validate Scheme and Forced Https Config
+     *
+     * @param  string $uriScheme
+     * @param  MvcEvent $e
+     *
+     * @return bool
+     */
+    private function validateSchemeAndToBeForcedHttpsConfig($uriScheme, $e)
+    {
+        if ($this->isSchemeHttps($uriScheme) || ! $this->isGoingToBeForcedToHttps($e)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Force Https Scheme handle.
      *
      * @param  MvcEvent         $e
@@ -78,10 +90,14 @@ class ForceHttps extends AbstractListenerAggregate
     {
         /** @var $request \Zend\Http\PhpEnvironment\Request */
         $request   = $e->getRequest();
+        /** @var $response \Zend\Http\PhpEnvironment\Response */
+        $response  = $e->getResponse();
+
         $uri       = $request->getUri();
         $uriScheme = $uri->getScheme();
 
-        if ($this->isSchemeHttps($uriScheme) || ! $this->isGoingToBeForcedToHttps($e)) {
+        $this->setHttpStrictTransportSecurity($uriScheme, $e, $response);
+        if (! $this->validateSchemeAndToBeForcedHttpsConfig($uriScheme, $e)) {
             return;
         }
 
