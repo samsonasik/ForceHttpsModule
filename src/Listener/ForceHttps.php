@@ -46,16 +46,19 @@ class ForceHttps extends AbstractListenerAggregate
     {
         /** @var $request \Zend\Http\PhpEnvironment\Request */
         $request   = $e->getRequest();
-        $uri       = $request->getUri();
-        $uriScheme = $uri->getScheme();
+        $uriScheme = $request->getUri()->getScheme();
 
         if (! $this->isGoingToBeForcedToHttps($uriScheme, $e) &&
-            ! empty($this->config['strict_transport_security'])
+            isset(
+                $this->config['strict_transport_security']['enable'],
+                $this->config['strict_transport_security']['value']
+            ) &&
+            $this->config['strict_transport_security']['enable'] === true
         ) {
             /** @var $response \Zend\Http\PhpEnvironment\Response */
             $response = $e->getResponse();
             $response->getHeaders()
-                     ->addHeaderLine('Strict-Transport-Security: ' . $this->config['strict_transport_security']);
+                     ->addHeaderLine('Strict-Transport-Security: ' . $this->config['strict_transport_security']['value']);
         }
     }
 

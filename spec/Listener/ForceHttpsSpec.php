@@ -111,7 +111,10 @@ describe('ForceHttps', function () {
                 'enable'                    => true,
                 'force_all_routes'          => true,
                 'force_specific_routes'     => [],
-                'strict_transport_security' => 'max-age=31536000',
+                'strict_transport_security' => [
+                    'enable' => true,
+                    'value'  => 'max-age=31536000',
+                ],
             ]);
 
             $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
