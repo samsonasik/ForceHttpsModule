@@ -8,5 +8,6 @@ return [
             // a lists of specific routes to be https
             // only works if previous config 'force_all_routes' => false
         ],
+        'strict-transport-security' => 'max-age=31536000',
     ],
 ];

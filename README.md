@@ -19,6 +19,7 @@ Features
 - [x] Force Https to All routes.
 - [x] Force Https to specific routes only.
 - [x] Keep headers, request method, and request body.
+- [x] Allow set HTTP Strict Transport Security Header.
 
 Installation
 ------------
@@ -55,6 +56,8 @@ return [
             'checkout',
             'payment'
         ],
+        // set HTTP Strict Transport Security Header value
+        'strict-transport-security' => 'max-age=31536000',
     ],
 ];
 ```

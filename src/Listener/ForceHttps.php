@@ -33,7 +33,28 @@ class ForceHttps extends AbstractListenerAggregate
             return;
         }
 
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_BOOTSTRAP, [$this, 'setHttpStrictTransportSecurity']);
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttpsScheme']);
+    }
+
+    /**
+     * Set The HTTP Strict Transport Security.
+     *
+     * @param  MvcEvent $e
+     */
+    public function setHttpStrictTransportSecurity(MvcEvent $e)
+    {
+        if (! $this->isBeingForcedHttps($uriScheme, $e)) {
+            return;
+        }
+
+        if (empty($this->config['strict-transport-security'])) {
+            return;
+        }
+
+        $response = $e->getResponse();
+        $response->getHeaders()
+                 ->addHeaderLine('strict-transport-security: ' . $this->config['strict-transport-security']);
     }
 
     /**
@@ -47,8 +68,33 @@ class ForceHttps extends AbstractListenerAggregate
         $request   = $e->getRequest();
         $uri       = $request->getUri();
         $uriScheme = $uri->getScheme();
-        if ($uriScheme === 'https') {
+
+        if (! $this->isBeingForcedHttps($uriScheme, $e)) {
             return;
+        }
+
+        /** @var $response \Zend\Http\PhpEnvironment\Response */
+        $response        = $e->getResponse();
+        $httpsRequestUri = $uri->setScheme('https')->toString();
+
+        // 307 keeps headers, request method, and request body
+        $response->setStatusCode(307);
+        $response->getHeaders()
+                 ->addHeaderLine('Location', $httpsRequestUri);
+        $response->send();
+
+        exit(0);
+    }
+
+    /**
+     * @param string    $uriScheme
+     * @param  MvcEvent $e
+     * @return bool
+     */
+    private function isBeingForcedHttps($uriScheme, $e)
+    {
+        if ($uriScheme === 'https') {
+            return false;
         }
 
         if (! $this->config['force_all_routes'] &&
@@ -57,18 +103,9 @@ class ForceHttps extends AbstractListenerAggregate
                 $this->config['force_specific_routes']
             )
         ) {
-            return;
+            return false;
         }
 
-        /** @var $response \Zend\Http\PhpEnvironment\Response */
-        $response        = $e->getResponse();
-        $httpsRequestUri = $uri->setScheme('https')->toString();
-
-        $response->setStatusCode(307);
-        $response->getHeaders()
-                 ->addHeaderLine('Location', $httpsRequestUri);
-        $response->send();
-
-        exit(0);
+        return true;
     }
 }
