@@ -70,7 +70,7 @@ describe('ForceHttps', function () {
 
     describe('->setHttpStrictTransportSecurity', function () {
 
-        it('add Strict Transport Security Header with max-age=0 (disable) if uri scheme is http and no "strict_transport_security" defined/empty', function () {
+        it('add Strict Transport Security Header with max-age=0 (expire) if uri scheme is http and no "strict_transport_security" defined/empty', function () {
 
             Console::overrideIsConsole(false);
             $listener = new ForceHttps([
@@ -92,7 +92,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('add Strict Transport Security Header with max-age=0 (disable) if uri scheme is https and no "strict_transport_security" defined/empty', function () {
+        it('add Strict Transport Security Header with max-age=0 (expire) if uri scheme is https and no "strict_transport_security" defined/empty', function () {
 
             Console::overrideIsConsole(false);
             $listener = new ForceHttps([
