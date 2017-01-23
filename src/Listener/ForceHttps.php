@@ -47,7 +47,8 @@ class ForceHttps extends AbstractListenerAggregate
     private function setHttpStrictTransportSecurity($uriScheme, MvcEvent $e, Response $response)
     {
         if (
-            ($this->isSchemeHttps($uriScheme) || $this->isGoingToBeForcedToHttps($e)) &&
+            $this->isSchemeHttps($uriScheme) &&
+            $this->isGoingToBeForcedToHttps($e) &&
             isset(
                 $this->config['strict_transport_security']['enable'],
                 $this->config['strict_transport_security']['value']
@@ -110,8 +111,6 @@ class ForceHttps extends AbstractListenerAggregate
         $response->getHeaders()
                  ->addHeaderLine('Location', $httpsRequestUri);
         $response->send();
-
-        exit(0);
     }
 
     /**
