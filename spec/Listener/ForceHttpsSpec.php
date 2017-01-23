@@ -273,7 +273,6 @@ describe('ForceHttps', function () {
             allow($response)->toReceive('send');
 
             expect($mvcEvent)->toReceive('getResponse');
-            // max-age still 0 as it not https yet
             expect($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
             expect($response)->not->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/login');
 
