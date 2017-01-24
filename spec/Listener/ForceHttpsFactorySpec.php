@@ -15,13 +15,17 @@ describe('ForceHttpsFactory', function () {
 
     describe('->__invoke', function () {
 
+        given('container', function () {
+            return Double::instance(['implements' => ContainerInterface::class]);
+        });
+
         it('returns ' . ForceHttps::class . ' instance with default config', function () {
 
             $config = [];
-            $container = Double::instance(['implements' => ContainerInterface::class]);
-            allow($container)->toReceive('get')->with('config')->andReturn($config);
+            allow($this->container)->toReceive('get')->with('config')->andReturn($config);
 
-            $actual = $this->factory->__invoke($container);
+            $actual = $this->factory->__invoke($this->container);
+
             expect($actual)->toBeAnInstanceOf(ForceHttps::class);
 
         });
@@ -35,10 +39,10 @@ describe('ForceHttpsFactory', function () {
                     'force_specific_routes' => [],
                 ],
             ];
-            $container = Double::instance(['implements' => ContainerInterface::class]);
-            allow($container)->toReceive('get')->with('config')->andReturn($config);
+            allow($this->container)->toReceive('get')->with('config')->andReturn($config);
 
-            $actual = $this->factory->__invoke($container);
+            $actual = $this->factory->__invoke($this->container);
+            
             expect($actual)->toBeAnInstanceOf(ForceHttps::class);
 
         });

@@ -52,17 +52,19 @@ class ForceHttps extends AbstractListenerAggregate
             isset(
                 $this->config['strict_transport_security']['enable'],
                 $this->config['strict_transport_security']['value']
-            ) &&
-            $this->config['strict_transport_security']['enable'] === true
+            )
         ) {
+            if ($this->config['strict_transport_security']['enable'] === true) {
+                $response->getHeaders()
+                         ->addHeaderLine('Strict-Transport-Security: ' . $this->config['strict_transport_security']['value']);
+                return;
+            }
+
+            // set max-age = 0 to strictly expire it,
             $response->getHeaders()
-                     ->addHeaderLine('Strict-Transport-Security: ' . $this->config['strict_transport_security']['value']);
+                     ->addHeaderLine('Strict-Transport-Security: max-age=0');
             return;
         }
-
-        // set max-age = 0 to strictly expire it,
-        $response->getHeaders()
-                 ->addHeaderLine('Strict-Transport-Security: max-age=0');
     }
 
     /**

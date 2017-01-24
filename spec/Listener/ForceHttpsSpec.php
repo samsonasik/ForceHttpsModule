@@ -15,49 +15,60 @@ describe('ForceHttps', function () {
 
     describe('->attach()', function () {
 
-        it('attach on route event on non-console', function () {
+        context('on console or not enable', function () {
 
-            Console::overrideIsConsole(false);
-            $listener = new ForceHttps([
-                'enable'                => true,
-                'force_all_routes'      => true,
-                'force_specific_routes' => [],
-            ]);
+            beforeEach(function () {
+                $this->eventManager =  Double::instance(['implements' => EventManagerInterface::class]);
+            });
 
-            $eventManager = Double::instance(['implements' => EventManagerInterface::class]);
-            expect($eventManager)->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+            it('not attach on route on console', function () {
 
-            $listener->attach($eventManager);
+                Console::overrideIsConsole(true);
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'force_specific_routes' => [],
+                ]);
+
+                $listener->attach($this->eventManager);
+
+                expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+
+            });
+
+            it('not attach on route on enable = false', function () {
+
+                Console::overrideIsConsole(false);
+                $listener = new ForceHttps([
+                    'enable'                => false,
+                ]);
+
+                $listener->attach($this->eventManager);
+
+                expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+
+            });
 
         });
 
-        it('not attach on route on console', function () {
+        context('not on console and enable', function () {
 
-            Console::overrideIsConsole(true);
-            $listener = new ForceHttps([
-                'enable'                => true,
-                'force_all_routes'      => true,
-                'force_specific_routes' => [],
-            ]);
+            it('attach on route event on non-console and enable', function () {
 
-            $eventManager = Double::instance(['implements' => EventManagerInterface::class]);
-            expect($eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+                $eventManager =  Double::instance(['implements' => EventManagerInterface::class]);
 
-            $listener->attach($eventManager);
+                Console::overrideIsConsole(false);
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'force_specific_routes' => [],
+                ]);
 
-        });
+                $listener->attach($eventManager);
 
-        it('not attach on route on enable = false', function () {
+                expect($eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
 
-            Console::overrideIsConsole(true);
-            $listener = new ForceHttps([
-                'enable'                => false,
-            ]);
-
-            $eventManager = Double::instance(['implements' => EventManagerInterface::class]);
-            expect($eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
-
-            $listener->attach($eventManager);
+            });
 
         });
 
@@ -65,218 +76,231 @@ describe('ForceHttps', function () {
 
     describe('->forceHttpsScheme()', function () {
 
-        it('not redirect if uri already has https scheme', function () {
+        beforeEach(function () {
+            $this->mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
+            $this->response = Double::instance(['extends' => Response::class]);
+            $this->request  = Double::instance(['extends' => Request::class]);
+            $this->uri      = Double::instance(['extends' => Uri::class]);
+        });
 
-            Console::overrideIsConsole(false);
-            $listener = new ForceHttps([
-                'enable'                => true,
-                'force_all_routes'      => true,
-                'force_specific_routes' => [],
-            ]);
+        context('on current scheme is https', function () {
 
-            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
-            $response = Double::instance(['extends' => Response::class]);
+            it('not redirect if uri already has https scheme and without strict_transport_security', function () {
 
-            allow($mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
-            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
-            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
-            expect($mvcEvent)->toReceive('getResponse');
-            // no strict_transport_security config
-            expect($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'force_specific_routes' => [],
+                ]);
 
-            $listener->forceHttpsScheme($mvcEvent);
+                allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                expect($this->mvcEvent)->toReceive('getResponse');
+
+                $listener->forceHttpsScheme($this->mvcEvent);
+                expect($this->response)->not->toReceive('getHeaders');
+
+            });
 
         });
 
-        it('not redirect if force_all_routes is false and route name not in force_specific_routes config', function () {
+        context('on current scheme is http', function () {
 
-            Console::overrideIsConsole(false);
-            $listener = new ForceHttps([
-                'enable'                => true,
-                'force_all_routes'      => false,
-                'force_specific_routes' => [
-                    'checkout'
-                ],
-            ]);
+            it('not redirect if force_all_routes is false and route name not in force_specific_routes config', function () {
 
-            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
-            $response = Double::instance(['extends' => Response::class]);
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => false,
+                    'force_specific_routes' => [
+                        'checkout'
+                    ],
+                ]);
 
-            allow($mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('http');
-            allow($mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
-            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
-            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
-            expect($mvcEvent)->toReceive('getResponse');
+                allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('http');
+                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
 
-            $listener->forceHttpsScheme($mvcEvent);
+                $listener->forceHttpsScheme($this->mvcEvent);
 
-        });
+                expect($this->mvcEvent)->toReceive('getResponse');
 
-        it('redirect if force_all_routes is false and route name in force_specific_routes config', function () {
+            });
 
-            Console::overrideIsConsole(false);
-            $listener = new ForceHttps([
-                'enable'                => true,
-                'force_all_routes'      => false,
-                'force_specific_routes' => [
-                    'checkout'
-                ],
-            ]);
+            it('redirect if force_all_routes is false and route name in force_specific_routes config', function () {
 
-            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
-            $response = Double::instance(['extends' => Response::class]);
-            $request  = Double::instance(['extends' => Request::class]);
-            $uri      = Double::instance(['extends' => Uri::class]);
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => false,
+                    'force_specific_routes' => [
+                        'checkout'
+                    ],
+                ]);
 
-            allow($mvcEvent)->toReceive('getRequest')->andReturn($request);
-            allow($request)->toReceive('getUri')->andReturn($uri);
-            allow($uri)->toReceive('getScheme')->andReturn('http');
-            allow($mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('checkout');
-            allow($uri)->toReceive('setScheme')->with('https')->andReturn($uri);
-            allow($uri)->toReceive('toString')->andReturn('https://example.com/about');
-            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
-            allow($response)->toReceive('setStatusCode')->with(307)->andReturn($response);
-            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
-            allow($response)->toReceive('send');
+                allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
+                allow($this->request)->toReceive('getUri')->andReturn($this->uri);
+                allow($this->uri)->toReceive('getScheme')->andReturn('http');
+                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('checkout');
+                allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
+                allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('setStatusCode')->with(307)->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
+                allow($this->response)->toReceive('send');
 
-            expect($mvcEvent)->toReceive('getResponse');
+                $listener->forceHttpsScheme($this->mvcEvent);
 
-            $listener->forceHttpsScheme($mvcEvent);
+                expect($this->mvcEvent)->toReceive('getResponse');
 
-        });
+            });
 
-        it('redirect if force_all_routes is true', function () {
+            it('redirect if force_all_routes is true', function () {
 
-            Console::overrideIsConsole(false);
-            $listener = new ForceHttps([
-                'enable'                => true,
-                'force_all_routes'      => true,
-                'force_specific_routes' => [],
-            ]);
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'force_specific_routes' => [],
+                ]);
 
-            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
-            $response = Double::instance(['extends' => Response::class]);
-            $request  = Double::instance(['extends' => Request::class]);
-            $uri      = Double::instance(['extends' => Uri::class]);
+                $this->mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
+                $this->response = Double::instance(['extends' => Response::class]);
+                $this->request  = Double::instance(['extends' => Request::class]);
+                $this->uri      = Double::instance(['extends' => Uri::class]);
 
-            allow($mvcEvent)->toReceive('getRequest')->andReturn($request);
-            allow($request)->toReceive('getUri')->andReturn($uri);
-            allow($uri)->toReceive('getScheme')->andReturn('http');
-            allow($mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
-            allow($uri)->toReceive('setScheme')->with('https')->andReturn($uri);
-            allow($uri)->toReceive('toString')->andReturn('https://example.com/about');
-            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
-            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
-            allow($response)->toReceive('setStatusCode')->with(307)->andReturn($response);
-            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
-            allow($response)->toReceive('send');
+                allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
+                allow($this->request)->toReceive('getUri')->andReturn($this->uri);
+                allow($this->uri)->toReceive('getScheme')->andReturn('http');
+                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
+                allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
+                allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
+                allow($this->response)->toReceive('setStatusCode')->with(307)->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
+                allow($this->response)->toReceive('send');
 
-            expect($mvcEvent)->toReceive('getResponse');
+                $listener->forceHttpsScheme($this->mvcEvent);
 
-            $listener->forceHttpsScheme($mvcEvent);
+                expect($this->mvcEvent)->toReceive('getResponse');
 
-        });
+            });
 
-        it('not redirect with set strict_transport_security exists and uri already has https scheme', function () {
+            it('redirect if force_all_routes is true and strict_transport_security config exists', function () {
 
-            Console::overrideIsConsole(false);
-            $listener = new ForceHttps([
-                'enable'                => true,
-                'force_all_routes'      => true,
-                'force_specific_routes' => [],
-                'strict_transport_security' => [
-                    'enable' => true,
-                    'value' => 'max-age=31536000',
-                ],
-            ]);
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'force_specific_routes' => [],
+                    'strict_transport_security' => [
+                        'enable' => true,
+                        'value' => 'max-age=31536000',
+                    ],
+                ]);
 
-            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
-            $response = Double::instance(['extends' => Response::class]);
+                allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
+                allow($this->request)->toReceive('getUri')->andReturn($this->uri);
+                allow($this->uri)->toReceive('getScheme')->andReturn('http');
+                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
+                allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
+                allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('setStatusCode')->with(307)->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
+                allow($this->response)->toReceive('send');
 
-            allow($mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
-            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
-            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
-            expect($mvcEvent)->toReceive('getResponse');
-            expect($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
+                $listener->forceHttpsScheme($this->mvcEvent);
 
-            $listener->forceHttpsScheme($mvcEvent);
+                expect($this->mvcEvent)->toReceive('getResponse');
+                expect($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
 
-        });
+            });
 
-        it('redirect if force_all_routes is true and strict_transport_security config exists', function () {
+            it('not redirect with set strict_transport_security exists and uri already has https scheme', function () {
 
-            Console::overrideIsConsole(false);
-            $listener = new ForceHttps([
-                'enable'                => true,
-                'force_all_routes'      => true,
-                'force_specific_routes' => [],
-                'strict_transport_security' => [
-                    'enable' => true,
-                    'value' => 'max-age=31536000',
-                ],
-            ]);
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'force_specific_routes' => [],
+                    'strict_transport_security' => [
+                        'enable' => true,
+                        'value' => 'max-age=31536000',
+                    ],
+                ]);
 
-            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
-            $response = Double::instance(['extends' => Response::class]);
-            $request  = Double::instance(['extends' => Request::class]);
-            $uri      = Double::instance(['extends' => Uri::class]);
+                allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
 
-            allow($mvcEvent)->toReceive('getRequest')->andReturn($request);
-            allow($request)->toReceive('getUri')->andReturn($uri);
-            allow($uri)->toReceive('getScheme')->andReturn('http');
-            allow($mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
-            allow($uri)->toReceive('setScheme')->with('https')->andReturn($uri);
-            allow($uri)->toReceive('toString')->andReturn('https://example.com/about');
-            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
-            allow($response)->toReceive('setStatusCode')->with(307)->andReturn($response);
-            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
-            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
-            allow($response)->toReceive('send');
+                $listener->forceHttpsScheme($this->mvcEvent);
 
-            expect($mvcEvent)->toReceive('getResponse');
-            // max-age still 0 as it not https yet
-            expect($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
-            expect($response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
+                expect($this->mvcEvent)->toReceive('getResponse');
+                expect($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
 
-            $listener->forceHttpsScheme($mvcEvent);
+            });
 
-        });
+            it('set Strict-Transport-Security if force_specific_routes has its value, match and strict_transport_security config exists', function () {
 
-        it('set Strict-Transport-Security if force_specific_routes has its value, match and strict_transport_security config exists', function () {
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => false,
+                    'force_specific_routes' => [
+                        'login'
+                    ],
+                    'strict_transport_security' => [
+                        'enable' => true,
+                        'value' => 'max-age=31536000',
+                    ],
+                ]);
 
-            Console::overrideIsConsole(false);
-            $listener = new ForceHttps([
-                'enable'                => true,
-                'force_all_routes'      => false,
-                'force_specific_routes' => [
-                    'login'
-                ],
-                'strict_transport_security' => [
-                    'enable' => true,
-                    'value' => 'max-age=31536000',
-                ],
-            ]);
+                allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
+                allow($this->request)->toReceive('getUri')->andReturn($this->uri);
+                allow($this->uri)->toReceive('getScheme')->andReturn('https');
+                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('login');
+                allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
+                allow($this->uri)->toReceive('toString')->andReturn('https://example.com/login');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
+                allow($this->response)->toReceive('send');
 
-            $mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
-            $response = Double::instance(['extends' => Response::class]);
-            $request  = Double::instance(['extends' => Request::class]);
-            $uri      = Double::instance(['extends' => Uri::class]);
+                $listener->forceHttpsScheme($this->mvcEvent);
 
-            allow($mvcEvent)->toReceive('getRequest')->andReturn($request);
-            allow($request)->toReceive('getUri')->andReturn($uri);
-            allow($uri)->toReceive('getScheme')->andReturn('https');
-            allow($mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('login');
-            allow($uri)->toReceive('setScheme')->with('https')->andReturn($uri);
-            allow($uri)->toReceive('toString')->andReturn('https://example.com/login');
-            allow($mvcEvent)->toReceive('getResponse')->andReturn($response);
-            allow($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
-            allow($response)->toReceive('send');
+                expect($this->mvcEvent)->toReceive('getResponse');
+                expect($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
+                expect($this->response)->not->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/login');
 
-            expect($mvcEvent)->toReceive('getResponse');
-            expect($response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
-            expect($response)->not->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/login');
+            });
 
-            $listener->forceHttpsScheme($mvcEvent);
+            it('set Strict-Transport-Security to expire if force_specific_routes has its value, match and strict_transport_security config exists', function () {
+
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => false,
+                    'force_specific_routes' => [
+                        'login'
+                    ],
+                    'strict_transport_security' => [
+                        'enable' => false,
+                        'value' => 'max-age=31536000',
+                    ],
+                ]);
+
+                allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
+                allow($this->request)->toReceive('getUri')->andReturn($this->uri);
+                allow($this->uri)->toReceive('getScheme')->andReturn('https');
+                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('login');
+                allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
+                allow($this->uri)->toReceive('toString')->andReturn('https://example.com/login');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
+                allow($this->response)->toReceive('send');
+
+                $listener->forceHttpsScheme($this->mvcEvent);
+
+                expect($this->mvcEvent)->toReceive('getResponse');
+                expect($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
+                expect($this->response)->not->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/login');
+
+            });
 
         });
 
