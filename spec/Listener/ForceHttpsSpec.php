@@ -15,60 +15,39 @@ describe('ForceHttps', function () {
 
     describe('->attach()', function () {
 
-        context('on console or not enable', function () {
+        beforeEach(function () {
+            $this->eventManager =  Double::instance(['implements' => EventManagerInterface::class]);
+        });
 
-            beforeEach(function () {
-                $this->eventManager =  Double::instance(['implements' => EventManagerInterface::class]);
-            });
+        it('not attach on route on console', function () {
 
-            it('not attach on route on console', function () {
+            Console::overrideIsConsole(true);
+            $listener = new ForceHttps([
+                'enable'                => true,
+                'force_all_routes'      => true,
+                'force_specific_routes' => [],
+            ]);
 
-                Console::overrideIsConsole(true);
-                $listener = new ForceHttps([
-                    'enable'                => true,
-                    'force_all_routes'      => true,
-                    'force_specific_routes' => [],
-                ]);
+            $listener->attach($this->eventManager);
 
-                $listener->attach($this->eventManager);
-
-                expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
-
-            });
-
-            it('not attach on route on enable = false', function () {
-
-                Console::overrideIsConsole(false);
-                $listener = new ForceHttps([
-                    'enable'                => false,
-                ]);
-
-                $listener->attach($this->eventManager);
-
-                expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
-
-            });
+            expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
 
         });
 
-        context('not on console and enable', function () {
+        it('attach on route event on non-console and enable', function () {
 
-            it('attach on route event on non-console and enable', function () {
+            $eventManager =  Double::instance(['implements' => EventManagerInterface::class]);
 
-                $eventManager =  Double::instance(['implements' => EventManagerInterface::class]);
+            Console::overrideIsConsole(false);
+            $listener = new ForceHttps([
+                'enable'                => true,
+                'force_all_routes'      => true,
+                'force_specific_routes' => [],
+            ]);
 
-                Console::overrideIsConsole(false);
-                $listener = new ForceHttps([
-                    'enable'                => true,
-                    'force_all_routes'      => true,
-                    'force_specific_routes' => [],
-                ]);
+            $listener->attach($eventManager);
 
-                $listener->attach($eventManager);
-
-                expect($eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
-
-            });
+            expect($eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
 
         });
 
@@ -81,6 +60,23 @@ describe('ForceHttps', function () {
             $this->response = Double::instance(['extends' => Response::class]);
             $this->request  = Double::instance(['extends' => Request::class]);
             $this->uri      = Double::instance(['extends' => Uri::class]);
+        });
+
+        context('not enabled', function () {
+
+            it('returns early', function () {
+
+                $listener = new ForceHttps([
+                    'enable'                => false,
+                    'force_all_routes'      => true,
+                    'force_specific_routes' => [],
+                ]);
+                $actual = $listener->forceHttpsScheme($this->mvcEvent);
+
+                expect($actual)->toBe(null);
+
+            });
+
         });
 
         context('on current scheme is https', function () {

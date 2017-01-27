@@ -30,11 +30,43 @@ class ForceHttps extends AbstractListenerAggregate
      */
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        if (Console::isConsole() || ! $this->config['enable']) {
+        if (Console::isConsole()) {
             return;
         }
 
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttpsScheme']);
+    }
+
+    /**
+     * Is Scheme https ?
+     *
+     * @param string $uriScheme
+     *
+     * @return bool
+     */
+    private function isSchemeHttps($uriScheme)
+    {
+        return $uriScheme === 'https';
+    }
+
+    /**
+     * Check Config if is going to be forced to https.
+     *
+     * @param  MvcEvent $e
+     * @return bool
+     */
+    private function isGoingToBeForcedToHttps(MvcEvent $e)
+    {
+        if (! $this->config['force_all_routes'] &&
+            ! in_array(
+                $e->getRouteMatch()->getMatchedRouteName(),
+                $this->config['force_specific_routes']
+            )
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -91,6 +123,10 @@ class ForceHttps extends AbstractListenerAggregate
      */
     public function forceHttpsScheme(MvcEvent $e)
     {
+        if (! $this->config['enable']) {
+           return;
+        }
+
         /** @var $request \Zend\Http\PhpEnvironment\Request */
         $request   = $e->getRequest();
         /** @var $response \Zend\Http\PhpEnvironment\Response */
@@ -113,37 +149,5 @@ class ForceHttps extends AbstractListenerAggregate
         $response->getHeaders()
                  ->addHeaderLine('Location', $httpsRequestUri);
         $response->send();
-    }
-
-    /**
-     * Is Scheme https ?
-     *
-     * @param string $uriScheme
-     *
-     * @return bool
-     */
-    private function isSchemeHttps($uriScheme)
-    {
-        return $uriScheme === 'https';
-    }
-
-    /**
-     * Check Config if is going to be forced to https.
-     *
-     * @param  MvcEvent $e
-     * @return bool
-     */
-    private function isGoingToBeForcedToHttps(MvcEvent $e)
-    {
-        if (! $this->config['force_all_routes'] &&
-            ! in_array(
-                $e->getRouteMatch()->getMatchedRouteName(),
-                $this->config['force_specific_routes']
-            )
-        ) {
-            return false;
-        }
-
-        return true;
     }
 }
