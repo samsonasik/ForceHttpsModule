@@ -3,6 +3,8 @@
 namespace ForceHttpsModule\Middleware;
 
 use ForceHttpsModule\HttpsTrait;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Zend\Console\Console;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Router\RouteResult;
@@ -30,12 +32,11 @@ class ForceHttps
     /**
      * Set The HTTP Strict Transport Security.
      *
-     * @param string      $uriScheme
-     * @param RouteResult $match
-     *
-     * @param $response
+     * @param string            $uriScheme
+     * @param RouteResult       $match
+     * @param ResponseInterface $response
      */
-    private function setHttpStrictTransportSecurity($uriScheme, RouteResult $match, $response)
+    private function setHttpStrictTransportSecurity($uriScheme, RouteResult $match, ResponseInterface $response)
     {
         if (
             $this->isSchemeHttps($uriScheme) &&
@@ -57,7 +58,7 @@ class ForceHttps
         return $response;
     }
 
-    public function __invoke($request, $response, callable $next = null)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         $match = $this->router->match($request);
         if (Console::isConsole() || ! $this->config['enable'] || $match->isFailure()) {

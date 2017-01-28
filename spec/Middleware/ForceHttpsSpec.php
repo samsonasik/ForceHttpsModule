@@ -5,8 +5,9 @@ namespace ForceHttpsModuleSpec\Middleware;
 use ForceHttpsModule\Middleware\ForceHttps;
 use Kahlan\Plugin\Double;
 use Zend\Console\Console;
+use Psr\Http\Message\UriInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response;
 use Zend\Diactoros\Uri;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Router\RouteResult;
@@ -16,19 +17,19 @@ describe('ForceHttps', function () {
     describe('->invoke()', function () {
 
         given('response', function () {
-            return Double::instance(['extends'    => Response::class]);
+            return Double::instance(['implements' => ResponseInterface::class]);
         });
 
         given('request', function () {
-            return Double::instance(['implements'    => ServerRequestInterface::class]);
+            return Double::instance(['implements' => ServerRequestInterface::class]);
         });
 
         given('uri', function () {
-            return Double::instance(['extends'    => Uri::class]);
+            return Double::instance(['implements' => UriInterface::class]);
         });
 
         given('router', function () {
-            return Double::instance(['implements'    => RouterInterface::class]);
+            return Double::instance(['implements'  => RouterInterface::class]);
         });
 
         it('not redirect on console', function () {
