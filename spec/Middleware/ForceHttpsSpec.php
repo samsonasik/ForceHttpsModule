@@ -15,18 +15,20 @@ describe('ForceHttps', function () {
 
     describe('->invoke()', function () {
 
-        beforeEach(function () {
-            $this->response = Double::instance(['extends'    => Response::class]);
-            $this->request  = Double::instance(['implements' => ServerRequestInterface::class]);
-            $this->uri      = Double::instance(['extends'    => Uri::class]);
-            $this->router   = Double::instance(['implements' => RouterInterface::class]);
+        given('response', function () {
+            return Double::instance(['extends'    => Response::class]);
         });
 
-        afterEach(function () {
-            $this->response = Double::instance(['extends'    => Response::class]);
-            $this->request  = Double::instance(['implements' => ServerRequestInterface::class]);
-            $this->uri      = Double::instance(['extends'    => Uri::class]);
-            $this->router   = Double::instance(['implements' => RouterInterface::class]);
+        given('request', function () {
+            return Double::instance(['implements'    => ServerRequestInterface::class]);
+        });
+
+        given('uri', function () {
+            return Double::instance(['extends'    => Uri::class]);
+        });
+
+        given('router', function () {
+            return Double::instance(['implements'    => RouterInterface::class]);
         });
 
         it('call next() on console', function () {
@@ -36,6 +38,7 @@ describe('ForceHttps', function () {
 
             $listener->__invoke($this->request, $this->response, function () {});
 
+            expect($this->response)->not->toReceive('withStatus');
         });
 
         it('call next() on not-enable', function () {
@@ -45,6 +48,7 @@ describe('ForceHttps', function () {
 
             $listener->__invoke($this->request, $this->response, function () {});
 
+            expect($this->response)->not->toReceive('withStatus');
         });
 
         it('call next() on router not match', function () {
@@ -56,6 +60,8 @@ describe('ForceHttps', function () {
             $listener = new ForceHttps(['enable' => true], $this->router);
 
             $listener->__invoke($this->request, $this->response, function () {});
+
+            expect($this->response)->not->toReceive('withStatus');
 
         });
 
@@ -70,6 +76,8 @@ describe('ForceHttps', function () {
             $listener = new ForceHttps(['enable' => true, 'force_all_routes' => true], $this->router);
 
             $listener->__invoke($this->request, $this->response, function () {});
+
+            expect($this->response)->not->toReceive('withStatus');
 
         });
 
@@ -96,6 +104,8 @@ describe('ForceHttps', function () {
 
             $listener->__invoke($this->request, $this->response, function () {});
 
+            expect($this->response)->not->toReceive('withStatus');
+
         });
 
         it('call next() on https and match, with strict_transport_security config, but disabled', function () {
@@ -120,6 +130,8 @@ describe('ForceHttps', function () {
 
             $listener->__invoke($this->request, $this->response, function () {});
 
+            expect($this->response)->not->toReceive('withStatus');
+
         });
 
         it('call next() on https and match, with strict_transport_security config, and enabled', function () {
@@ -129,9 +141,6 @@ describe('ForceHttps', function () {
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('https');
-
-            allow($this->response)->toReceive('withHeader')->andReturn($this->response);
-            expect($this->response)->toReceive('withHeader');
 
             $listener = new ForceHttps(
                 [
@@ -146,6 +155,8 @@ describe('ForceHttps', function () {
             );
 
             $listener->__invoke($this->request, $this->response, function () {});
+
+            expect($this->response)->not->toReceive('withStatus');
 
         });
 
@@ -157,13 +168,7 @@ describe('ForceHttps', function () {
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
 
-            allow($this->response)->toReceive('withHeader')->andReturn($this->response);
             allow($this->response)->toReceive('withStatus')->andReturn($this->response);
-            allow($this->response)->toReceive('withHeader')->andReturn($this->response);
-
-            expect($this->response)->toReceive('withHeader')->ordered;
-            expect($this->response)->toReceive('withStatus')->ordered;
-            expect($this->response)->toReceive('withHeader')->ordered;
 
             $listener = new ForceHttps(
                 [
@@ -179,6 +184,7 @@ describe('ForceHttps', function () {
 
             $listener->__invoke($this->request, $this->response, function () {});
 
+            expect($this->response)->toReceive('withStatus');
 
         });
 
