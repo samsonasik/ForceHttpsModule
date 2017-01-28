@@ -1,11 +1,12 @@
 <?php
 
-namespace ForceHttpsModuleSpec\Listener;
+namespace ForceHttpsModuleSpec\Middleware;
 
-use ForceHttpsModule\Listener\ForceHttps;
-use ForceHttpsModule\Listener\ForceHttpsFactory;
+use ForceHttpsModule\Middleware\ForceHttps;
+use ForceHttpsModule\Middleware\ForceHttpsFactory;
 use Interop\Container\ContainerInterface;
 use Kahlan\Plugin\Double;
+use Zend\Expressive\Router\RouterInterface;
 
 describe('ForceHttpsFactory', function () {
 
@@ -19,10 +20,15 @@ describe('ForceHttpsFactory', function () {
             return Double::instance(['implements' => ContainerInterface::class]);
         });
 
+        given('router', function () {
+            return Double::instance(['implements' => RouterInterface::class]);
+        });
+
         it('returns ' . ForceHttps::class . ' instance with default config', function () {
 
             $config = [];
             allow($this->container)->toReceive('get')->with('config')->andReturn($config);
+            allow($this->container)->toReceive('get')->with(RouterInterface::class)->andReturn($this->router);
 
             $actual = $this->factory->__invoke($this->container);
 
@@ -40,6 +46,7 @@ describe('ForceHttpsFactory', function () {
                 ],
             ];
             allow($this->container)->toReceive('get')->with('config')->andReturn($config);
+            allow($this->container)->toReceive('get')->with(RouterInterface::class)->andReturn($this->router);
 
             $actual = $this->factory->__invoke($this->container);
 

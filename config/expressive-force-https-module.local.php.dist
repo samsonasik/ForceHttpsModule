@@ -1,0 +1,35 @@
+<?php
+
+namespace ForceHttpsModule;
+
+return [
+    'force-https-module' => [
+        'enable'                => true,
+        'force_all_routes'      => true,
+        'force_specific_routes' => [
+            // a lists of specific routes to be https
+            // only works if previous config 'force_all_routes' => false
+        ],
+        // set HTTP Strict Transport Security Header
+        'strict_transport_security' => [
+            'enable' => true, // set to false to disable it
+            'value'  => 'max-age=31536000',
+        ],
+    ],
+
+    'dependencies' => [
+        'factories' => [
+            Middleware\ForceHttps::class => Middleware\ForceHttpsFactory::class,
+        ],
+    ],
+
+    'middleware_pipeline' => [
+        'always' => [
+            'middleware' => [
+                Middleware\ForceHttps::class
+            ],
+            'priority' => PHP_INT_MAX,
+        ],
+    ],
+
+];
