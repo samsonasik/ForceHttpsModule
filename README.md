@@ -32,7 +32,7 @@ composer require samsonasik/force-https-module
 
 **2. Copy config**
 
-a. For [ZF2/ZF3 Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) application, copy `force-https-module.local.php.dist` config to your local's autoload and configure it**
+***a. For [ZF2/ZF3 Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) application, copy `force-https-module.local.php.dist` config to your local's autoload and configure it***
 
 | source                                                                       | destination                                 |
 |------------------------------------------------------------------------------|---------------------------------------------|
@@ -44,7 +44,7 @@ Or run copy command:
 cp vendor/samsonasik/force-https-module/config/force-https-module.local.php.dist config/autoload/force-https-module.local.php
 ```
 
-b. For [ZF Expressive](https://zendframework.github.io/zend-expressive/) application, copy `expressive-force-https-module.local.php.dist` config to your local's autoload and configure it**
+***b. For [ZF Expressive](https://zendframework.github.io/zend-expressive/) application, copy `expressive-force-https-module.local.php.dist` config to your local's autoload and configure it***
 
 | source                                                                       | destination                                 |
 |------------------------------------------------------------------------------|---------------------------------------------|
@@ -81,7 +81,7 @@ return [
 
 **3. Lastly, enable it**
 
-a. For ZF Mvc application
+***a. For ZF Mvc application***
 
 ```php
 // config/modules.config.php or config/application.config.php
@@ -91,7 +91,7 @@ return [
 ],
 ```
 
-b. For ZF Expressive application
+***b. For ZF Expressive application***
 
 It's should already just works!
 
