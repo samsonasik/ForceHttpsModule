@@ -31,7 +31,7 @@ describe('ForceHttps', function () {
             return Double::instance(['implements'    => RouterInterface::class]);
         });
 
-        it('call next() on console', function () {
+        it('not redirect on console', function () {
 
             Console::overrideIsConsole(true);
             $listener = new ForceHttps([], $this->router);
@@ -41,7 +41,7 @@ describe('ForceHttps', function () {
             expect($this->response)->not->toReceive('withStatus');
         });
 
-        it('call next() on not-enable', function () {
+        it('not redirect on not-enable', function () {
 
             Console::overrideIsConsole(false);
             $listener = new ForceHttps(['enable' => false], $this->router);
@@ -51,7 +51,7 @@ describe('ForceHttps', function () {
             expect($this->response)->not->toReceive('withStatus');
         });
 
-        it('call next() on router not match', function () {
+        it('not redirect on router not match', function () {
 
             Console::overrideIsConsole(false);
             $match = RouteResult::fromRouteFailure();
@@ -65,7 +65,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('call next() on https and match but no strict_transport_security config', function () {
+        it('not redirect on https and match but no strict_transport_security config', function () {
 
             Console::overrideIsConsole(false);
             $match = RouteResult::fromRouteMatch('about', 'About', []);
@@ -81,7 +81,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('call next() on http and match, with force_all_routes is false and matched route name not in force_specific_routes config', function () {
+        it('not redirect on http and match, with force_all_routes is false and matched route name not in force_specific_routes config', function () {
 
             Console::overrideIsConsole(false);
             $match = RouteResult::fromRouteMatch('about', 'About', []);
@@ -108,7 +108,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('call next() on https and match, with strict_transport_security config, but disabled', function () {
+        it('not redirect on https and match, with strict_transport_security config, but disabled', function () {
 
             Console::overrideIsConsole(false);
             $match = RouteResult::fromRouteMatch('about', 'About', []);
@@ -134,7 +134,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('call next() on https and match, with strict_transport_security config, and enabled', function () {
+        it('not redirect on https and match, with strict_transport_security config, and enabled', function () {
 
             Console::overrideIsConsole(false);
             $match = RouteResult::fromRouteMatch('about', 'About', []);
