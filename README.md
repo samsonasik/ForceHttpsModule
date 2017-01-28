@@ -10,7 +10,7 @@ ForceHttpsModule
 Introduction
 ------------
 
-ForceHttpsModule is a configurable module for force https in your ZF2/ZF3 Mvc and Expressive Application.
+ForceHttpsModule is a configurable module for force https in your [ZF2/ZF3 Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) and [ZF Expressive](https://zendframework.github.io/zend-expressive/) Application.
 
 Features
 --------
@@ -32,7 +32,7 @@ composer require samsonasik/force-https-module
 
 **2. Copy config**
 
-a. For ZF Mvc application, copy `force-https-module.local.php.dist` config to your local's autoload and configure it**
+a. For [ZF2/ZF3 Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) application, copy `force-https-module.local.php.dist` config to your local's autoload and configure it**
 
 | source                                                                       | destination                                 |
 |------------------------------------------------------------------------------|---------------------------------------------|
@@ -44,7 +44,7 @@ Or run copy command:
 cp vendor/samsonasik/force-https-module/config/force-https-module.local.php.dist config/autoload/force-https-module.local.php
 ```
 
-b. For ZF Expressive application, copy `expressive-force-https-module.local.php.dist` config to your local's autoload and configure it**
+b. For [ZF Expressive](https://zendframework.github.io/zend-expressive/) application, copy `expressive-force-https-module.local.php.dist` config to your local's autoload and configure it**
 
 | source                                                                       | destination                                 |
 |------------------------------------------------------------------------------|---------------------------------------------|
