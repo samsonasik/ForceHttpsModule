@@ -82,7 +82,7 @@ class ForceHttps
      * Validate Scheme and Forced Https Config
      *
      * @param  string $uriScheme
-     * @param  $request
+     * @param  $match
      *
      * @return bool
      */
