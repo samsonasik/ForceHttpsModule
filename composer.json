@@ -2,7 +2,7 @@
     "name": "samsonasik/force-https-module",
     "type": "library",
     "description": "Force Https Module",
-    "keywords": ["zf2", "zf3", "force", "https", "http"],
+    "keywords": ["zf2", "zf3", "expressive", "force", "https", "http"],
     "homepage": "https://github.com/samsonasik/ForceHttpsModule",
     "license": "MIT",
     "authors": [
