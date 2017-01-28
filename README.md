@@ -10,7 +10,7 @@ ForceHttpsModule
 Introduction
 ------------
 
-ForceHttpsModule is a configurable module for force https in your ZF2/ZF3 Mvc Application.
+ForceHttpsModule is a configurable module for force https in your ZF2/ZF3 Mvc and Expressive Application.
 
 Features
 --------
@@ -30,7 +30,9 @@ Installation
 composer require samsonasik/force-https-module
 ```
 
-**2. Copy `force-https-module.local.php.dist` config to your local's autoload and configure it**
+**2. Copy config**
+
+a. For ZF Mvc application, copy `force-https-module.local.php.dist` config to your local's autoload and configure it**
 
 | source                                                                       | destination                                 |
 |------------------------------------------------------------------------------|---------------------------------------------|
@@ -42,11 +44,23 @@ Or run copy command:
 cp vendor/samsonasik/force-https-module/config/force-https-module.local.php.dist config/autoload/force-https-module.local.php
 ```
 
-When done, you can modify `config/autoload/force-https-module.local.php` config in your's local config:
+b. For ZF Expressive application, copy `expressive-force-https-module.local.php.dist` config to your local's autoload and configure it**
+
+| source                                                                       | destination                                 |
+|------------------------------------------------------------------------------|---------------------------------------------|
+|  vendor/samsonasik/force-https-module/config/expressive-force-https-module.local.php.dist | config/autoload/expressive-force-https-module.local.php |
+
+Or run copy command:
+
+```sh
+cp vendor/samsonasik/force-https-module/config/expressive-force-https-module.local.php.dist config/autoload/expressive-force-https-module.local.php
+```
+
+When done, you can modify your local config:
 
 ```php
 <?php
-// config/autoload/force-https-module.local.php
+// config/autoload/force-https-module.local.php or config/autoload/expressive-force-https-module.local.php
 return [
     'force-https-module' => [
         'enable'                => true,
@@ -66,6 +80,9 @@ return [
 ```
 
 **3. Lastly, enable it**
+
+a. For ZF Mvc application
+
 ```php
 // config/modules.config.php or config/application.config.php
 return [
@@ -74,6 +91,9 @@ return [
 ],
 ```
 
+b. For ZF Expressive application
+
+It's should already just works!
 
 Contributing
 ------------
