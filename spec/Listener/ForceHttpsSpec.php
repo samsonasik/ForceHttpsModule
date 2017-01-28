@@ -1,6 +1,6 @@
 <?php
 
-namespace ForceHttpsModuleSpec;
+namespace ForceHttpsModuleSpec\Listener;
 
 use ForceHttpsModule\Listener\ForceHttps;
 use Kahlan\Plugin\Double;
