@@ -2,21 +2,24 @@
 
 namespace ForceHttpsModule\Listener;
 
+use ForceHttpsModule\HttpsTrait;
 use Zend\Console\Console;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\MvcEvent;
+use Zend\Router\RouteMatch;
 
 class ForceHttps extends AbstractListenerAggregate
 {
+    use HttpsTrait;
+
     /**
      * @var array
      */
     private $config;
 
     /**
-     * @method __construct
      * @param  array       $config
      */
     public function __construct(array $config)
@@ -38,49 +41,17 @@ class ForceHttps extends AbstractListenerAggregate
     }
 
     /**
-     * Is Scheme https ?
-     *
-     * @param string $uriScheme
-     *
-     * @return bool
-     */
-    private function isSchemeHttps($uriScheme)
-    {
-        return $uriScheme === 'https';
-    }
-
-    /**
-     * Check Config if is going to be forced to https.
-     *
-     * @param  MvcEvent $e
-     * @return bool
-     */
-    private function isGoingToBeForcedToHttps(MvcEvent $e)
-    {
-        if (! $this->config['force_all_routes'] &&
-            ! in_array(
-                $e->getRouteMatch()->getMatchedRouteName(),
-                $this->config['force_specific_routes']
-            )
-        ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Set The HTTP Strict Transport Security.
      *
-     * @param string $uriScheme
-     * @param MvcEvent $e
-     * @param Response $response
+     * @param string     $uriScheme
+     * @param RouteMatch $match     didn't typed hinted in code in favor of zf-mvc ^2.5 RouteMatch compat
+     * @param Response   $response
      */
-    private function setHttpStrictTransportSecurity($uriScheme, MvcEvent $e, Response $response)
+    private function setHttpStrictTransportSecurity($uriScheme, $match, Response $response)
     {
         if (
             $this->isSchemeHttps($uriScheme) &&
-            $this->isGoingToBeForcedToHttps($e) &&
+            $this->isGoingToBeForcedToHttps($match) &&
             isset(
                 $this->config['strict_transport_security']['enable'],
                 $this->config['strict_transport_security']['value']
@@ -97,23 +68,6 @@ class ForceHttps extends AbstractListenerAggregate
                      ->addHeaderLine('Strict-Transport-Security: max-age=0');
             return;
         }
-    }
-
-    /**
-     * Validate Scheme and Forced Https Config
-     *
-     * @param  string $uriScheme
-     * @param  MvcEvent $e
-     *
-     * @return bool
-     */
-    private function validateSchemeAndToBeForcedHttpsConfig($uriScheme, $e)
-    {
-        if ($this->isSchemeHttps($uriScheme) || ! $this->isGoingToBeForcedToHttps($e)) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -135,8 +89,9 @@ class ForceHttps extends AbstractListenerAggregate
         $uri       = $request->getUri();
         $uriScheme = $uri->getScheme();
 
-        $this->setHttpStrictTransportSecurity($uriScheme, $e, $response);
-        if (! $this->validateSchemeAndToBeForcedHttpsConfig($uriScheme, $e)) {
+        $routeMatch = $e->getRouteMatch();
+        $this->setHttpStrictTransportSecurity($uriScheme, $routeMatch, $response);
+        if (! $this->validateSchemeAndToBeForcedHttpsConfig($uriScheme, $routeMatch)) {
             return;
         }
 

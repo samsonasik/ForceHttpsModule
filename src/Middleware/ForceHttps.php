@@ -2,15 +2,25 @@
 
 namespace ForceHttpsModule\Middleware;
 
+use ForceHttpsModule\HttpsTrait;
 use Zend\Console\Console;
 use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Router\RouteResult;
 
 class ForceHttps
 {
+    use HttpsTrait;
+
+    /** @var array */
     private $config;
 
+    /** @var RouterInterface */
     private $router;
 
+    /**
+     * @param  array           $config
+     * @param  RouterInterface $router
+     */
     public function __construct(array $config, RouterInterface $router)
     {
         $this->config = $config;
@@ -18,45 +28,14 @@ class ForceHttps
     }
 
     /**
-     * Is Scheme https ?
-     *
-     * @param string $uriScheme
-     *
-     * @return bool
-     */
-    private function isSchemeHttps($uriScheme)
-    {
-        return $uriScheme === 'https';
-    }
-
-    /**
-     * Check Config if is going to be forced to https.
-     *
-     * @param  $match
-     * @return bool
-     */
-    private function isGoingToBeForcedToHttps($match)
-    {
-        if (! $this->config['force_all_routes'] &&
-            ! in_array(
-                $match->getMatchedRouteName(),
-                $this->config['force_specific_routes']
-            )
-        ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Set The HTTP Strict Transport Security.
      *
-     * @param string $uriScheme
-     * @param $match
+     * @param string      $uriScheme
+     * @param RouteResult $match
+     *
      * @param $response
      */
-    private function setHttpStrictTransportSecurity($uriScheme, $match, $response)
+    private function setHttpStrictTransportSecurity($uriScheme, RouteResult $match, $response)
     {
         if (
             $this->isSchemeHttps($uriScheme) &&
@@ -76,23 +55,6 @@ class ForceHttps
         }
 
         return $response;
-    }
-
-    /**
-     * Validate Scheme and Forced Https Config
-     *
-     * @param  string $uriScheme
-     * @param  $match
-     *
-     * @return bool
-     */
-    private function validateSchemeAndToBeForcedHttpsConfig($uriScheme, $match)
-    {
-        if ($this->isSchemeHttps($uriScheme) || ! $this->isGoingToBeForcedToHttps($match)) {
-            return false;
-        }
-
-        return true;
     }
 
     public function __invoke($request, $response, callable $next = null)
