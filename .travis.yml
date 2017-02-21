@@ -9,6 +9,7 @@ matrix:
   fast_finish: true
 
 before_script:
+  - mkdir -p build/logs
   - composer self-update
   - composer install --prefer-source --no-interaction
   - if [[ $TRAVIS_PHP_VERSION = 7.1 ]]; then composer global require --dev phpstan/phpstan; fi
