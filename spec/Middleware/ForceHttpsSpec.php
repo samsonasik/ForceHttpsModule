@@ -9,6 +9,7 @@ use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Uri;
+use Zend\Expressive\Router\Route;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Router\RouteResult;
 
@@ -69,7 +70,7 @@ describe('ForceHttps', function () {
         it('not redirect on https and match but no strict_transport_security config', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRouteMatch('about', 'About', []);
+            $match = RouteResult::fromRoute(new Route('/about', 'About'));
             allow($this->router)->toReceive('match')->andReturn($match);
 
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('https');
@@ -85,7 +86,7 @@ describe('ForceHttps', function () {
         it('not redirect on http and match, with force_all_routes is false and matched route name not in force_specific_routes config', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRouteMatch('about', 'About', []);
+            $match = RouteResult::fromRoute(new Route('/about', 'About'));
             allow($this->router)->toReceive('match')->andReturn($match);
 
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
@@ -112,7 +113,7 @@ describe('ForceHttps', function () {
         it('not redirect on https and match, with strict_transport_security config, but disabled', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRouteMatch('about', 'About', []);
+            $match = RouteResult::fromRoute(new Route('/about', 'About'));
             allow($this->router)->toReceive('match')->andReturn($match);
 
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('https');
@@ -138,7 +139,7 @@ describe('ForceHttps', function () {
         it('not redirect on https and match, with strict_transport_security config, and enabled', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRouteMatch('about', 'About', []);
+            $match = RouteResult::fromRoute(new Route('/about', 'About'));
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('https');
@@ -164,7 +165,7 @@ describe('ForceHttps', function () {
         it('return Response with 308 status on http and match', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRouteMatch('about', 'About', []);
+            $match = RouteResult::fromRoute(new Route('/about', 'About'));
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
