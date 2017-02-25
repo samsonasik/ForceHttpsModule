@@ -5,7 +5,6 @@ namespace ForceHttpsModule\Listener;
 use ForceHttpsModule\HttpsTrait;
 use Zend\Console\Console;
 use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\Event;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\MvcEvent;
@@ -74,9 +73,9 @@ class ForceHttps extends AbstractListenerAggregate
     /**
      * Force Https Scheme handle.
      *
-     * @param  Event         $e
+     * @param  MvcEvent         $e
      */
-    public function forceHttpsScheme(Event $e)
+    public function forceHttpsScheme(MvcEvent $e)
     {
         if (! $this->config['enable']) {
            return;
