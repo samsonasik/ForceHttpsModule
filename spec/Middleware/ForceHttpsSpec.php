@@ -186,7 +186,7 @@ describe('ForceHttps', function () {
 
             $listener->__invoke($this->request, $this->response, function () {});
 
-            expect($this->response)->toReceive('withStatus');
+            expect($this->response)->toReceive('withStatus')->with(308);
 
         });
 
