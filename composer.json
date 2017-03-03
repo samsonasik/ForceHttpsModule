@@ -15,7 +15,8 @@
     ],
     "require":{
         "php": "^5.6 || ^7.0",
-        "zendframework/zend-console": "^2.5"
+        "zendframework/zend-console": "^2.5",
+        "zendframework/zend-http": "dev-develop as 2.6"
     },
     "require-dev": {
         "kahlan/kahlan": "^3.0",

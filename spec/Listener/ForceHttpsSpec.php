@@ -140,7 +140,7 @@ describe('ForceHttps', function () {
                 allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
                 allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
-                allow($this->response)->toReceive('setStatusCode')->with(307)->andReturn($this->response);
+                allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
 
@@ -171,7 +171,7 @@ describe('ForceHttps', function () {
                 allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
-                allow($this->response)->toReceive('setStatusCode')->with(307)->andReturn($this->response);
+                allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
 
@@ -200,7 +200,7 @@ describe('ForceHttps', function () {
                 allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
                 allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
-                allow($this->response)->toReceive('setStatusCode')->with(307)->andReturn($this->response);
+                allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
 
