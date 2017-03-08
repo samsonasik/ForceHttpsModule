@@ -56,4 +56,26 @@ trait HttpsTrait
 
         return true;
     }
+
+    /**
+     * Add www. prefix when required in the config
+     *
+     * @param  string $httpsRequestUri
+     * @return string
+     */
+    private function withWwwPrefixWhenRequired($httpsRequestUri)
+    {
+        if (
+            ! isset($this->config['add_www_prefix']) ||
+            ! $this->config['add_www_prefix'] ||
+            (
+                $this->config['add_www_prefix'] === true &&
+                substr($httpsRequestUri, 8, 4) === 'www.'
+            )
+        ) {
+            return $httpsRequestUri;
+        }
+
+        return str_replace('https://', 'https://www.', $httpsRequestUri);
+    }
 }

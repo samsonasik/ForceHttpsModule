@@ -190,6 +190,35 @@ describe('ForceHttps', function () {
 
         });
 
+        it('return Response with 308 status with include www prefix on http and match with configurable "add_www_prefix"', function () {
+
+            Console::overrideIsConsole(false);
+            $match = RouteResult::fromRoute(new Route('/about', 'About'));
+
+            allow($this->router)->toReceive('match')->andReturn($match);
+            allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
+
+            allow($this->response)->toReceive('withStatus')->andReturn($this->response);
+
+            $listener = new ForceHttps(
+                [
+                    'enable' => true,
+                    'force_all_routes' => true,
+                    'strict_transport_security' => [
+                        'enable' => true,
+                        'value'  => 'max-age=31536000',
+                    ],
+                    'add_www_prefix' => true,
+                ],
+                $this->router
+            );
+
+            $listener->__invoke($this->request, $this->response, function () {});
+
+            expect($this->response)->toReceive('withStatus')->with(308);
+
+        });
+
     });
 
 });
