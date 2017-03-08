@@ -20,6 +20,7 @@ Features
 - [x] Force Https to specific routes only.
 - [x] Keep headers, request method, and request body.
 - [x] Enable/disable HTTP Strict Transport Security Header and set its value.
+- [x] Allow add "www." prefix during redirection.
 
 Installation
 ------------
@@ -75,6 +76,7 @@ return [
             'enable' => true, // set to false to disable it
             'value'  => 'max-age=31536000',
         ],
+        'add_www_prefix'        => false, // set to true to add "www." prefix during redirection
     ],
     // ...
 ];
