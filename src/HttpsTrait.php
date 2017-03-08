@@ -76,6 +76,6 @@ trait HttpsTrait
             return $httpsRequestUri;
         }
 
-        return str_replace('https://', 'https://www.', $httpsRequestUri);
+        return substr_replace($httpsRequestUri, 'www.', 8, 0);
     }
 }
