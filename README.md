@@ -20,7 +20,7 @@ Features
 - [x] Force Https to specific routes only.
 - [x] Keep headers, request method, and request body.
 - [x] Enable/disable HTTP Strict Transport Security Header and set its value.
-- [x] Allow add "www." prefix during redirection.
+- [x] Allow add `www.` prefix during redirection.
 
 Installation
 ------------
