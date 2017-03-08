@@ -169,6 +169,7 @@ describe('ForceHttps', function () {
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
+            allow($this->request)->toReceive('getUri', 'withScheme', '__toString')->andReturn('https://example.com/about');
 
             allow($this->response)->toReceive('withStatus')->andReturn($this->response);
 
@@ -187,6 +188,7 @@ describe('ForceHttps', function () {
             $listener->__invoke($this->request, $this->response, function () {});
 
             expect($this->response)->toReceive('withStatus')->with(308);
+            expect($this->response)->toReceive('withHeader')->with('Location', 'https://example.com/about');
 
         });
 
@@ -197,6 +199,7 @@ describe('ForceHttps', function () {
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
+            allow($this->request)->toReceive('getUri', 'withScheme', '__toString')->andReturn('https://example.com/about');
 
             allow($this->response)->toReceive('withStatus')->andReturn($this->response);
 
@@ -216,6 +219,7 @@ describe('ForceHttps', function () {
             $listener->__invoke($this->request, $this->response, function () {});
 
             expect($this->response)->toReceive('withStatus')->with(308);
+            expect($this->response)->toReceive('withHeader')->with('Location', 'https://www.example.com/about');
 
         });
 
