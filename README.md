@@ -98,7 +98,7 @@ return [
 
 For [zend-expressive-skeleton](https://github.com/zendframework/zend-expressive-skeleton) ^1.0, It's should already just works!
 
-For [zend-expressive-skeleton](https://github.com/zendframework/zend-expressive-skeleton) ^2.0 (upcoming), you need to open `config/pipeline.php` and add:
+For [zend-expressive-skeleton](https://github.com/zendframework/zend-expressive-skeleton) ^2.0, you need to open `config/pipeline.php` and add:
 
 ```php
 $app->pipe(ForceHttpsModule\Middleware\ForceHttps::class);
