@@ -70,7 +70,12 @@ describe('ForceHttps', function () {
         it('not redirect on https and match but no strict_transport_security config', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            if (method_exists(RouteResult::class, 'fromRoute')) {
+                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            } else {
+                $match = RouteResult::fromRouteMatch('about', 'about', []);
+            }
+
             allow($this->router)->toReceive('match')->andReturn($match);
 
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('https');
@@ -86,7 +91,11 @@ describe('ForceHttps', function () {
         it('not redirect on http and match, with force_all_routes is false and matched route name not in force_specific_routes config', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            if (method_exists(RouteResult::class, 'fromRoute')) {
+                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            } else {
+                $match = RouteResult::fromRouteMatch('about', 'about', []);
+            }
             allow($this->router)->toReceive('match')->andReturn($match);
 
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
@@ -113,7 +122,11 @@ describe('ForceHttps', function () {
         it('not redirect on https and match, with strict_transport_security config, but disabled', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            if (method_exists(RouteResult::class, 'fromRoute')) {
+                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            } else {
+                $match = RouteResult::fromRouteMatch('about', 'about', []);
+            }
             allow($this->router)->toReceive('match')->andReturn($match);
 
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('https');
@@ -139,7 +152,11 @@ describe('ForceHttps', function () {
         it('not redirect on https and match, with strict_transport_security config, and enabled', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            if (method_exists(RouteResult::class, 'fromRoute')) {
+                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            } else {
+                $match = RouteResult::fromRouteMatch('about', 'about', []);
+            }
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('https');
@@ -165,7 +182,11 @@ describe('ForceHttps', function () {
         it('return Response with 308 status on http and match', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            if (method_exists(RouteResult::class, 'fromRoute')) {
+                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            } else {
+                $match = RouteResult::fromRouteMatch('about', 'about', []);
+            }
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
@@ -195,7 +216,11 @@ describe('ForceHttps', function () {
         it('return Response with 308 status with include www prefix on http and match with configurable "add_www_prefix"', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            if (method_exists(RouteResult::class, 'fromRoute')) {
+                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            } else {
+                $match = RouteResult::fromRouteMatch('about', 'about', []);
+            }
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
