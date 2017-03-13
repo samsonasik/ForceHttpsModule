@@ -8,7 +8,6 @@ use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\MvcEvent;
-use Zend\Router\RouteMatch;
 
 class ForceHttps extends AbstractListenerAggregate
 {
@@ -43,9 +42,9 @@ class ForceHttps extends AbstractListenerAggregate
     /**
      * Set The HTTP Strict Transport Security.
      *
-     * @param string     $uriScheme
-     * @param RouteMatch $match     didn't typed hinted in code in favor of zf-mvc ^2.5 RouteMatch compat
-     * @param Response   $response
+     * @param string   $uriScheme
+     * @param mixed    $match     didn't typed hinted in code in favor of zf-mvc ^2.5 RouteMatch compat
+     * @param Response $response
      */
     private function setHttpStrictTransportSecurity($uriScheme, $match, Response $response)
     {
