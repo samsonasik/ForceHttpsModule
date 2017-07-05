@@ -29,7 +29,7 @@ trait HttpsTrait
     private function isGoingToBeForcedToHttps($match)
     {
         if (! $this->config['force_all_routes'] &&
-            ! in_array(
+            ! \in_array(
                 $match->getMatchedRouteName(),
                 $this->config['force_specific_routes']
             )
@@ -70,12 +70,12 @@ trait HttpsTrait
             ! $this->config['add_www_prefix'] ||
             (
                 $this->config['add_www_prefix'] === true &&
-                substr($httpsRequestUri, 8, 4) === 'www.'
+                \substr($httpsRequestUri, 8, 4) === 'www.'
             )
         ) {
             return $httpsRequestUri;
         }
 
-        return substr_replace($httpsRequestUri, 'www.', 8, 0);
+        return \substr_replace($httpsRequestUri, 'www.', 8, 0);
     }
 }
