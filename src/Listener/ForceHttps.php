@@ -49,24 +49,26 @@ class ForceHttps extends AbstractListenerAggregate
     private function setHttpStrictTransportSecurity($uriScheme, $match, Response $response)
     {
         if (
-            $this->isSchemeHttps($uriScheme) &&
-            $this->isGoingToBeForcedToHttps($match) &&
-            isset(
+            ! $this->isSchemeHttps($uriScheme) ||
+            ! $this->isGoingToBeForcedToHttps($match) ||
+            ! isset(
                 $this->config['strict_transport_security']['enable'],
                 $this->config['strict_transport_security']['value']
             )
         ) {
-            if ($this->config['strict_transport_security']['enable'] === true) {
-                $response->getHeaders()
-                         ->addHeaderLine('Strict-Transport-Security: ' . $this->config['strict_transport_security']['value']);
-                return;
-            }
-
-            // set max-age = 0 to strictly expire it,
-            $response->getHeaders()
-                     ->addHeaderLine('Strict-Transport-Security: max-age=0');
             return;
         }
+
+        if ($this->config['strict_transport_security']['enable'] === true) {
+            $response->getHeaders()
+                        ->addHeaderLine('Strict-Transport-Security: ' . $this->config['strict_transport_security']['value']);
+            return;
+        }
+
+        // set max-age = 0 to strictly expire it,
+        $response->getHeaders()
+                    ->addHeaderLine('Strict-Transport-Security: max-age=0');
+        return;
     }
 
     /**
