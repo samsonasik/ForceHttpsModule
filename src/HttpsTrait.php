@@ -2,8 +2,10 @@
 
 namespace ForceHttpsModule;
 
+use Psr\Http\Message\ResponseInterface;
 use Zend\Router\RouteMatch;
 use Zend\Expressive\Router\RouteResult;
+use Zend\Http\PhpEnvironment\Response;
 
 trait HttpsTrait
 {
@@ -38,6 +40,25 @@ trait HttpsTrait
         }
 
         return true;
+    }
+
+    /**
+     * Check if Setup Strict-Transport-Security need to be skipped.
+     *
+     * @param string                     $uriScheme
+     * @param RouteMatch|RouteResult     $match
+     * @param Response|ResponseInterface $response
+     *
+     * @return bool
+     */
+    private function isSkippedHttpStrictTransportSecurity($uriScheme, $match, $response)
+    {
+        return ! $this->isSchemeHttps($uriScheme) ||
+            ! $this->isGoingToBeForcedToHttps($match) ||
+            ! isset(
+                $this->config['strict_transport_security']['enable'],
+                $this->config['strict_transport_security']['value']
+            );
     }
 
     /**
