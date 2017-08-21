@@ -45,6 +45,7 @@ class ForceHttps extends AbstractListenerAggregate
      * @param string   $uriScheme
      * @param mixed    $match     didn't typed hinted in code in favor of zf-mvc ^2.5 RouteMatch compat
      * @param Response $response
+     * @return Response
      */
     private function setHttpStrictTransportSecurity($uriScheme, $match, Response $response)
     {
@@ -56,19 +57,19 @@ class ForceHttps extends AbstractListenerAggregate
                 $this->config['strict_transport_security']['value']
             )
         ) {
-            return;
+            return $response;
         }
 
         if ($this->config['strict_transport_security']['enable'] === true) {
             $response->getHeaders()
                      ->addHeaderLine('Strict-Transport-Security: ' . $this->config['strict_transport_security']['value']);
-            return;
+            return $response;
         }
 
         // set max-age = 0 to strictly expire it,
         $response->getHeaders()
                  ->addHeaderLine('Strict-Transport-Security: max-age=0');
-        return;
+        return $response;
     }
 
     /**
@@ -92,13 +93,11 @@ class ForceHttps extends AbstractListenerAggregate
         $uriScheme = $uri->getScheme();
 
         $routeMatch = $e->getRouteMatch();
-        $this->setHttpStrictTransportSecurity($uriScheme, $routeMatch, $response);
+        $response   = $this->setHttpStrictTransportSecurity($uriScheme, $routeMatch, $response);
         if (! $this->validateSchemeAndToBeForcedHttpsConfig($uriScheme, $routeMatch)) {
             return;
         }
 
-        /** @var $response \Zend\Http\PhpEnvironment\Response */
-        $response        = $e->getResponse();
         $httpsRequestUri = $this->withWwwPrefixWhenRequired($uri->setScheme('https')->toString());
 
         // 307 keeps headers, request method, and request body
