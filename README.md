@@ -73,10 +73,12 @@ return [
         ],
         // set HTTP Strict Transport Security Header
         'strict_transport_security' => [
-            'enable' => true, // set to false to disable it
+            // set to false to disable it
+            'enable' => true,
             'value'  => 'max-age=31536000',
         ],
-        'add_www_prefix'        => false, // set to true to add "www." prefix during redirection
+        // set to true to add "www." prefix during redirection from http or already https
+        'add_www_prefix'        => false,
     ],
     // ...
 ];
