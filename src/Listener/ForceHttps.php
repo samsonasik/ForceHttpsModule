@@ -99,7 +99,9 @@ class ForceHttps extends AbstractListenerAggregate
             }
         }
 
-        $httpsRequestUri = $this->withWwwPrefixWhenRequired($uri->setScheme('https')->toString());
+        if (! isset($httpsRequestUri)) {
+            $httpsRequestUri = $this->withWwwPrefixWhenRequired($uri->setScheme('https')->toString());
+        }
 
         // 307 keeps headers, request method, and request body
         // \Zend\Http\PhpEnvironment\Response doesn't support 308 yet

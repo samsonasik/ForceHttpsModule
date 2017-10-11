@@ -74,8 +74,10 @@ class ForceHttps
             }
         }
 
-        $newUri          = $uri->withScheme('https');
-        $httpsRequestUri = $this->withWwwPrefixWhenRequired($newUri->__toString());
+        if (! isset($httpsRequestUri)) {
+            $newUri          = $uri->withScheme('https');
+            $httpsRequestUri = $this->withWwwPrefixWhenRequired($newUri->__toString());
+        }
 
         // 308 keeps headers, request method, and request body
         // \Zend\Diactoros\Response already support 308
