@@ -62,8 +62,16 @@ class ForceHttps
         $uriScheme = $uri->getScheme();
 
         $response = $this->setHttpStrictTransportSecurity($uriScheme, $match, $response);
-        if (! $this->validateSchemeAndToBeForcedHttpsConfig($uriScheme, $match)) {
+        if (! $this->isGoingToBeForcedToHttps($match)) {
             return $next($request, $response);
+        }
+
+        if ($this->isSchemeHttps($uriScheme)) {
+            $uriString = $uri->__toString();
+            $httpsRequestUri = $this->withWwwPrefixWhenRequired($uriString);
+            if ($uriString === $httpsRequestUri) {
+                return $next($request, $response);
+            }
         }
 
         $newUri          = $uri->withScheme('https');

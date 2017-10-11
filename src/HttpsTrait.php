@@ -62,23 +62,6 @@ trait HttpsTrait
     }
 
     /**
-     * Validate Scheme and Forced Https Config
-     *
-     * @param  string                 $uriScheme
-     * @param  RouteMatch|RouteResult $match
-     *
-     * @return bool
-     */
-    private function validateSchemeAndToBeForcedHttpsConfig($uriScheme, $match)
-    {
-        if ($this->isSchemeHttps($uriScheme) || ! $this->isGoingToBeForcedToHttps($match)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Add www. prefix when required in the config
      *
      * @param  string $httpsRequestUri

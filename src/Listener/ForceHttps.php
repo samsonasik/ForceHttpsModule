@@ -87,8 +87,16 @@ class ForceHttps extends AbstractListenerAggregate
 
         $routeMatch = $e->getRouteMatch();
         $response   = $this->setHttpStrictTransportSecurity($uriScheme, $routeMatch, $response);
-        if (! $this->validateSchemeAndToBeForcedHttpsConfig($uriScheme, $routeMatch)) {
+        if (! $this->isGoingToBeForcedToHttps($routeMatch)) {
             return;
+        }
+
+        if ($this->isSchemeHttps($uriScheme)) {
+            $uriString       = $uri->toString();
+            $httpsRequestUri = $this->withWwwPrefixWhenRequired($uriString);
+            if ($uriString === $httpsRequestUri) {
+                return;
+            }
         }
 
         $httpsRequestUri = $this->withWwwPrefixWhenRequired($uri->setScheme('https')->toString());
