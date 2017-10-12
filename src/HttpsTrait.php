@@ -82,4 +82,24 @@ trait HttpsTrait
 
         return \substr_replace($httpsRequestUri, 'www.', 8, 0);
     }
+
+    private function withoutWwwPrefixWhenNotRequired($httpsRequestUri)
+    {
+        if (isset($this->config['add_www_prefix']) && $this->config['add_www_prefix'] === true) {
+            return $httpsRequestUri;
+        }
+
+        if (
+            ! isset($this->config['remove_www_prefix']) ||
+            ! $this->config['remove_www_prefix'] ||
+            (
+                $this->config['remove_www_prefix'] === true &&
+                \substr($httpsRequestUri, 8, 4) !== 'www.'
+            )
+        ) {
+            return $httpsRequestUri;
+        }
+
+        return \substr_replace($httpsRequestUri, '', 8, 4);
+    }
 }

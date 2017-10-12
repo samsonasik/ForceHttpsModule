@@ -242,6 +242,37 @@ describe('ForceHttps', function () {
 
             });
 
+            it('redirect with www prefix for already has www prefix with configurable "remove_www_prefix" on force_all_routes', function () {
+
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'force_specific_routes' => [],
+                    'strict_transport_security' => [
+                        'enable' => true,
+                        'value' => 'max-age=31536000',
+                    ],
+                    'add_www_prefix' => false,
+                    'remove_www_prefix' => true,
+                ]);
+
+                allow($this->uri)->toReceive('toString')->andReturn('http://www.example.com/about');
+                allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
+                allow($this->request)->toReceive('getUri')->andReturn($this->uri);
+                allow($this->uri)->toReceive('getScheme')->andReturn('http');
+                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
+                allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
+                allow($this->uri)->toReceive('toString')->andReturn('https://www.example.com/about');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
+                allow($this->response)->toReceive('send');
+
+                $listener->forceHttpsScheme($this->mvcEvent);
+
+                expect($this->mvcEvent)->toReceive('getResponse');
+
+            });
+
             it('not redirect with set strict_transport_security exists and uri already has https scheme', function () {
 
                 $listener = new ForceHttps([

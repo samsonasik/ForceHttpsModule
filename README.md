@@ -21,6 +21,7 @@ Features
 - [x] Keep headers, request method, and request body.
 - [x] Enable/disable HTTP Strict Transport Security Header and set its value.
 - [x] Allow add `www.` prefix during redirection from http or already https.
+- [x] Allow remove `www.` prefix during redirection from http or already https.
 
 Installation
 ------------
@@ -79,6 +80,9 @@ return [
         ],
         // set to true to add "www." prefix during redirection from http or already https
         'add_www_prefix'        => false,
+        // remove existing "www." prefix during redirection from http or already https
+        // only works if previous's config 'add_www_prefix' => false
+        'remove_www_prefix'     => false,
     ],
     // ...
 ];

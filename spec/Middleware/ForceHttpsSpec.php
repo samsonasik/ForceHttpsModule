@@ -248,6 +248,43 @@ describe('ForceHttps', function () {
 
         });
 
+        it('return Response with 308 status with remove www prefix on http and match with configurable "remove_www_prefix"', function () {
+
+            Console::overrideIsConsole(false);
+            if (method_exists(RouteResult::class, 'fromRoute')) {
+                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+            } else {
+                $match = RouteResult::fromRouteMatch('about', 'about', []);
+            }
+
+            allow($this->request)->toReceive('getUri', '__toString')->andReturn('http://www.example.com/about');
+            allow($this->router)->toReceive('match')->andReturn($match);
+            allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
+            allow($this->request)->toReceive('getUri', 'withScheme', '__toString')->andReturn('https://example.com/about');
+
+            allow($this->response)->toReceive('withStatus')->andReturn($this->response);
+
+            $listener = new ForceHttps(
+                [
+                    'enable' => true,
+                    'force_all_routes' => true,
+                    'strict_transport_security' => [
+                        'enable' => true,
+                        'value'  => 'max-age=31536000',
+                    ],
+                    'add_www_prefix' => false,
+                    'remove_www_prefix' => true,
+                ],
+                $this->router
+            );
+
+            $listener->__invoke($this->request, $this->response, function () {});
+
+            expect($this->response)->toReceive('withStatus')->with(308);
+            expect($this->response)->toReceive('withHeader')->with('Location', 'https://example.com/about');
+
+        });
+
     });
 
 });
