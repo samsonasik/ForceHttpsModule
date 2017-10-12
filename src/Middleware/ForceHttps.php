@@ -69,6 +69,8 @@ class ForceHttps
         if ($this->isSchemeHttps($uriScheme)) {
             $uriString = $uri->__toString();
             $httpsRequestUri = $this->withWwwPrefixWhenRequired($uriString);
+            $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
+
             if ($uriString === $httpsRequestUri) {
                 return $next($request, $response);
             }
@@ -77,6 +79,7 @@ class ForceHttps
         if (! isset($httpsRequestUri)) {
             $newUri          = $uri->withScheme('https');
             $httpsRequestUri = $this->withWwwPrefixWhenRequired($newUri->__toString());
+            $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
         }
 
         // 308 keeps headers, request method, and request body
