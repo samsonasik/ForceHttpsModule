@@ -15,7 +15,6 @@
     ],
     "require":{
         "php": "^5.6 || ^7.0",
-        "http-interop/http-middleware": "^0.4.1",
         "zendframework/zend-console": "^2.5"
     },
     "require-dev": {
