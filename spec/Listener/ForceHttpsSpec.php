@@ -242,7 +242,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('redirect with www prefix for already has www prefix with configurable "remove_www_prefix" on force_all_routes', function () {
+            it('redirect without www prefix for already has www prefix with configurable "remove_www_prefix" on force_all_routes', function () {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -264,6 +264,9 @@ describe('ForceHttps', function () {
                 allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
                 allow($this->uri)->toReceive('toString')->andReturn('https://www.example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')
+                                      ->with('Location', 'https://example.com/about')
+                                      ->andReturn($this->response);
                 allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
                 allow($this->response)->toReceive('send');
 
