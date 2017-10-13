@@ -106,9 +106,8 @@ class ForceHttps extends AbstractListenerAggregate
             $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
         }
 
-        // 307 keeps headers, request method, and request body
-        // \Zend\Http\PhpEnvironment\Response doesn't support 308 yet
-        $response->setStatusCode(307);
+        // 308 keeps headers, request method, and request body
+        $response->setStatusCode(308);
         $response->getHeaders()
                  ->addHeaderLine('Location', $httpsRequestUri);
         $response->send();

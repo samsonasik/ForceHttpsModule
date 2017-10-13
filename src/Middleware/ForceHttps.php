@@ -83,7 +83,6 @@ class ForceHttps
         }
 
         // 308 keeps headers, request method, and request body
-        // \Zend\Diactoros\Response already support 308
         $response = $response->withStatus(308);
         $response = $response->withHeader('Location', $httpsRequestUri);
 
