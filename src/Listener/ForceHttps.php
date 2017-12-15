@@ -76,13 +76,13 @@ class ForceHttps extends AbstractListenerAggregate
            return;
         }
 
-        /** @var $request \Zend\Http\PhpEnvironment\Request */
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request   = $e->getRequest();
-        /** @var $response \Zend\Http\PhpEnvironment\Response */
+        /** @var \Zend\Http\PhpEnvironment\Response $response */
         $response  = $e->getResponse();
 
         $uri       = $request->getUri();
-        /** @var $uriScheme string */
+        /** @var string  $uriScheme*/
         $uriScheme = $uri->getScheme();
 
         $routeMatch = $e->getRouteMatch();
