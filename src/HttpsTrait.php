@@ -3,9 +3,9 @@
 namespace ForceHttpsModule;
 
 use Psr\Http\Message\ResponseInterface;
-use Zend\Router\RouteMatch;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Http\PhpEnvironment\Response;
+use Zend\Router\RouteMatch;
 
 trait HttpsTrait
 {

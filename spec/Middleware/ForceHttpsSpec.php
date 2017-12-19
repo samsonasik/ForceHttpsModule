@@ -4,14 +4,14 @@ namespace ForceHttpsModuleSpec\Middleware;
 
 use ForceHttpsModule\Middleware\ForceHttps;
 use Kahlan\Plugin\Double;
-use Zend\Console\Console;
-use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
+use Zend\Console\Console;
 use Zend\Diactoros\Uri;
 use Zend\Expressive\Router\Route;
-use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Router\RouteResult;
+use Zend\Expressive\Router\RouterInterface;
 
 describe('ForceHttps', function () {
 
