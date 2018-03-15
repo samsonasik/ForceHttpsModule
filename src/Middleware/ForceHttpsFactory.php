@@ -9,7 +9,7 @@ use Zend\Expressive\Router\RouterInterface;
 
 class ForceHttpsFactory
 {
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ForceHttps
     {
         $config = $container->get('config');
         $router = $container->get(RouterInterface::class);
