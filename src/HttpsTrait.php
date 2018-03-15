@@ -54,9 +54,8 @@ trait HttpsTrait
 
     /**
      * Add www. prefix when use add_www_prefix = true
-     * @return \Zend\Uri\Uri|\Psr\Http\Message\UriInterface|string
      */
-    private function withWwwPrefixWhenRequired($httpsRequestUri)
+    private function withWwwPrefixWhenRequired(string $httpsRequestUri) : string
     {
         if (
             ! isset($this->config['add_www_prefix']) ||
@@ -74,9 +73,9 @@ trait HttpsTrait
 
     /**
      * Remove www. prefix when use remove_www_prefix = true
-     * @return \Zend\Uri\Uri|\Psr\Http\Message\UriInterface|string
+     * It only works if previous's config 'add_www_prefix' => false
      */
-    private function withoutWwwPrefixWhenNotRequired($httpsRequestUri)
+    private function withoutWwwPrefixWhenNotRequired(string $httpsRequestUri) : string
     {
         if (isset($this->config['add_www_prefix']) && $this->config['add_www_prefix'] === true) {
             return $httpsRequestUri;

@@ -95,6 +95,7 @@ describe('ForceHttps', function () {
                 allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('about');
 
                 allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
+                allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'toString')->andReturn('https://www.example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
                 expect($this->mvcEvent)->toReceive('getResponse');
 
@@ -302,6 +303,7 @@ describe('ForceHttps', function () {
                 allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
                 allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('about');
                 allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
+                allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'toString')->andReturn('https://www.example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
 
