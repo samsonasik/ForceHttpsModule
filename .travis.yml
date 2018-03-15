@@ -19,7 +19,6 @@ before_script:
   - mkdir -p build/logs
   - composer self-update
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable --no-interaction ; fi
-  - if [[ $DEPS == 'latest' ]]; then travis_retry composer require http-interop/http-middleware:^0.4.1 --prefer-source --no-interaction ; fi
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer install --prefer-source --no-interaction ; fi
   - composer global require --dev phpstan/phpstan
   - composer dump-autoload -o
