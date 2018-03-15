@@ -54,7 +54,7 @@ trait HttpsTrait
 
     /**
      * Add www. prefix when use add_www_prefix = true
-     * @return \Zend\Uri\Uri|\Zend\Diactoros\Uri
+     * @return \Zend\Uri\Uri|\Psr\Http\Message\UriInterface|string
      */
     private function withWwwPrefixWhenRequired($httpsRequestUri)
     {
@@ -74,7 +74,7 @@ trait HttpsTrait
 
     /**
      * Remove www. prefix when use remove_www_prefix = true
-     * @return \Zend\Uri\Uri|\Zend\Diactoros\Uri
+     * @return \Zend\Uri\Uri|\Psr\Http\Message\UriInterface|string
      */
     private function withoutWwwPrefixWhenNotRequired($httpsRequestUri)
     {
