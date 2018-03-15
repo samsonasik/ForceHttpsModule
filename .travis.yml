@@ -26,7 +26,7 @@ before_script:
 script:
   - ~/.composer/vendor/bin/phpstan analyse src/ --level=max
   - bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml
-  - bin/php-coveralls -v --exclude-no-stmt
+  - if [[ $DEPS == 'latest' ]]; bin/php-coveralls -v --exclude-no-stmt ; fi
 
 notifications:
     email: false
