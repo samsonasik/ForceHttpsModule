@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ForceHttpsModule\Middleware;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Zend\Expressive\Router\RouterInterface;
 
 class ForceHttpsFactory

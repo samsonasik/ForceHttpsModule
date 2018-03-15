@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ForceHttpsModule\Middleware;
 
 use ForceHttpsModule\HttpsTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Console\Console;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
 
-class ForceHttps
+class ForceHttps implements MiddlewareInterface
 {
     use HttpsTrait;
 
@@ -36,7 +40,7 @@ class ForceHttps
      * @param RouteResult       $match
      * @param ResponseInterface $response
      */
-    private function setHttpStrictTransportSecurity($uriScheme, RouteResult $match, ResponseInterface $response)
+    private function setHttpStrictTransportSecurity($uriScheme, RouteResult $match, ResponseInterface $response) : ResponseInterface
     {
         if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match, $response)) {
             return $response;
@@ -51,19 +55,23 @@ class ForceHttps
         return $response;
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
-        $match = $this->router->match($request);
-        if (Console::isConsole() || ! $this->config['enable'] || $match->isFailure()) {
-            return $next($request, $response);
+        if (Console::isConsole() || ! $this->config['enable']) {
+            return $handler->handle($request);
+        }
+
+        $match    = $this->router->match($request);
+        if ($match->isFailure()) {
+            return $handler->handle($request);
         }
 
         $uri       = $request->getUri();
         $uriScheme = $uri->getScheme();
 
-        $response = $this->setHttpStrictTransportSecurity($uriScheme, $match, $response);
+        $response = $this->setHttpStrictTransportSecurity($uriScheme, $match, $handler->handle($request));
         if (! $this->isGoingToBeForcedToHttps($match)) {
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
         if ($this->isSchemeHttps($uriScheme)) {
@@ -72,7 +80,7 @@ class ForceHttps
             $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
 
             if ($uriString === $httpsRequestUri) {
-                return $next($request, $response);
+                return $handler->handle($request);
             }
         }
 
