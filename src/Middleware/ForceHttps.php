@@ -46,19 +46,20 @@ class ForceHttps implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
+        $response = $handler->handle($request);
         if (Console::isConsole() || ! $this->config['enable']) {
-            return $handler->handle($request);
+            return $response;
         }
 
         $match    = $this->router->match($request);
         if ($match->isFailure()) {
-            return $handler->handle($request);
+            return $response;
         }
 
         $uri       = $request->getUri();
         $uriScheme = $uri->getScheme();
 
-        $response = $this->setHttpStrictTransportSecurity($uriScheme, $match, $handler->handle($request));
+        $response = $this->setHttpStrictTransportSecurity($uriScheme, $match, $response);
         if (! $this->isGoingToBeForcedToHttps($match)) {
             return $response;
         }
