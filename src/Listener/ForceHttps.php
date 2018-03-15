@@ -71,6 +71,7 @@ class ForceHttps extends AbstractListenerAggregate
         /** @var string  $uriScheme*/
         $uriScheme = $uri->getScheme();
 
+        /** @var RouteMatch $routeMatch */
         $routeMatch = $e->getRouteMatch();
         $response   = $this->setHttpStrictTransportSecurity($uriScheme, $routeMatch, $response);
         if (! $this->isGoingToBeForcedToHttps($routeMatch)) {

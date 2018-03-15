@@ -23,23 +23,12 @@ class ForceHttps implements MiddlewareInterface
     /** @var RouterInterface */
     private $router;
 
-    /**
-     * @param  array           $config
-     * @param  RouterInterface $router
-     */
     public function __construct(array $config, RouterInterface $router)
     {
         $this->config = $config;
         $this->router = $router;
     }
 
-    /**
-     * Set The HTTP Strict Transport Security.
-     *
-     * @param string            $uriScheme
-     * @param RouteResult       $match
-     * @param ResponseInterface $response
-     */
     private function setHttpStrictTransportSecurity($uriScheme, RouteResult $match, ResponseInterface $response) : ResponseInterface
     {
         if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match, $response)) {
