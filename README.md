@@ -10,7 +10,7 @@ ForceHttpsModule
 Introduction
 ------------
 
-ForceHttpsModule is a configurable module for force https in your [ZF2/ZF3 Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) and [ZF Expressive](https://zendframework.github.io/zend-expressive/) Application.
+ForceHttpsModule is a configurable module for force https in your [ZF Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) and [ZF Expressive](https://zendframework.github.io/zend-expressive/) Application.
 
 > This is README for version ^2.0 which only support ZF3 and ZF Expressive version 3 with php ^7.1.
 
