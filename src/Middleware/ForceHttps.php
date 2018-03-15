@@ -60,16 +60,16 @@ class ForceHttps implements MiddlewareInterface
 
         $response = $this->setHttpStrictTransportSecurity($uriScheme, $match, $handler->handle($request));
         if (! $this->isGoingToBeForcedToHttps($match)) {
-            return $handler->handle($request);
+            return $response;
         }
 
         if ($this->isSchemeHttps($uriScheme)) {
-            $uriString = $uri->__toString();
+            $uriString       = $uri->__toString();
             $httpsRequestUri = $this->withWwwPrefixWhenRequired($uriString);
             $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
 
             if ($uriString === $httpsRequestUri) {
-                return $handler->handle($request);
+                return $response;
             }
         }
 
