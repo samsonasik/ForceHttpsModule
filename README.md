@@ -12,6 +12,10 @@ Introduction
 
 ForceHttpsModule is a configurable module for force https in your [ZF2/ZF3 Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) and [ZF Expressive](https://zendframework.github.io/zend-expressive/) Application.
 
+> This is README for version ^2.0 which only support ZF3 and ZF Expressive version 3 with php ^7.1.
+
+> For version 1, you can read at [version 1 readme](https://github.com/samsonasik/ForceHttpsModule/tree/1.x.x) which still support ZF2 and ZF Expressive version 1 and 2 with php ^5.6|^7.0 support.
+
 Features
 --------
 
@@ -102,9 +106,7 @@ return [
 
 ***b. For ZF Expressive application***
 
-For [zend-expressive-skeleton](https://github.com/zendframework/zend-expressive-skeleton) ^1.0, It's should already just works!
-
-For [zend-expressive-skeleton](https://github.com/zendframework/zend-expressive-skeleton) ^2.0, you need to open `config/pipeline.php` and add:
+For [zend-expressive-skeleton](https://github.com/zendframework/zend-expressive-skeleton) ^3.0, you need to open `config/pipeline.php` and add:
 
 ```php
 $app->pipe(ForceHttpsModule\Middleware\ForceHttps::class);
