@@ -38,7 +38,7 @@ composer require samsonasik/force-https-module
 
 **2. Copy config**
 
-***a. For [ZF2/ZF3 Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) application, copy `force-https-module.local.php.dist` config to your local's autoload and configure it***
+***a. For [ZF3 Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) application, copy `force-https-module.local.php.dist` config to your local's autoload and configure it***
 
 | source                                                                       | destination                                 |
 |------------------------------------------------------------------------------|---------------------------------------------|
