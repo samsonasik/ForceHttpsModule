@@ -44,7 +44,5 @@
         "zf": {
             "module": "ForceHttpsModule"
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
