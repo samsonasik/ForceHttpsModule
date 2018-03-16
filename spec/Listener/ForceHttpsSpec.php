@@ -9,6 +9,7 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\MvcEvent;
+use Zend\Router\RouteMatch;
 use Zend\Uri\Uri;
 
 describe('ForceHttps', function () {
@@ -56,10 +57,11 @@ describe('ForceHttps', function () {
     describe('->forceHttpsScheme()', function () {
 
         beforeEach(function () {
-            $this->mvcEvent = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
-            $this->response = Double::instance(['extends' => Response::class]);
-            $this->request  = Double::instance(['extends' => Request::class]);
-            $this->uri      = Double::instance(['extends' => Uri::class]);
+            $this->mvcEvent   = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
+            $this->response   = Double::instance(['extends' => Response::class]);
+            $this->request    = Double::instance(['extends' => Request::class]);
+            $this->uri        = Double::instance(['extends' => Uri::class]);
+            $this->routeMatch = Double::instance(['extends' => RouteMatch::class, 'methods' => '__construct']);
         });
 
         context('not enabled', function () {
@@ -89,7 +91,11 @@ describe('ForceHttps', function () {
                     'force_specific_routes' => [],
                 ]);
 
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('about');
+
                 allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
+                allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'toString')->andReturn('https://www.example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
                 expect($this->mvcEvent)->toReceive('getResponse');
 
@@ -113,7 +119,8 @@ describe('ForceHttps', function () {
                 ]);
 
                 allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('http');
-                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=0');
 
@@ -136,7 +143,8 @@ describe('ForceHttps', function () {
                 allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
                 allow($this->request)->toReceive('getUri')->andReturn($this->uri);
                 allow($this->uri)->toReceive('getScheme')->andReturn('http');
-                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('checkout');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('checkout');
                 allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
                 allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
@@ -166,7 +174,8 @@ describe('ForceHttps', function () {
                 allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
                 allow($this->request)->toReceive('getUri')->andReturn($this->uri);
                 allow($this->uri)->toReceive('getScheme')->andReturn('http');
-                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('about');
                 allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
                 allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
@@ -196,7 +205,8 @@ describe('ForceHttps', function () {
                 allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
                 allow($this->request)->toReceive('getUri')->andReturn($this->uri);
                 allow($this->uri)->toReceive('getScheme')->andReturn('http');
-                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('about');
                 allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
                 allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
@@ -227,7 +237,8 @@ describe('ForceHttps', function () {
                 allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
                 allow($this->request)->toReceive('getUri')->andReturn($this->uri);
                 allow($this->uri)->toReceive('getScheme')->andReturn('http');
-                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('about');
                 allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
                 allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
@@ -260,7 +271,8 @@ describe('ForceHttps', function () {
                 allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
                 allow($this->request)->toReceive('getUri')->andReturn($this->uri);
                 allow($this->uri)->toReceive('getScheme')->andReturn('http');
-                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('about');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('about');
                 allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
                 allow($this->uri)->toReceive('toString')->andReturn('https://www.example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
@@ -288,7 +300,10 @@ describe('ForceHttps', function () {
                     ],
                 ]);
 
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('about');
                 allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
+                allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'toString')->andReturn('https://www.example.com/about');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
 
@@ -316,7 +331,8 @@ describe('ForceHttps', function () {
                 allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
                 allow($this->request)->toReceive('getUri')->andReturn($this->uri);
                 allow($this->uri)->toReceive('getScheme')->andReturn('https');
-                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('login');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('login');
                 allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
                 allow($this->uri)->toReceive('toString')->andReturn('https://example.com/login');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
@@ -348,7 +364,8 @@ describe('ForceHttps', function () {
                 allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
                 allow($this->request)->toReceive('getUri')->andReturn($this->uri);
                 allow($this->uri)->toReceive('getScheme')->andReturn('https');
-                allow($this->mvcEvent)->toReceive('getRouteMatch', 'getMatchedRouteName')->andReturn('login');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('login');
                 allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
                 allow($this->uri)->toReceive('toString')->andReturn('https://example.com/login');
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);

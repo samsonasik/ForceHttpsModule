@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ForceHttpsModule;
 
 use Psr\Http\Message\ResponseInterface;
@@ -9,14 +11,7 @@ use Zend\Router\RouteMatch;
 
 trait HttpsTrait
 {
-    /**
-     * Is Scheme https ?
-     *
-     * @param string $uriScheme
-     *
-     * @return bool
-     */
-    private function isSchemeHttps($uriScheme)
+    private function isSchemeHttps(string $uriScheme) : bool
     {
         return $uriScheme === 'https';
     }
@@ -25,10 +20,8 @@ trait HttpsTrait
      * Check Config if is going to be forced to https.
      *
      * @param  RouteMatch|RouteResult $match
-     *
-     * @return bool
      */
-    private function isGoingToBeForcedToHttps($match)
+    private function isGoingToBeForcedToHttps($match) : bool
     {
         if (! $this->config['force_all_routes'] &&
             ! \in_array(
@@ -45,13 +38,11 @@ trait HttpsTrait
     /**
      * Check if Setup Strict-Transport-Security need to be skipped.
      *
-     * @param string                     $uriScheme
      * @param RouteMatch|RouteResult     $match
      * @param Response|ResponseInterface $response
      *
-     * @return bool
      */
-    private function isSkippedHttpStrictTransportSecurity($uriScheme, $match, $response)
+    private function isSkippedHttpStrictTransportSecurity(string $uriScheme, $match, $response) : bool
     {
         return ! $this->isSchemeHttps($uriScheme) ||
             ! $this->isGoingToBeForcedToHttps($match) ||
@@ -62,12 +53,9 @@ trait HttpsTrait
     }
 
     /**
-     * Add www. prefix when required in the config
-     *
-     * @param  string $httpsRequestUri
-     * @return string
+     * Add www. prefix when use add_www_prefix = true
      */
-    private function withWwwPrefixWhenRequired($httpsRequestUri)
+    private function withWwwPrefixWhenRequired(string $httpsRequestUri) : string
     {
         if (
             ! isset($this->config['add_www_prefix']) ||
@@ -83,7 +71,11 @@ trait HttpsTrait
         return \substr_replace($httpsRequestUri, 'www.', 8, 0);
     }
 
-    private function withoutWwwPrefixWhenNotRequired($httpsRequestUri)
+    /**
+     * Remove www. prefix when use remove_www_prefix = true
+     * It only works if previous's config 'add_www_prefix' => false
+     */
+    private function withoutWwwPrefixWhenNotRequired(string $httpsRequestUri) : string
     {
         if (isset($this->config['add_www_prefix']) && $this->config['add_www_prefix'] === true) {
             return $httpsRequestUri;

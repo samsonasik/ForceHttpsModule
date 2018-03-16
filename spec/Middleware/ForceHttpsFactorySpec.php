@@ -4,8 +4,8 @@ namespace ForceHttpsModuleSpec\Middleware;
 
 use ForceHttpsModule\Middleware\ForceHttps;
 use ForceHttpsModule\Middleware\ForceHttpsFactory;
-use Interop\Container\ContainerInterface;
 use Kahlan\Plugin\Double;
+use Psr\Container\ContainerInterface;
 use Zend\Expressive\Router\RouterInterface;
 
 describe('ForceHttpsFactory', function () {

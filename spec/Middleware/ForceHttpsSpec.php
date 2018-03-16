@@ -7,8 +7,9 @@ use Kahlan\Plugin\Double;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Console\Console;
-use Zend\Diactoros\Uri;
 use Zend\Expressive\Router\Route;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
@@ -38,7 +39,10 @@ describe('ForceHttps', function () {
             Console::overrideIsConsole(true);
             $listener = new ForceHttps([], $this->router);
 
-            $listener->__invoke($this->request, $this->response, function () {});
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+
+            $listener->process($this->request, $handler);
 
             expect($this->response)->not->toReceive('withStatus');
         });
@@ -48,7 +52,10 @@ describe('ForceHttps', function () {
             Console::overrideIsConsole(false);
             $listener = new ForceHttps(['enable' => false], $this->router);
 
-            $listener->__invoke($this->request, $this->response, function () {});
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+
+            $listener->process($this->request, $handler);
 
             expect($this->response)->not->toReceive('withStatus');
         });
@@ -56,12 +63,15 @@ describe('ForceHttps', function () {
         it('not redirect on router not match', function () {
 
             Console::overrideIsConsole(false);
-            $match = RouteResult::fromRouteFailure();
+            $match = RouteResult::fromRouteFailure(null);
             allow($this->router)->toReceive('match')->andReturn($match);
 
             $listener = new ForceHttps(['enable' => true], $this->router);
 
-            $listener->__invoke($this->request, $this->response, function () {});
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+
+            $listener->process($this->request, $handler);
 
             expect($this->response)->not->toReceive('withStatus');
 
@@ -70,11 +80,7 @@ describe('ForceHttps', function () {
         it('not redirect on https and match but no strict_transport_security config', function () {
 
             Console::overrideIsConsole(false);
-            if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
-            } else {
-                $match = RouteResult::fromRouteMatch('about', 'about', []);
-            }
+            $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
             allow($this->router)->toReceive('match')->andReturn($match);
 
@@ -82,7 +88,10 @@ describe('ForceHttps', function () {
 
             $listener = new ForceHttps(['enable' => true, 'force_all_routes' => true], $this->router);
 
-            $listener->__invoke($this->request, $this->response, function () {});
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+
+            $listener->process($this->request, $handler);
 
             expect($this->response)->not->toReceive('withStatus');
 
@@ -91,11 +100,7 @@ describe('ForceHttps', function () {
         it('not redirect on http and match, with force_all_routes is false and matched route name not in force_specific_routes config', function () {
 
             Console::overrideIsConsole(false);
-            if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
-            } else {
-                $match = RouteResult::fromRouteMatch('about', 'about', []);
-            }
+            $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
             allow($this->router)->toReceive('match')->andReturn($match);
 
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
@@ -113,7 +118,10 @@ describe('ForceHttps', function () {
                 $this->router
             );
 
-            $listener->__invoke($this->request, $this->response, function () {});
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+
+            $listener->process($this->request, $handler);
 
             expect($this->response)->not->toReceive('withStatus');
 
@@ -122,11 +130,8 @@ describe('ForceHttps', function () {
         it('not redirect on https and match, with strict_transport_security config, but disabled', function () {
 
             Console::overrideIsConsole(false);
-            if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
-            } else {
-                $match = RouteResult::fromRouteMatch('about', 'about', []);
-            }
+            $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
+
             allow($this->router)->toReceive('match')->andReturn($match);
 
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('https');
@@ -143,7 +148,11 @@ describe('ForceHttps', function () {
                 $this->router
             );
 
-            $listener->__invoke($this->request, $this->response, function () {});
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+            allow($this->response)->toReceive('withHeader')->with('Strict-Transport-Security', 'max-age=0')->andReturn($this->response);
+
+            $listener->process($this->request, $handler);
 
             expect($this->response)->not->toReceive('withStatus');
 
@@ -152,11 +161,7 @@ describe('ForceHttps', function () {
         it('not redirect on https and match, with strict_transport_security config, and enabled', function () {
 
             Console::overrideIsConsole(false);
-            if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
-            } else {
-                $match = RouteResult::fromRouteMatch('about', 'about', []);
-            }
+            $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('https');
@@ -173,7 +178,11 @@ describe('ForceHttps', function () {
                 $this->router
             );
 
-            $listener->__invoke($this->request, $this->response, function () {});
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+            allow($this->response)->toReceive('withHeader')->with('Strict-Transport-Security', 'max-age=31536000')->andReturn($this->response);
+
+            $listener->process($this->request, $handler);
 
             expect($this->response)->not->toReceive('withStatus');
 
@@ -182,17 +191,16 @@ describe('ForceHttps', function () {
         it('return Response with 308 status on http and match', function () {
 
             Console::overrideIsConsole(false);
-            if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
-            } else {
-                $match = RouteResult::fromRouteMatch('about', 'about', []);
-            }
+            $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
             allow($this->request)->toReceive('getUri', 'withScheme', '__toString')->andReturn('https://example.com/about');
 
-            allow($this->response)->toReceive('withStatus')->andReturn($this->response);
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+            allow($this->response)->toReceive('withStatus')->with(308)->andReturn($this->response);
+            allow($this->response)->toReceive('withHeader')->with('Location', 'https://example.com/about')->andReturn($this->response);
 
             $listener = new ForceHttps(
                 [
@@ -205,8 +213,7 @@ describe('ForceHttps', function () {
                 ],
                 $this->router
             );
-
-            $listener->__invoke($this->request, $this->response, function () {});
+            $listener->process($this->request, $handler);
 
             expect($this->response)->toReceive('withStatus')->with(308);
             expect($this->response)->toReceive('withHeader')->with('Location', 'https://example.com/about');
@@ -216,17 +223,16 @@ describe('ForceHttps', function () {
         it('return Response with 308 status with include www prefix on http and match with configurable "add_www_prefix"', function () {
 
             Console::overrideIsConsole(false);
-            if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
-            } else {
-                $match = RouteResult::fromRouteMatch('about', 'about', []);
-            }
+            $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
             allow($this->router)->toReceive('match')->andReturn($match);
             allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
             allow($this->request)->toReceive('getUri', 'withScheme', '__toString')->andReturn('https://example.com/about');
 
-            allow($this->response)->toReceive('withStatus')->andReturn($this->response);
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+            allow($this->response)->toReceive('withStatus')->with(308)->andReturn($this->response);
+            allow($this->response)->toReceive('withHeader')->with('Location', 'https://www.example.com/about')->andReturn($this->response);
 
             $listener = new ForceHttps(
                 [
@@ -240,8 +246,7 @@ describe('ForceHttps', function () {
                 ],
                 $this->router
             );
-
-            $listener->__invoke($this->request, $this->response, function () {});
+            $listener->process($this->request, $handler);
 
             expect($this->response)->toReceive('withStatus')->with(308);
             expect($this->response)->toReceive('withHeader')->with('Location', 'https://www.example.com/about');
@@ -251,11 +256,7 @@ describe('ForceHttps', function () {
         it('return Response with 308 status with remove www prefix on http and match with configurable "remove_www_prefix"', function () {
 
             Console::overrideIsConsole(false);
-            if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
-            } else {
-                $match = RouteResult::fromRouteMatch('about', 'about', []);
-            }
+            $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
             allow($this->request)->toReceive('getUri', '__toString')->andReturn('http://www.example.com/about');
             allow($this->router)->toReceive('match')->andReturn($match);
@@ -263,6 +264,13 @@ describe('ForceHttps', function () {
             allow($this->request)->toReceive('getUri', 'withScheme', '__toString')->andReturn('https://www.example.com/about');
 
             allow($this->response)->toReceive('withStatus')->andReturn($this->response);
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+
+            $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
+            allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
+            allow($this->response)->toReceive('withStatus')->with(308)->andReturn($this->response);
+            allow($this->response)->toReceive('withHeader')->with('Location', 'https://example.com/about')->andReturn($this->response);
 
             $listener = new ForceHttps(
                 [
@@ -278,7 +286,7 @@ describe('ForceHttps', function () {
                 $this->router
             );
 
-            $listener->__invoke($this->request, $this->response, function () {});
+            $listener->process($this->request, $handler);
 
             expect($this->response)->toReceive('withStatus')->with(308);
             expect($this->response)->toReceive('withHeader')->with('Location', 'https://example.com/about');

@@ -4,8 +4,8 @@ namespace ForceHttpsModuleSpec\Listener;
 
 use ForceHttpsModule\Listener\ForceHttps;
 use ForceHttpsModule\Listener\ForceHttpsFactory;
-use Interop\Container\ContainerInterface;
 use Kahlan\Plugin\Double;
+use Psr\Container\ContainerInterface;
 
 describe('ForceHttpsFactory', function () {
 

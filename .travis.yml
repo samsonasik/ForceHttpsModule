@@ -2,18 +2,6 @@ language: php
 
 matrix:
   include:
-    - php: 5.6
-      env:
-        - DEPS=lowest
-    - php: 5.6
-      env:
-        - DEPS=latest
-    - php: 7.0
-      env:
-        - DEPS=lowest
-    - php: 7.0
-      env:
-        - DEPS=latest
     - php: 7.1
       env:
         - DEPS=lowest
@@ -31,15 +19,14 @@ before_script:
   - mkdir -p build/logs
   - composer self-update
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable --no-interaction ; fi
-  - if [[ $DEPS == 'latest' ]]; then travis_retry composer require http-interop/http-middleware:^0.4.1 --prefer-source --no-interaction ; fi
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer install --prefer-source --no-interaction ; fi
-  - if [[ $TRAVIS_PHP_VERSION = 7.1 ]]; then composer global require --dev phpstan/phpstan; fi
+  - composer global require --dev phpstan/phpstan
   - composer dump-autoload -o
 
 script:
-  - if [[ $TRAVIS_PHP_VERSION = 7.1 ]]; then ~/.composer/vendor/bin/phpstan analyse src/ --level=5; fi
+  - ~/.composer/vendor/bin/phpstan analyse src/ --level=max
   - bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml
-  - if [[ $TRAVIS_PHP_VERSION = 7.1 ]]; then bin/coveralls -v --exclude-no-stmt; fi
+  - if [[ $DEPS == 'latest' ]]; then bin/php-coveralls -v --exclude-no-stmt ; fi
 
 notifications:
     email: false
