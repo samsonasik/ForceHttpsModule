@@ -13,14 +13,8 @@ class ForceHttpsFactory
     {
         $config = $container->get('config');
         $router = $container->get(RouterInterface::class);
+        $forceHttpsConfig = $config['force-https-module'] ?? ['enable' => false];
 
-        if (empty($config['force-https-module'])) {
-            $forceHttpsModuleConfig = [
-                'enable'                => false,
-            ];
-            return new ForceHttps($forceHttpsModuleConfig, $router);
-        }
-
-        return new ForceHttps($config['force-https-module'], $router);
+        return new ForceHttps($forceHttpsConfig, $router);
     }
 }
