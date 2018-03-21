@@ -36,12 +36,10 @@ class ForceHttps implements MiddlewareInterface
         }
 
         if ($this->config['strict_transport_security']['enable'] === true) {
-            $response = $response->withHeader('Strict-Transport-Security', $this->config['strict_transport_security']['value']);
-            return $response;
+            return $response->withHeader('Strict-Transport-Security', $this->config['strict_transport_security']['value']);
         }
 
-        $response = $response->withHeader('Strict-Transport-Security', 'max-age=0');
-        return $response;
+        return $response->withHeader('Strict-Transport-Security', 'max-age=0');
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
@@ -82,8 +80,6 @@ class ForceHttps implements MiddlewareInterface
 
         // 308 keeps headers, request method, and request body
         $response = $response->withStatus(308);
-        $response = $response->withHeader('Location', $httpsRequestUri);
-
-        return $response;
+        return $response->withHeader('Location', $httpsRequestUri);
     }
 }
