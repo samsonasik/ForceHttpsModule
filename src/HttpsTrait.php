@@ -94,4 +94,16 @@ trait HttpsTrait
 
         return \substr_replace($httpsRequestUri, '', 8, 4);
     }
+
+    /**
+     * Get Final Request Uri with configured with or without www prefix
+     *
+     * @param string $httpsRequestUri
+     * @return string
+     */
+    private function getFinalhttpsRequestUri(string $httpsRequestUri) : string
+    {
+        $httpsRequestUri = $this->withWwwPrefixWhenRequired($httpsRequestUri);
+        return $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
+    }
 }

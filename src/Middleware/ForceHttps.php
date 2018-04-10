@@ -64,8 +64,7 @@ class ForceHttps implements MiddlewareInterface
 
         if ($this->isSchemeHttps($uriScheme)) {
             $uriString       = $uri->__toString();
-            $httpsRequestUri = $this->withWwwPrefixWhenRequired($uriString);
-            $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
+            $httpsRequestUri = $this->getFinalhttpsRequestUri($uriString);
 
             if ($uriString === $httpsRequestUri) {
                 return $response;
@@ -73,9 +72,8 @@ class ForceHttps implements MiddlewareInterface
         }
 
         if (! isset($httpsRequestUri)) {
-            $newUri          = $uri->withScheme('https');
-            $httpsRequestUri = $this->withWwwPrefixWhenRequired($newUri->__toString());
-            $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
+            $uriString       = $uri->withScheme('https')->__toString();
+            $httpsRequestUri = $this->getFinalhttpsRequestUri($uriString);
         }
 
         // 308 keeps headers, request method, and request body

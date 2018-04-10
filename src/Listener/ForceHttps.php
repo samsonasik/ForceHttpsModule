@@ -80,8 +80,7 @@ class ForceHttps extends AbstractListenerAggregate
 
         if ($this->isSchemeHttps($uriScheme)) {
             $uriString       = $uri->toString();
-            $httpsRequestUri = $this->withWwwPrefixWhenRequired($uriString);
-            $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
+            $httpsRequestUri = $this->getFinalhttpsRequestUri($uriString);
 
             if ($uriString === $httpsRequestUri) {
                 return;
@@ -89,8 +88,8 @@ class ForceHttps extends AbstractListenerAggregate
         }
 
         if (! isset($httpsRequestUri)) {
-            $httpsRequestUri = $this->withWwwPrefixWhenRequired($uri->setScheme('https')->toString());
-            $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
+            $uriString       = $uri->setScheme('https')->toString();
+            $httpsRequestUri = $this->getFinalhttpsRequestUri($uriString);
         }
 
         // 308 keeps headers, request method, and request body
