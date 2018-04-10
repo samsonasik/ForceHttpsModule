@@ -104,6 +104,8 @@ trait HttpsTrait
     private function getFinalhttpsRequestUri(string $httpsRequestUri) : string
     {
         $httpsRequestUri = $this->withWwwPrefixWhenRequired($httpsRequestUri);
-        return $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
+        $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
+
+        return $httpsRequestUri;
     }
 }
