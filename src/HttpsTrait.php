@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace ForceHttpsModule;
 
 use Psr\Http\Message\ResponseInterface;
+use Zend\Console\Console;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Router\RouteMatch;
 
 trait HttpsTrait
 {
+    private function isConsoleOrNotEnabled() : bool
+    {
+        return Console::isConsole() || ! $this->config['enable'];
+    }
+
     private function isSchemeHttps(string $uriScheme) : bool
     {
         return $uriScheme === 'https';

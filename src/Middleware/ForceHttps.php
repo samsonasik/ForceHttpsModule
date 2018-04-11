@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Console\Console;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
 
@@ -45,7 +44,7 @@ class ForceHttps implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
         $response = $handler->handle($request);
-        if (Console::isConsole() || ! $this->config['enable']) {
+        if ($this->isConsoleOrNotEnabled()) {
             return $response;
         }
 

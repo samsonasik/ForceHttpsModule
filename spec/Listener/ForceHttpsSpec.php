@@ -35,9 +35,22 @@ describe('ForceHttps', function () {
 
         });
 
-        it('attach on route event on non-console and enable', function () {
+        it('not attach when not enabled', function () {
 
-            $eventManager =  Double::instance(['implements' => EventManagerInterface::class]);
+            Console::overrideIsConsole(false);
+            $listener = new ForceHttps([
+                'enable'                => false,
+                'force_all_routes'      => true,
+                'force_specific_routes' => [],
+            ]);
+
+            $listener->attach($this->eventManager);
+
+            expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+
+        });
+
+        it('attach on route event on non-console and enable', function () {
 
             Console::overrideIsConsole(false);
             $listener = new ForceHttps([
@@ -46,9 +59,10 @@ describe('ForceHttps', function () {
                 'force_specific_routes' => [],
             ]);
 
-            $listener->attach($eventManager);
+            allow($this->eventManager)->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+            $listener->attach($this->eventManager);
 
-            expect($eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+            expect($this->eventManager)->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
 
         });
 
@@ -62,23 +76,6 @@ describe('ForceHttps', function () {
             $this->request    = Double::instance(['extends' => Request::class]);
             $this->uri        = Double::instance(['extends' => Uri::class]);
             $this->routeMatch = Double::instance(['extends' => RouteMatch::class, 'methods' => '__construct']);
-        });
-
-        context('not enabled', function () {
-
-            it('returns early', function () {
-
-                $listener = new ForceHttps([
-                    'enable'                => false,
-                    'force_all_routes'      => true,
-                    'force_specific_routes' => [],
-                ]);
-                $actual = $listener->forceHttpsScheme($this->mvcEvent);
-
-                expect($actual)->toBe(null);
-
-            });
-
         });
 
         context('on current scheme is https', function () {

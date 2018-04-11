@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ForceHttpsModule\Listener;
 
 use ForceHttpsModule\HttpsTrait;
-use Zend\Console\Console;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\PhpEnvironment\Response;
@@ -28,7 +27,7 @@ class ForceHttps extends AbstractListenerAggregate
 
     public function attach(EventManagerInterface $events, $priority = 1) : void
     {
-        if (Console::isConsole()) {
+        if ($this->isConsoleOrNotEnabled()) {
             return;
         }
 
@@ -58,10 +57,6 @@ class ForceHttps extends AbstractListenerAggregate
      */
     public function forceHttpsScheme(MvcEvent $e) : void
     {
-        if (! $this->config['enable']) {
-           return;
-        }
-
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request   = $e->getRequest();
         /** @var \Zend\Http\PhpEnvironment\Response $response */
