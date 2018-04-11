@@ -57,14 +57,10 @@ trait HttpsTrait
      */
     private function withWwwPrefixWhenRequired(string $httpsRequestUri) : string
     {
-        if (
-            ! isset($this->config['add_www_prefix']) ||
-            ! $this->config['add_www_prefix'] ||
-            (
-                $this->config['add_www_prefix'] === true &&
-                \substr($httpsRequestUri, 8, 4) === 'www.'
-            )
-        ) {
+        $addWwwPrefix        = $this->config['add_www_prefix'] ?? false;
+        $alreadyHasWwwPrefix = \substr($httpsRequestUri, 8, 4) === 'www.';
+
+        if (! $addWwwPrefix || $alreadyHasWwwPrefix) {
             return $httpsRequestUri;
         }
 
@@ -77,18 +73,15 @@ trait HttpsTrait
      */
     private function withoutWwwPrefixWhenNotRequired(string $httpsRequestUri) : string
     {
-        if (isset($this->config['add_www_prefix']) && $this->config['add_www_prefix'] === true) {
+        $addWwwPrefix = $this->config['add_www_prefix'] ?? false;
+        if ($addWwwPrefix) {
             return $httpsRequestUri;
         }
 
-        if (
-            ! isset($this->config['remove_www_prefix']) ||
-            ! $this->config['remove_www_prefix'] ||
-            (
-                $this->config['remove_www_prefix'] === true &&
-                \substr($httpsRequestUri, 8, 4) !== 'www.'
-            )
-        ) {
+        $removeWwwPrefix     = $this->config['remove_www_prefix'] ?? false;
+        $alreadyHasWwwPrefix = \substr($httpsRequestUri, 8, 4) === 'www.';
+
+        if (! $removeWwwPrefix || ! $alreadyHasWwwPrefix) {
             return $httpsRequestUri;
         }
 
