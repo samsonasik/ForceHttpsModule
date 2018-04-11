@@ -44,7 +44,7 @@ class ForceHttps implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
         $response = $handler->handle($request);
-        if ($this->isConsoleOrNotEnabled()) {
+        if (! $this->config['enable']) {
             return $response;
         }
 
