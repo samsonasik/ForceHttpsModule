@@ -58,7 +58,7 @@ trait HttpsTrait
     private function withWwwPrefixWhenRequired(string $httpsRequestUri) : string
     {
         $addWwwPrefix        = $this->config['add_www_prefix'] ?? false;
-        $alreadyHasWwwPrefix = \substr($httpsRequestUri, 8, 4) === 'www.';
+        $alreadyHasWwwPrefix = \strpos($httpsRequestUri, 'www.', 8) === 8;
 
         if (! $addWwwPrefix || $alreadyHasWwwPrefix) {
             return $httpsRequestUri;
@@ -79,7 +79,7 @@ trait HttpsTrait
         }
 
         $removeWwwPrefix     = $this->config['remove_www_prefix'] ?? false;
-        $alreadyHasWwwPrefix = \substr($httpsRequestUri, 8, 4) === 'www.';
+        $alreadyHasWwwPrefix = \strpos($httpsRequestUri, 'www.', 8) === 8;
 
         if (! $removeWwwPrefix || ! $alreadyHasWwwPrefix) {
             return $httpsRequestUri;
