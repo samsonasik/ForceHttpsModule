@@ -11,6 +11,12 @@ use Zend\Router\RouteMatch;
 
 trait HttpsTrait
 {
+    /** @var bool */
+    private $needsWwwPrefix;
+
+    /** @var bool */
+    private $alreadyHasWwwPrefix;
+
     private function isSchemeHttps(string $uriScheme) : bool
     {
         return $uriScheme === 'https';
@@ -57,10 +63,10 @@ trait HttpsTrait
      */
     private function withWwwPrefixWhenRequired(string $httpsRequestUri) : string
     {
-        $addWwwPrefix        = $this->config['add_www_prefix'] ?? false;
-        $alreadyHasWwwPrefix = \strpos($httpsRequestUri, 'www.', 8) === 8;
+        $this->needsWwwPrefix      = $this->config['add_www_prefix'] ?? false;
+        $this->alreadyHasWwwPrefix = \strpos($httpsRequestUri, 'www.', 8) === 8;
 
-        if (! $addWwwPrefix || $alreadyHasWwwPrefix) {
+        if (! $this->needsWwwPrefix || $this->alreadyHasWwwPrefix) {
             return $httpsRequestUri;
         }
 
@@ -73,15 +79,12 @@ trait HttpsTrait
      */
     private function withoutWwwPrefixWhenNotRequired(string $httpsRequestUri) : string
     {
-        $addWwwPrefix = $this->config['add_www_prefix'] ?? false;
-        if ($addWwwPrefix) {
+        if ($this->needsWwwPrefix) {
             return $httpsRequestUri;
         }
 
         $removeWwwPrefix     = $this->config['remove_www_prefix'] ?? false;
-        $alreadyHasWwwPrefix = \strpos($httpsRequestUri, 'www.', 8) === 8;
-
-        if (! $removeWwwPrefix || ! $alreadyHasWwwPrefix) {
+        if (! $removeWwwPrefix || ! $this->alreadyHasWwwPrefix) {
             return $httpsRequestUri;
         }
 
