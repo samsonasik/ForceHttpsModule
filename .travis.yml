@@ -29,7 +29,7 @@ matrix:
     - php: 7.2
       env:
         - DEPS=lowest
-        - INSTALL_PHPSTAN=yes
+        - INSTALL_PHPSTAN=no
     - php: 7.2
       env:
         - DEPS=latest
