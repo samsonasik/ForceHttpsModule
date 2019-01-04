@@ -339,12 +339,6 @@ describe('ForceHttps', function () {
                 allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Strict-Transport-Security: max-age=31536000');
 
-                allow($this->mvcEvent)->toReceive('getApplication')->andReturn($this->application);
-                allow($this->application)->toReceive('getEventManager')->andReturn($this->eventManager);
-                allow($this->application)->toReceive('getServiceManager', 'get')
-                                 ->with('SendResponseListener')
-                                 ->andReturn($this->sendResponseListener);
-
                 $listener->forceHttpsScheme($this->mvcEvent);
 
                 expect($this->mvcEvent)->toReceive('getResponse');
