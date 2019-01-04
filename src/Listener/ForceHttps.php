@@ -99,5 +99,7 @@ class ForceHttps extends AbstractListenerAggregate
         $response->getHeaders()
                  ->addHeaderLine('Location', $httpsRequestUri);
         $response->send();
+
+        exit(0);
     }
 }

@@ -4,6 +4,8 @@ namespace ForceHttpsModule\Spec\Listener;
 
 use ForceHttpsModule\Listener\ForceHttps;
 use Kahlan\Plugin\Double;
+use Kahlan\Plugin\Quit;
+use Kahlan\QuitException;
 use Zend\Console\Console;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\PhpEnvironment\Request;
@@ -80,6 +82,8 @@ describe('ForceHttps', function () {
             $this->request              = Double::instance(['extends' => Request::class]);
             $this->uri                  = Double::instance(['extends' => Uri::class]);
             $this->routeMatch           = Double::instance(['extends' => RouteMatch::class, 'methods' => '__construct']);
+
+            Quit::disable();
         });
 
         context('on current scheme is https', function () {
@@ -159,7 +163,10 @@ describe('ForceHttps', function () {
                                  ->with('SendResponseListener')
                                  ->andReturn($this->sendResponseListener);
 
-                $listener->forceHttpsScheme($this->mvcEvent);
+                $closure = function () use ($listener) {
+                    $listener->forceHttpsScheme($this->mvcEvent);
+                };
+                expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
 
                 expect($this->mvcEvent)->toReceive('getResponse');
 
@@ -197,7 +204,10 @@ describe('ForceHttps', function () {
                                  ->with('SendResponseListener')
                                  ->andReturn($this->sendResponseListener);
 
-                $listener->forceHttpsScheme($this->mvcEvent);
+                $closure = function () use ($listener) {
+                    $listener->forceHttpsScheme($this->mvcEvent);
+                };
+                expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
 
                 expect($this->mvcEvent)->toReceive('getResponse');
 
@@ -233,7 +243,10 @@ describe('ForceHttps', function () {
                                  ->with('SendResponseListener')
                                  ->andReturn($this->sendResponseListener);
 
-                $listener->forceHttpsScheme($this->mvcEvent);
+                $closure = function () use ($listener) {
+                    $listener->forceHttpsScheme($this->mvcEvent);
+                };
+                expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
 
                 expect($this->mvcEvent)->toReceive('getResponse');
                 expect($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
@@ -271,7 +284,10 @@ describe('ForceHttps', function () {
                                  ->with('SendResponseListener')
                                  ->andReturn($this->sendResponseListener);
 
-                $listener->forceHttpsScheme($this->mvcEvent);
+                $closure = function () use ($listener) {
+                    $listener->forceHttpsScheme($this->mvcEvent);
+                };
+                expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
 
                 expect($this->mvcEvent)->toReceive('getResponse');
                 expect($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://www.example.com/about');
@@ -314,7 +330,10 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
                 allow($this->response)->toReceive('send');
 
-                $listener->forceHttpsScheme($this->mvcEvent);
+                $closure = function () use ($listener) {
+                    $listener->forceHttpsScheme($this->mvcEvent);
+                };
+                expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
 
                 expect($this->mvcEvent)->toReceive('getResponse');
 
