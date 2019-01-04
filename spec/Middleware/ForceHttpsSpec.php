@@ -11,6 +11,7 @@ use Zend\Console\Console;
 use Zend\Expressive\Router\Route;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
+use Webimpress\HttpMiddlewareCompatibility\MiddlewareInterface;
 
 describe('ForceHttps', function () {
 
@@ -70,12 +71,7 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(
-                    new Route(
-                        '/about',
-                        new Fixture\Middleware\About()
-                    )
-                );
+                $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -96,12 +92,7 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(
-                    new Route(
-                        '/about',
-                        new Fixture\Middleware\About()
-                    )
-                );
+                $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -132,12 +123,7 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(
-                    new Route(
-                        '/about',
-                        new Fixture\Middleware\About()
-                    )
-                );
+                $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -167,12 +153,7 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(
-                    new Route(
-                        '/about',
-                        new Fixture\Middleware\About()
-                    )
-                );
+                $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -202,12 +183,7 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(
-                    new Route(
-                        '/about',
-                        new Fixture\Middleware\About()
-                    )
-                );
+                $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -241,12 +217,7 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(
-                    new Route(
-                        '/about',
-                        new Fixture\Middleware\About()
-                    )
-                );
+                $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -281,12 +252,7 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(
-                    new Route(
-                        '/about',
-                        new Fixture\Middleware\About()
-                    )
-                );
+                $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
