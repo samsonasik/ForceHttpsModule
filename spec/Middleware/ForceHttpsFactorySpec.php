@@ -1,6 +1,6 @@
 <?php
 
-namespace ForceHttpsModuleSpec\Middleware;
+namespace ForceHttpsModule\Spec\Middleware;
 
 use ForceHttpsModule\Middleware\ForceHttps;
 use ForceHttpsModule\Middleware\ForceHttpsFactory;

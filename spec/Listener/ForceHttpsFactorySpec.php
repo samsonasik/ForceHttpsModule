@@ -1,6 +1,6 @@
 <?php
 
-namespace ForceHttpsModuleSpec\Listener;
+namespace ForceHttpsModule\Spec\Listener;
 
 use ForceHttpsModule\Listener\ForceHttps;
 use ForceHttpsModule\Listener\ForceHttpsFactory;
