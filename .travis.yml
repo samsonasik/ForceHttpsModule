@@ -8,11 +8,11 @@ before_script:
   - mkdir -p build/logs
   - composer self-update
   - travis_retry composer install --prefer-source --no-interaction
-  - composer global require --dev phpstan/phpstan
+  - composer require --dev phpstan/phpstan
   - composer dump-autoload -o
 
 script:
-  - ~/.composer/vendor/bin/phpstan analyse src/ --level=max
+  - bin/phpstan analyse src/ --level=max
   - bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml
   - bin/php-coveralls -v --exclude-no-stmt
 
