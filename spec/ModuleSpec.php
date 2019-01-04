@@ -1,6 +1,6 @@
 <?php
 
-namespace ForceHttpsModuleSpec;
+namespace ForceHttpsModule\Spec;
 
 use ForceHttpsModule\Module;
 

@@ -1,16 +1,13 @@
 <?php
 
-namespace ForceHttpsModuleSpec\Middleware;
+namespace ForceHttpsModule\Spec\Middleware;
 
 use ForceHttpsModule\Middleware\ForceHttps;
-use Interop\Http\ServerMiddleware\DelegateInterface;
 use Kahlan\Plugin\Double;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Webimpress\HttpMiddlewareCompatibility\MiddlewareInterface;
 use Zend\Console\Console;
-use Zend\Diactoros\Response;
 use Zend\Expressive\Router\Route;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
@@ -76,12 +73,7 @@ describe('ForceHttps', function () {
                 $match = RouteResult::fromRoute(
                     new Route(
                         '/about',
-                        new class implements MiddlewareInterface {
-                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
-                            {
-                                return new Response('test');
-                            }
-                        }
+                        new Fixture\Middleware\About()
                     )
                 );
             } else {
@@ -107,12 +99,7 @@ describe('ForceHttps', function () {
                 $match = RouteResult::fromRoute(
                     new Route(
                         '/about',
-                        new class implements MiddlewareInterface {
-                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
-                            {
-                                return new Response('test');
-                            }
-                        }
+                        new Fixture\Middleware\About()
                     )
                 );
             } else {
@@ -148,12 +135,7 @@ describe('ForceHttps', function () {
                 $match = RouteResult::fromRoute(
                     new Route(
                         '/about',
-                        new class implements MiddlewareInterface {
-                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
-                            {
-                                return new Response('test');
-                            }
-                        }
+                        new Fixture\Middleware\About()
                     )
                 );
             } else {
@@ -188,12 +170,7 @@ describe('ForceHttps', function () {
                 $match = RouteResult::fromRoute(
                     new Route(
                         '/about',
-                        new class implements MiddlewareInterface {
-                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
-                            {
-                                return new Response('test');
-                            }
-                        }
+                        new Fixture\Middleware\About()
                     )
                 );
             } else {
@@ -228,12 +205,7 @@ describe('ForceHttps', function () {
                 $match = RouteResult::fromRoute(
                     new Route(
                         '/about',
-                        new class implements MiddlewareInterface {
-                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
-                            {
-                                return new Response('test');
-                            }
-                        }
+                        new Fixture\Middleware\About()
                     )
                 );
             } else {
@@ -272,12 +244,7 @@ describe('ForceHttps', function () {
                 $match = RouteResult::fromRoute(
                     new Route(
                         '/about',
-                        new class implements MiddlewareInterface {
-                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
-                            {
-                                return new Response('test');
-                            }
-                        }
+                        new Fixture\Middleware\About()
                     )
                 );
             } else {
@@ -317,12 +284,7 @@ describe('ForceHttps', function () {
                 $match = RouteResult::fromRoute(
                     new Route(
                         '/about',
-                        new class implements MiddlewareInterface {
-                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
-                            {
-                                return new Response('test');
-                            }
-                        }
+                        new Fixture\Middleware\About()
                     )
                 );
             } else {
