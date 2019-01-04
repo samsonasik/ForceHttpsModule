@@ -88,12 +88,6 @@ class ForceHttps extends AbstractListenerAggregate
             $httpsRequestUri = $this->getFinalhttpsRequestUri($uriString);
         }
 
-        $application    = $e->getApplication();
-        $events         = $application->getEventManager();
-        $serviceManager = $application->getServiceManager();
-        $serviceManager->get('SendResponseListener')
-                       ->detach($events);
-
         // 308 keeps headers, request method, and request body
         $response->setStatusCode(308);
         $response->getHeaders()

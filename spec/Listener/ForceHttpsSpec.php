@@ -12,7 +12,6 @@ use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\SendResponseListener;
 use Zend\Router\RouteMatch;
 use Zend\Uri\Uri;
 
@@ -76,8 +75,6 @@ describe('ForceHttps', function () {
 
         beforeEach(function () {
             $this->mvcEvent             = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
-            $this->application          = Double::instance(['extends' => Application::class, 'methods' => '__construct']);
-            $this->sendResponseListener = Double::instance(['extends' => SendResponseListener::class, 'methods' => '__construct']);
             $this->response             = Double::instance(['extends' => Response::class]);
             $this->request              = Double::instance(['extends' => Request::class]);
             $this->uri                  = Double::instance(['extends' => Uri::class]);
@@ -157,12 +154,6 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
 
-                allow($this->mvcEvent)->toReceive('getApplication')->andReturn($this->application);
-                allow($this->application)->toReceive('getEventManager')->andReturn($this->eventManager);
-                allow($this->application)->toReceive('getServiceManager', 'get')
-                                 ->with('SendResponseListener')
-                                 ->andReturn($this->sendResponseListener);
-
                 $closure = function () use ($listener) {
                     $listener->forceHttpsScheme($this->mvcEvent);
                 };
@@ -198,12 +189,6 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
 
-                allow($this->mvcEvent)->toReceive('getApplication')->andReturn($this->application);
-                allow($this->application)->toReceive('getEventManager')->andReturn($this->eventManager);
-                allow($this->application)->toReceive('getServiceManager', 'get')
-                                 ->with('SendResponseListener')
-                                 ->andReturn($this->sendResponseListener);
-
                 $closure = function () use ($listener) {
                     $listener->forceHttpsScheme($this->mvcEvent);
                 };
@@ -236,12 +221,6 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
-
-                allow($this->mvcEvent)->toReceive('getApplication')->andReturn($this->application);
-                allow($this->application)->toReceive('getEventManager')->andReturn($this->eventManager);
-                allow($this->application)->toReceive('getServiceManager', 'get')
-                                 ->with('SendResponseListener')
-                                 ->andReturn($this->sendResponseListener);
 
                 $closure = function () use ($listener) {
                     $listener->forceHttpsScheme($this->mvcEvent);
@@ -277,12 +256,6 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
-
-                allow($this->mvcEvent)->toReceive('getApplication')->andReturn($this->application);
-                allow($this->application)->toReceive('getEventManager')->andReturn($this->eventManager);
-                allow($this->application)->toReceive('getServiceManager', 'get')
-                                 ->with('SendResponseListener')
-                                 ->andReturn($this->sendResponseListener);
 
                 $closure = function () use ($listener) {
                     $listener->forceHttpsScheme($this->mvcEvent);
@@ -320,12 +293,6 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')
                                       ->with('Location', 'https://example.com/about')
                                       ->andReturn($this->response);
-
-                allow($this->mvcEvent)->toReceive('getApplication')->andReturn($this->application);
-                allow($this->application)->toReceive('getEventManager')->andReturn($this->eventManager);
-                allow($this->application)->toReceive('getServiceManager', 'get')
-                                 ->with('SendResponseListener')
-                                 ->andReturn($this->sendResponseListener);
 
                 allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
                 allow($this->response)->toReceive('send');
