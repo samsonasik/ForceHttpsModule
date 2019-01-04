@@ -3,12 +3,14 @@
 namespace ForceHttpsModuleSpec\Middleware;
 
 use ForceHttpsModule\Middleware\ForceHttps;
+use Interop\Http\ServerMiddleware\DelegateInterface;
 use Kahlan\Plugin\Double;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
+use Webimpress\HttpMiddlewareCompatibility\MiddlewareInterface;
 use Zend\Console\Console;
-use Zend\Diactoros\Uri;
+use Zend\Diactoros\Response;
 use Zend\Expressive\Router\Route;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
@@ -71,7 +73,17 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+                $match = RouteResult::fromRoute(
+                    new Route(
+                        '/about',
+                        new class implements MiddlewareInterface {
+                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+                            {
+                                return new Response('test');
+                            }
+                        }
+                    )
+                );
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -92,7 +104,17 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+                $match = RouteResult::fromRoute(
+                    new Route(
+                        '/about',
+                        new class implements MiddlewareInterface {
+                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+                            {
+                                return new Response('test');
+                            }
+                        }
+                    )
+                );
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -123,7 +145,17 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+                $match = RouteResult::fromRoute(
+                    new Route(
+                        '/about',
+                        new class implements MiddlewareInterface {
+                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+                            {
+                                return new Response('test');
+                            }
+                        }
+                    )
+                );
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -153,7 +185,17 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+                $match = RouteResult::fromRoute(
+                    new Route(
+                        '/about',
+                        new class implements MiddlewareInterface {
+                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+                            {
+                                return new Response('test');
+                            }
+                        }
+                    )
+                );
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -183,7 +225,17 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+                $match = RouteResult::fromRoute(
+                    new Route(
+                        '/about',
+                        new class implements MiddlewareInterface {
+                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+                            {
+                                return new Response('test');
+                            }
+                        }
+                    )
+                );
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -217,7 +269,17 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+                $match = RouteResult::fromRoute(
+                    new Route(
+                        '/about',
+                        new class implements MiddlewareInterface {
+                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+                            {
+                                return new Response('test');
+                            }
+                        }
+                    )
+                );
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
@@ -252,7 +314,17 @@ describe('ForceHttps', function () {
 
             Console::overrideIsConsole(false);
             if (method_exists(RouteResult::class, 'fromRoute')) {
-                $match = RouteResult::fromRoute(new Route('/about', 'About'));
+                $match = RouteResult::fromRoute(
+                    new Route(
+                        '/about',
+                        new class implements MiddlewareInterface {
+                            public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+                            {
+                                return new Response('test');
+                            }
+                        }
+                    )
+                );
             } else {
                 $match = RouteResult::fromRouteMatch('about', 'about', []);
             }
