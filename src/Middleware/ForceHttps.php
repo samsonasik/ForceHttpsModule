@@ -49,9 +49,6 @@ class ForceHttps implements MiddlewareInterface
         }
 
         $match    = $this->router->match($request);
-        if ($match->isFailure()) {
-            return $response;
-        }
 
         $uri       = $request->getUri();
         $uriScheme = $uri->getScheme();

@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace ForceHttpsModule\Listener;
 
 use ForceHttpsModule\HttpsTrait;
-use Zend\Console\Console;
-use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\EventManagerInterface;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Router\RouteMatch;
 
-class ForceHttps extends AbstractListenerAggregate
+class ForceHttpsOnSharedEventManager
 {
     use HttpsTrait;
 
@@ -26,19 +23,9 @@ class ForceHttps extends AbstractListenerAggregate
         $this->config = $config;
     }
 
-    public function attach(EventManagerInterface $events, $priority = 1) : void
+    private function setHttpStrictTransportSecurity(string $uriScheme, Response $response) : Response
     {
-        if (Console::isConsole() || ! $this->config['enable']) {
-            return;
-        }
-
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttpsScheme']);
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'forceHttpsScheme'], 1000);
-    }
-
-    private function setHttpStrictTransportSecurity(string $uriScheme, RouteMatch $match = null, Response $response) : Response
-    {
-        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match, $response)) {
+        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, null, $response)) {
             return $response;
         }
 
@@ -54,11 +41,18 @@ class ForceHttps extends AbstractListenerAggregate
         return $response;
     }
 
-    /**
-     * Force Https Scheme handle.
-     */
-    public function forceHttpsScheme(MvcEvent $e) : void
+    public function __invoke(MvcEvent $e)
     {
+        /** @var \Zend\Router\RouteMatch $routeMatch */
+        $routeMatch = $e->getRouteMatch();
+
+        $controller = $e->getTarget();
+        $action     = \str_replace('-', '', $routeMatch->getParam('action')) . 'Action';
+
+        if (\method_exists($controller, $action)) {
+            return;
+        }
+
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request   = $e->getRequest();
         /** @var Response $response */
@@ -68,10 +62,8 @@ class ForceHttps extends AbstractListenerAggregate
         /** @var string  $uriScheme*/
         $uriScheme = $uri->getScheme();
 
-        /** @var RouteMatch|null $routeMatch */
-        $routeMatch = $e->getRouteMatch();
-        $response   = $this->setHttpStrictTransportSecurity($uriScheme, $routeMatch, $response);
-        if (! $this->isGoingToBeForcedToHttps($routeMatch)) {
+        $response   = $this->setHttpStrictTransportSecurity($uriScheme, $response);
+        if (! $this->isGoingToBeForcedToHttps(null)) {
             return;
         }
 
