@@ -34,6 +34,7 @@ describe('ForceHttps', function () {
             $listener->attach($this->eventManager);
 
             expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+            expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_DISPATCH_ERROR, [$listener, 'forceHttpsScheme'], 1000);
 
         });
 
@@ -63,9 +64,11 @@ describe('ForceHttps', function () {
             ]);
 
             allow($this->eventManager)->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+            allow($this->eventManager)->toReceive('attach')->with(MvcEvent::EVENT_DISPATCH_ERROR, [$listener, 'forceHttpsScheme'], 1000);
             $listener->attach($this->eventManager);
 
             expect($this->eventManager)->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+            expect($this->eventManager)->toReceive('attach')->with(MvcEvent::EVENT_DISPATCH_ERROR, [$listener, 'forceHttpsScheme'], 1000);
 
         });
 
