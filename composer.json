@@ -2,7 +2,18 @@
     "name": "samsonasik/force-https-module",
     "type": "library",
     "description": "Force Https Module",
-    "keywords": ["zf2", "zf3", "expressive", "middleware", "force", "https", "http", "psr7", "psr11", "psr-15"],
+    "keywords": [
+        "zf2",
+        "zf3",
+        "expressive",
+        "middleware",
+        "force",
+        "https",
+        "http",
+        "psr7",
+        "psr11",
+        "psr-15"
+    ],
     "homepage": "https://github.com/samsonasik/ForceHttpsModule",
     "license": "MIT",
     "authors": [
@@ -13,19 +24,27 @@
             "role": "Developer"
         }
     ],
-    "require":{
+    "require": {
         "php": "^7.1",
         "zendframework/zend-console": "^2.5"
-    },
-    "require-dev": {
-        "kahlan/kahlan": "^4.0",
-        "satooshi/php-coveralls": "^2.0",
-        "zendframework/zend-mvc": "^3.0",
-        "zendframework/zend-expressive": "^3.0"
     },
     "conflict": {
         "zendframework/zend-expressive": "<3.0",
         "zendframework/zend-mvc": "<3.0"
+    },
+    "require-dev": {
+        "kahlan/kahlan": "^4.0",
+        "php-coveralls/php-coveralls": "^2.1",
+        "zendframework/zend-expressive": "^3.0",
+        "zendframework/zend-mvc": "^3.0"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "zf": {
+            "module": "ForceHttpsModule"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -35,14 +54,6 @@
     "autoload-dev": {
         "psr-4": {
             "ForceHttpsModule\\Spec\\": "spec/"
-        }
-    },
-    "config": {
-        "bin-dir": "bin"
-    },
-    "extra": {
-        "zf": {
-            "module": "ForceHttpsModule"
         }
     }
 }
