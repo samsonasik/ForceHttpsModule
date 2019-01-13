@@ -58,6 +58,28 @@ describe('ForceHttps', function () {
             Console::overrideIsConsole(false);
             $match = RouteResult::fromRouteFailure();
             allow($this->router)->toReceive('match')->andReturn($match);
+            allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
+
+            $listener = new ForceHttps(['enable' => true], $this->router);
+
+            $listener->__invoke($this->request, $this->response, function () {});
+
+            expect($this->response)->not->toReceive('withStatus');
+
+        });
+
+        it('not redirect on router not match and config allow_404 is false', function () {
+
+            $match = RouteResult::fromRouteFailure(null);
+            allow($this->router)->toReceive('match')->andReturn($match);
+            allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
+            $listener = new ForceHttps(
+                [
+                    'enable'    => true,
+                    'allow_404' => false,
+                ],
+                $this->router
+            );
 
             $listener = new ForceHttps(['enable' => true], $this->router);
 
@@ -210,6 +232,33 @@ describe('ForceHttps', function () {
 
             expect($this->response)->toReceive('withStatus')->with(308);
             expect($this->response)->toReceive('withHeader')->with('Location', 'https://example.com/about');
+
+        });
+
+        it('return Response with 308 status on http and not match, but allow_404 is true', function () {
+
+            Console::overrideIsConsole(false);
+
+            $match = RouteResult::fromRouteFailure(null);
+
+            allow($this->router)->toReceive('match')->andReturn($match);
+            allow($this->request)->toReceive('getUri', 'getScheme')->andReturn('http');
+            allow($this->request)->toReceive('getUri', 'withScheme', '__toString')->andReturn('https://example.com/404');
+
+            allow($this->response)->toReceive('withStatus')->andReturn($this->response);
+
+            $listener = new ForceHttps(
+                [
+                    'enable'    => true,
+                    'allow_404' => true,
+                ],
+                $this->router
+            );
+
+            $listener->__invoke($this->request, $this->response, function () {});
+
+            expect($this->response)->toReceive('withStatus')->with(308);
+            expect($this->response)->toReceive('withHeader')->with('Location', 'https://example.com/404');
 
         });
 

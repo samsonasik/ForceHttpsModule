@@ -42,6 +42,7 @@ before_script:
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer require http-interop/http-middleware:^0.4.1 --prefer-source --no-interaction ; fi
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer install --prefer-source --no-interaction ; fi
   - if [[ $INSTALL_PHPSTAN == 'yes' ]]; then composer require --dev phpstan/phpstan; fi
+  - if [[ $INSTALL_PHPSTAN == 'yes' ]]; then composer require --dev phpstan/phpstan-webmozart-assert; fi
   - composer dump-autoload -o
 
 script:

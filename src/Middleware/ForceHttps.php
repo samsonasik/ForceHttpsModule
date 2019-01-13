@@ -54,7 +54,7 @@ class ForceHttps
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         $match = $this->router->match($request);
-        if (Console::isConsole() || ! $this->config['enable'] || $match->isFailure()) {
+        if (Console::isConsole() || ! $this->config['enable']) {
             return $next($request, $response);
         }
 
