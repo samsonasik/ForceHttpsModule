@@ -39,13 +39,12 @@ trait HttpsTrait
             return $this->config['allow_404'];
         }
 
+        if ($this->config['force_all_routes']) {
+            return true;
+        }
+
         Assert::notNull($match);
-        if (! $this->config['force_all_routes'] &&
-            ! \in_array(
-                $match->getMatchedRouteName(),
-                $this->config['force_specific_routes']
-            )
-        ) {
+        if (! \in_array($match->getMatchedRouteName(), $this->config['force_specific_routes'])) {
             return false;
         }
 
