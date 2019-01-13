@@ -11,7 +11,8 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\MvcEvent;
-use Zend\Router\RouteMatch;
+use Zend\Mvc\Router\RouteMatch as V2RouteMatch;
+use Zend\Router\RouteMatch as V3RouteMatch;
 use Zend\Uri\Uri;
 
 describe('ForceHttps', function () {
@@ -67,7 +68,9 @@ describe('ForceHttps', function () {
             $this->response             = Double::instance(['extends' => Response::class]);
             $this->request              = Double::instance(['extends' => Request::class]);
             $this->uri                  = Double::instance(['extends' => Uri::class]);
-            $this->routeMatch           = Double::instance(['extends' => RouteMatch::class, 'methods' => '__construct']);
+            $this->routeMatch           = class_exists(V3RouteMatch::class)
+                ? Double::instance(['extends' => V3RouteMatch::class, 'methods' => '__construct'])
+                : Double::instance(['extends' => V2RouteMatch::class, 'methods' => '__construct']);
 
             Quit::disable();
         });
