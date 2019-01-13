@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ForceHttpsModule;
 
 use Psr\Http\Message\ResponseInterface;
+use Webmozart\Assert\Assert;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Router\RouteMatch;
@@ -41,6 +42,7 @@ trait HttpsTrait
             return false;
         }
 
+        Assert::notNull($match);
         if (! $this->config['force_all_routes'] &&
             ! \in_array(
                 $match->getMatchedRouteName(),

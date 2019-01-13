@@ -9,7 +9,6 @@ before_script:
   - mkdir -p build/logs
   - composer self-update
   - travis_retry composer install --prefer-source --no-interaction
-  - composer require --dev phpstan/phpstan
   - composer dump-autoload -o
 
 script:
