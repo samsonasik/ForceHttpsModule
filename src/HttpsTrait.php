@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ForceHttpsModule;
 
 use Psr\Http\Message\ResponseInterface;
+use Webmozart\Assert\Assert;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Router\RouteMatch;
@@ -25,10 +26,23 @@ trait HttpsTrait
     /**
      * Check Config if is going to be forced to https.
      *
-     * @param  RouteMatch|RouteResult $match
+     * @param  RouteMatch|RouteResult|null $match
      */
-    private function isGoingToBeForcedToHttps($match) : bool
+    private function isGoingToBeForcedToHttps($match = null) : bool
     {
+        $is404 = $match === null || ($match instanceof RouteResult && $match->isFailure());
+        if (isset($this->config['allow_404']) &&
+            $this->config['allow_404'] === true &&
+            $is404
+        ) {
+            return true;
+        }
+
+        if ($is404) {
+            return false;
+        }
+
+        Assert::notNull($match);
         if (! $this->config['force_all_routes'] &&
             ! \in_array(
                 $match->getMatchedRouteName(),
@@ -44,11 +58,11 @@ trait HttpsTrait
     /**
      * Check if Setup Strict-Transport-Security need to be skipped.
      *
-     * @param RouteMatch|RouteResult     $match
-     * @param Response|ResponseInterface $response
+     * @param RouteMatch|RouteResult|null $match
+     * @param Response|ResponseInterface  $response
      *
      */
-    private function isSkippedHttpStrictTransportSecurity(string $uriScheme, $match, $response) : bool
+    private function isSkippedHttpStrictTransportSecurity(string $uriScheme, $match = null, $response) : bool
     {
         return ! $this->isSchemeHttps($uriScheme) ||
             ! $this->isGoingToBeForcedToHttps($match) ||

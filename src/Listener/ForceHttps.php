@@ -33,9 +33,10 @@ class ForceHttps extends AbstractListenerAggregate
         }
 
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttpsScheme']);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'forceHttpsScheme'], 1000);
     }
 
-    private function setHttpStrictTransportSecurity(string $uriScheme, RouteMatch $match, Response $response) : Response
+    private function setHttpStrictTransportSecurity(string $uriScheme, RouteMatch $match = null, Response $response) : Response
     {
         if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match, $response)) {
             return $response;
@@ -67,7 +68,7 @@ class ForceHttps extends AbstractListenerAggregate
         /** @var string  $uriScheme*/
         $uriScheme = $uri->getScheme();
 
-        /** @var RouteMatch $routeMatch */
+        /** @var RouteMatch|null $routeMatch */
         $routeMatch = $e->getRouteMatch();
         $response   = $this->setHttpStrictTransportSecurity($uriScheme, $routeMatch, $response);
         if (! $this->isGoingToBeForcedToHttps($routeMatch)) {

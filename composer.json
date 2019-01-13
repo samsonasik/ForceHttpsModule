@@ -26,6 +26,7 @@
     ],
     "require": {
         "php": "^7.1",
+        "webmozart/assert": "^1.4",
         "zendframework/zend-console": "^2.5"
     },
     "conflict": {
@@ -35,11 +36,14 @@
     "require-dev": {
         "kahlan/kahlan": "^4.0",
         "php-coveralls/php-coveralls": "^2.1",
+        "phpstan/phpstan": "^0.10.8",
+        "phpstan/phpstan-webmozart-assert": "^0.10.0",
         "zendframework/zend-expressive": "^3.0",
         "zendframework/zend-mvc": "^3.0"
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "sort-packages": true
     },
     "extra": {
         "zf": {

@@ -10,7 +10,6 @@ use Zend\Console\Console;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
-use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
 use Zend\Router\RouteMatch;
 use Zend\Uri\Uri;
@@ -35,6 +34,7 @@ describe('ForceHttps', function () {
             $listener->attach($this->eventManager);
 
             expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+            expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_DISPATCH_ERROR, [$listener, 'forceHttpsScheme'], 1000);
 
         });
 
@@ -50,6 +50,7 @@ describe('ForceHttps', function () {
             $listener->attach($this->eventManager);
 
             expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+            expect($this->eventManager)->not->toReceive('attach')->with(MvcEvent::EVENT_DISPATCH_ERROR, [$listener, 'forceHttpsScheme'], 1000);
 
         });
 
@@ -63,9 +64,11 @@ describe('ForceHttps', function () {
             ]);
 
             allow($this->eventManager)->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+            allow($this->eventManager)->toReceive('attach')->with(MvcEvent::EVENT_DISPATCH_ERROR, [$listener, 'forceHttpsScheme'], 1000);
             $listener->attach($this->eventManager);
 
             expect($this->eventManager)->toReceive('attach')->with(MvcEvent::EVENT_ROUTE, [$listener, 'forceHttpsScheme']);
+            expect($this->eventManager)->toReceive('attach')->with(MvcEvent::EVENT_DISPATCH_ERROR, [$listener, 'forceHttpsScheme'], 1000);
 
         });
 
@@ -106,6 +109,27 @@ describe('ForceHttps', function () {
 
             });
 
+            it('not redirect if router not match', function () {
+
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'force_specific_routes' => [],
+                ]);
+
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn(null);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('about');
+
+                allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('https');
+                allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'toString')->andReturn('https://www.example.com/about');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                expect($this->mvcEvent)->toReceive('getResponse');
+
+                $listener->forceHttpsScheme($this->mvcEvent);
+                expect($this->response)->not->toReceive('getHeaders');
+
+            });
+
         });
 
         context('on current scheme is http', function () {
@@ -129,6 +153,24 @@ describe('ForceHttps', function () {
                 $listener->forceHttpsScheme($this->mvcEvent);
 
                 expect($this->mvcEvent)->toReceive('getResponse');
+                expect($this->response)->not->toReceive('send');
+
+            });
+
+            it('not redirect on router not match', function () {
+
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                ]);
+
+                allow($this->mvcEvent)->toReceive('getRequest', 'getUri', 'getScheme')->andReturn('http');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn(null);
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+
+                $listener->forceHttpsScheme($this->mvcEvent);
+
+                expect($this->mvcEvent)->toReceive('getResponse');
+                expect($this->response)->not->toReceive('send');
 
             });
 
@@ -229,6 +271,35 @@ describe('ForceHttps', function () {
 
                 expect($this->mvcEvent)->toReceive('getResponse');
                 expect($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
+
+            });
+
+
+            it('redirect no router not match, but allow_404 is true', function () {
+
+                $listener = new ForceHttps([
+                    'enable'    => true,
+                    'allow_404' => true,
+                ]);
+
+                allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
+                allow($this->request)->toReceive('getUri')->andReturn($this->uri);
+                allow($this->uri)->toReceive('getScheme')->andReturn('http');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn(null);
+                allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
+                allow($this->uri)->toReceive('toString')->andReturn('https://example.com/404');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/404');
+                allow($this->response)->toReceive('send');
+
+                $closure = function () use ($listener) {
+                    $listener->forceHttpsScheme($this->mvcEvent);
+                };
+                expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
+
+                expect($this->mvcEvent)->toReceive('getResponse');
+                expect($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/404');
 
             });
 
