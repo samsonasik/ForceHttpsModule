@@ -17,6 +17,7 @@ return [
         ],
         'add_www_prefix'        => false,
         'remove_www_prefix'     => false,
+        'allow_404'             => true,
     ],
 
     'dependencies' => [

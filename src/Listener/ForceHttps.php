@@ -37,6 +37,7 @@ class ForceHttps extends AbstractListenerAggregate
         }
 
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttpsScheme']);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'forceHttpsScheme'], 1000);
     }
 
     /**
