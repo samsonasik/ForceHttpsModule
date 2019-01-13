@@ -4,3 +4,4 @@ vendor
 coverage.json
 coverage/
 bin/
+build/logs
