@@ -41,7 +41,7 @@ class ForceHttps extends AbstractListenerAggregate
         Response   $response,
         RouteMatch $match = null
     ) : Response {
-        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $response, $match)) {
+        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match)) {
             return $response;
         }
 

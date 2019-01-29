@@ -33,8 +33,7 @@ class ForceHttps implements MiddlewareInterface
         ResponseInterface $response,
         RouteResult       $match
     ) : ResponseInterface {
-
-        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $response, $match)) {
+        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match)) {
             return $response;
         }
 

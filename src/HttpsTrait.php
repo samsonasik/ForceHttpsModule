@@ -54,11 +54,10 @@ trait HttpsTrait
     /**
      * Check if Setup Strict-Transport-Security need to be skipped.
      *
-     * @param Response|ResponseInterface  $response
      * @param RouteMatch|RouteResult|null $match
      *
      */
-    private function isSkippedHttpStrictTransportSecurity(string $uriScheme, $response, $match = null) : bool
+    private function isSkippedHttpStrictTransportSecurity(string $uriScheme, $match = null) : bool
     {
         return ! $this->isSchemeHttps($uriScheme) ||
             ! $this->isGoingToBeForcedToHttps($match) ||
