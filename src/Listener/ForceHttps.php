@@ -36,15 +36,21 @@ class ForceHttps extends AbstractListenerAggregate
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'forceHttpsScheme'], 1000);
     }
 
-    private function setHttpStrictTransportSecurity(string $uriScheme, RouteMatch $match = null, Response $response) : Response
-    {
-        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match, $response)) {
+    private function setHttpStrictTransportSecurity(
+        string     $uriScheme,
+        Response   $response,
+        RouteMatch $match = null
+    ) : Response {
+        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match)) {
             return $response;
         }
 
         if ($this->config['strict_transport_security']['enable'] === true) {
             $response->getHeaders()
-                     ->addHeaderLine('Strict-Transport-Security: ' . $this->config['strict_transport_security']['value']);
+                     ->addHeaderLine(sprintf(
+                         'Strict-Transport-Security: %s',
+                         $this->config['strict_transport_security']['value']
+                     ));
             return $response;
         }
 
@@ -70,7 +76,7 @@ class ForceHttps extends AbstractListenerAggregate
 
         /** @var RouteMatch|null $routeMatch */
         $routeMatch = $e->getRouteMatch();
-        $response   = $this->setHttpStrictTransportSecurity($uriScheme, $routeMatch, $response);
+        $response   = $this->setHttpStrictTransportSecurity($uriScheme, $response, $routeMatch);
         if (! $this->isGoingToBeForcedToHttps($routeMatch)) {
             return;
         }

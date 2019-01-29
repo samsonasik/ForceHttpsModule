@@ -4,3 +4,4 @@
 /.coveralls.yml export-ignore
 /spec/ export-ignore
 /CONTRIBUTING.md export-ignore
+/phpcs.xml export-ignore
