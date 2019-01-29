@@ -58,7 +58,7 @@ trait HttpsTrait
      * @param Response|ResponseInterface  $response
      *
      */
-    private function isSkippedHttpStrictTransportSecurity(string $uriScheme, $match = null, $response) : bool
+    private function isSkippedHttpStrictTransportSecurity(string $uriScheme, $response, $match = null) : bool
     {
         return ! $this->isSchemeHttps($uriScheme) ||
             ! $this->isGoingToBeForcedToHttps($match) ||
