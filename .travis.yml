@@ -12,6 +12,7 @@ before_script:
   - composer dump-autoload -o
 
 script:
+  - composer cs-check
   - bin/phpstan analyse src/ --level=max
   - bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml
   - bin/php-coveralls -v --exclude-no-stmt
