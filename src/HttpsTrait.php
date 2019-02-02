@@ -30,13 +30,8 @@ trait HttpsTrait
      */
     private function isGoingToBeForcedToHttps($match = null) : bool
     {
-        $is404 = $match === null || ($match instanceof RouteResult && $match->isFailure());
-        if ($is404) {
-            if (! isset($this->config['allow_404'])) {
-                return false;
-            }
-
-            return $this->config['allow_404'];
+        if ($match === null || ($match instanceof RouteResult && $match->isFailure())) {
+            return $this->config['allow_404'] ?? false;
         }
 
         if ($this->config['force_all_routes']) {
