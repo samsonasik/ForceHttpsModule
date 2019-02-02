@@ -73,10 +73,8 @@ class ForceHttps implements MiddlewareInterface
             }
         }
 
-        if (! isset($httpsRequestUri)) {
-            $uriString       = $uri->withScheme('https')->__toString();
-            $httpsRequestUri = $this->getFinalhttpsRequestUri($uriString);
-        }
+        $httpsRequestUri = $httpsRequestUri
+            ?? $this->getFinalhttpsRequestUri((string) $uri->withScheme('https'));
 
         // 308 keeps headers, request method, and request body
         $response = $response->withStatus(308);
