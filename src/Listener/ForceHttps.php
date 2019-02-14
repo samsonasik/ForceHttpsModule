@@ -37,8 +37,8 @@ class ForceHttps extends AbstractListenerAggregate
     }
 
     private function setHttpStrictTransportSecurity(
-        string     $uriScheme,
-        Response   $response,
+        string      $uriScheme,
+        Response    $response,
         ?RouteMatch $match
     ) : Response {
         if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match)) {
