@@ -5,7 +5,7 @@ ForceHttpsModule
 [![Build Status](https://travis-ci.org/samsonasik/ForceHttpsModule.svg?branch=master)](https://travis-ci.org/samsonasik/ForceHttpsModule)
 [![Coverage Status](https://coveralls.io/repos/github/samsonasik/ForceHttpsModule/badge.svg?branch=master)](https://coveralls.io/github/samsonasik/ForceHttpsModule?branch=master)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
-[![Downloads](https://img.shields.io/packagist/dt/samsonasik/force-https-module.svg?style=flat-square)](https://packagist.org/packages/samsonasik/force-https-module)
+[![Downloads](https://poser.pugx.org/samsonasik/force-https-module/downloads)](https://packagist.org/packages/samsonasik/force-https-module)
 
 Introduction
 ------------
