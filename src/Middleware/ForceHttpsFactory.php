@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace ForceHttpsModule\Middleware;
 
+use Mezzio\Router\RouterInterface;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Router\RouterInterface;
 
 class ForceHttpsFactory
 {
-    public function __invoke(ContainerInterface $container) : ForceHttps
+    public function __invoke(ContainerInterface $container): ForceHttps
     {
-        $config = $container->get('config');
-        $router = $container->get(RouterInterface::class);
+        $config           = $container->get('config');
+        $router           = $container->get(RouterInterface::class);
         $forceHttpsConfig = $config['force-https-module'] ?? ['enable' => false];
 
         return new ForceHttps($forceHttpsConfig, $router);

@@ -6,7 +6,7 @@ use ForceHttpsModule\Middleware\ForceHttps;
 use ForceHttpsModule\Middleware\ForceHttpsFactory;
 use Kahlan\Plugin\Double;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Router\RouterInterface;
+use Mezzio\Router\RouterInterface;
 
 describe('ForceHttpsFactory', function () {
 

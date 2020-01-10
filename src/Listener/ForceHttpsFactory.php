@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 
 class ForceHttpsFactory
 {
-    public function __invoke(ContainerInterface $container) : ForceHttps
+    public function __invoke(ContainerInterface $container): ForceHttps
     {
         $config           = $container->get('config');
         $forceHttpsConfig = $config['force-https-module'] ?? ['enable' => false];

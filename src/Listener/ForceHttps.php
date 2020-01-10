@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace ForceHttpsModule\Listener;
 
 use ForceHttpsModule\HttpsTrait;
-use Zend\Console\Console;
-use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Http\PhpEnvironment\Response;
-use Zend\Mvc\MvcEvent;
-use Zend\Router\RouteMatch;
+use Laminas\Console\Console;
+use Laminas\EventManager\AbstractListenerAggregate;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Http\PhpEnvironment\Response;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Router\RouteMatch;
+
+use function sprintf;
 
 class ForceHttps extends AbstractListenerAggregate
 {
     use HttpsTrait;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $config;
 
     public function __construct(array $config)
@@ -26,7 +27,10 @@ class ForceHttps extends AbstractListenerAggregate
         $this->config = $config;
     }
 
-    public function attach(EventManagerInterface $events, $priority = 1) : void
+    /**
+     * @param int $priority
+     */
+    public function attach(EventManagerInterface $events, $priority = 1): void
     {
         if (Console::isConsole() || ! $this->config['enable']) {
             return;
@@ -37,10 +41,10 @@ class ForceHttps extends AbstractListenerAggregate
     }
 
     private function setHttpStrictTransportSecurity(
-        string      $uriScheme,
-        Response    $response,
+        string $uriScheme,
+        Response $response,
         ?RouteMatch $match
-    ) : Response {
+    ): Response {
         if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match)) {
             return $response;
         }
@@ -63,14 +67,14 @@ class ForceHttps extends AbstractListenerAggregate
     /**
      * Force Https Scheme handle.
      */
-    public function forceHttpsScheme(MvcEvent $e) : void
+    public function forceHttpsScheme(MvcEvent $e): void
     {
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
-        $request   = $e->getRequest();
+        /** @var Request $request */
+        $request = $e->getRequest();
         /** @var Response $response */
-        $response  = $e->getResponse();
+        $response = $e->getResponse();
 
-        $uri       = $request->getUri();
+        $uri = $request->getUri();
         /** @var string  $uriScheme*/
         $uriScheme = $uri->getScheme();
 
