@@ -53,23 +53,23 @@ Or run copy command:
 cp vendor/samsonasik/force-https-module/config/force-https-module.local.php.dist config/autoload/force-https-module.local.php
 ```
 
-***b. For [Mezzio](https://docs.mezzio.dev/mezzio/) application, copy `expressive-force-https-module.local.php.dist` config to your local's autoload and configure it***
+***b. For [Mezzio](https://docs.mezzio.dev/mezzio/) application, copy `mezzio-force-https-module.local.php.dist` config to your local's autoload and configure it***
 
 | source                                                                       | destination                                 |
 |------------------------------------------------------------------------------|---------------------------------------------|
-|  vendor/samsonasik/force-https-module/config/expressive-force-https-module.local.php.dist | config/autoload/expressive-force-https-module.local.php |
+|  vendor/samsonasik/force-https-module/config/mezzio-force-https-module.local.php.dist | config/autoload/mezzio-force-https-module.local.php |
 
 Or run copy command:
 
 ```sh
-cp vendor/samsonasik/force-https-module/config/expressive-force-https-module.local.php.dist config/autoload/expressive-force-https-module.local.php
+cp vendor/samsonasik/force-https-module/config/mezzio-force-https-module.local.php.dist config/autoload/mezzio-force-https-module.local.php
 ```
 
 When done, you can modify your local config:
 
 ```php
 <?php
-// config/autoload/force-https-module.local.php or config/autoload/expressive-force-https-module.local.php
+// config/autoload/force-https-module.local.php or config/autoload/mezzio-force-https-module.local.php
 return [
     'force-https-module' => [
         'enable'                => true,
