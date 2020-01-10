@@ -37,7 +37,7 @@
         "php-coveralls/php-coveralls": "^2.1",
         "phpstan/phpstan": "^0.10.8",
         "phpstan/phpstan-webmozart-assert": "^0.10.0",
-        "laminas/laminas-coding-standard": "^1.0",
+        "laminas/laminas-coding-standard": "^2.0",
         "mezzio/mezzio": "^3.0",
         "laminas/laminas-mvc": "^3.0"
     },
@@ -63,5 +63,7 @@
     "scripts": {
         "cs-check": "phpcs",
         "cs-fix": "phpcbf"
-    }
+    },
+    "minimum-stability": "alpha",
+    "prefer-stable": true
 }

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace ForceHttpsModule\Middleware;
 
 use ForceHttpsModule\HttpsTrait;
+use Mezzio\Router\RouteResult;
+use Mezzio\Router\RouterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Mezzio\Router\RouteResult;
-use Mezzio\Router\RouterInterface;
 
 class ForceHttps implements MiddlewareInterface
 {
@@ -29,10 +29,10 @@ class ForceHttps implements MiddlewareInterface
     }
 
     private function setHttpStrictTransportSecurity(
-        string            $uriScheme,
+        string $uriScheme,
         ResponseInterface $response,
-        RouteResult       $match
-    ) : ResponseInterface {
+        RouteResult $match
+    ): ResponseInterface {
         if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match)) {
             return $response;
         }
@@ -47,14 +47,14 @@ class ForceHttps implements MiddlewareInterface
         return $response->withHeader('Strict-Transport-Security', 'max-age=0');
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
         if (! $this->config['enable']) {
             return $response;
         }
 
-        $match    = $this->router->match($request);
+        $match = $this->router->match($request);
 
         $uri       = $request->getUri();
         $uriScheme = $uri->getScheme();
