@@ -5,4 +5,4 @@
 /spec/ export-ignore
 /CONTRIBUTING.md export-ignore
 /phpcs.xml export-ignore
-/kahlan-config.php
+/kahlan-config.php export-ignore
