@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace ForceHttpsModule\Listener;
 
 use ForceHttpsModule\HttpsTrait;
-use Zend\Console\Console;
-use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Http\PhpEnvironment\Response;
-use Zend\Mvc\MvcEvent;
-use Zend\Router\RouteMatch;
+use Laminas\Console\Console;
+use Laminas\EventManager\AbstractListenerAggregate;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Http\PhpEnvironment\Response;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Router\RouteMatch;
 
 class ForceHttps extends AbstractListenerAggregate
 {
@@ -65,7 +65,7 @@ class ForceHttps extends AbstractListenerAggregate
      */
     public function forceHttpsScheme(MvcEvent $e) : void
     {
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        /** @var \Laminas\Http\PhpEnvironment\Request $request */
         $request   = $e->getRequest();
         /** @var Response $response */
         $response  = $e->getResponse();

@@ -6,13 +6,13 @@ use ForceHttpsModule\Listener\ForceHttps;
 use Kahlan\Plugin\Double;
 use Kahlan\Plugin\Quit;
 use Kahlan\QuitException;
-use Zend\Console\Console;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Http\PhpEnvironment\Response;
-use Zend\Mvc\MvcEvent;
-use Zend\Router\RouteMatch;
-use Zend\Uri\Uri;
+use Laminas\Console\Console;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Http\PhpEnvironment\Response;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Router\RouteMatch;
+use Laminas\Uri\Uri;
 
 describe('ForceHttps', function () {
 

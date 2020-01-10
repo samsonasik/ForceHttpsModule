@@ -10,9 +10,11 @@ ForceHttpsModule
 Introduction
 ------------
 
-ForceHttpsModule is a configurable module for force https in your [ZF Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) and [ZF Expressive](https://zendframework.github.io/zend-expressive/) Application.
+ForceHttpsModule is a configurable module for force https in your [Laminas Mvc](https://docs.laminas.dev/tutorials/) and [Mezzio](https://docs.mezzio.dev/mezzio/) Application.
 
-> This is README for version ^2.0 which only support ZF3 and ZF Expressive version 3 with php ^7.1.
+> This is README for version ^3.0 which only support Laminas Mvc version 3 and Mezzio version 3 with php ^7.1.
+
+> For version ^2.0, you can read at [version 2 readme](https://github.com/samsonasik/ForceHttpsModule/tree/2.x.x) which only support ZF3 and ZF Expressive version 3 with php ^7.1.
 
 > For version 1, you can read at [version 1 readme](https://github.com/samsonasik/ForceHttpsModule/tree/1.x.x) which still support ZF2 and ZF Expressive version 1 and 2 with php ^5.6|^7.0 support.
 
@@ -39,7 +41,7 @@ composer require samsonasik/force-https-module
 
 **2. Copy config**
 
-***a. For [ZF3 Mvc](https://zendframework.github.io/tutorials/getting-started/overview/) application, copy `force-https-module.local.php.dist` config to your local's autoload and configure it***
+***a. For [Laminas Mvc](https://docs.laminas.dev/tutorials/) application, copy `force-https-module.local.php.dist` config to your local's autoload and configure it***
 
 | source                                                                       | destination                                 |
 |------------------------------------------------------------------------------|---------------------------------------------|
@@ -51,7 +53,7 @@ Or run copy command:
 cp vendor/samsonasik/force-https-module/config/force-https-module.local.php.dist config/autoload/force-https-module.local.php
 ```
 
-***b. For [ZF Expressive](https://zendframework.github.io/zend-expressive/) application, copy `expressive-force-https-module.local.php.dist` config to your local's autoload and configure it***
+***b. For [Mezzio](https://docs.mezzio.dev/mezzio/) application, copy `expressive-force-https-module.local.php.dist` config to your local's autoload and configure it***
 
 | source                                                                       | destination                                 |
 |------------------------------------------------------------------------------|---------------------------------------------|
@@ -97,7 +99,7 @@ return [
 
 **3. Lastly, enable it**
 
-***a. For ZF Mvc application***
+***a. For Laminas Mvc application***
 
 ```php
 // config/modules.config.php or config/application.config.php
@@ -107,9 +109,9 @@ return [
 ],
 ```
 
-***b. For ZF Expressive application***
+***b. For Mezzio application***
 
-For [zend-expressive-skeleton](https://github.com/zendframework/zend-expressive-skeleton) ^3.0, you need to open `config/pipeline.php` and add:
+For [mezzio-skeleton](https://github.com/mezzio/mezzio-skeleton) ^3.0, you need to open `config/pipeline.php` and add:
 
 ```php
 $app->pipe(ForceHttpsModule\Middleware\ForceHttps::class);

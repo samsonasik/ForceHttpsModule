@@ -1,10 +1,9 @@
 {
     "name": "samsonasik/force-https-module",
     "type": "library",
-    "description": "Force Https Module",
+    "description": "Force Https Module for Laminas Mvc and Mezzio application",
     "keywords": [
-        "zf2",
-        "zf3",
+        "laminas3",
         "expressive",
         "middleware",
         "force",
@@ -27,20 +26,20 @@
     "require": {
         "php": "^7.1",
         "webmozart/assert": "^1.4",
-        "zendframework/zend-console": "^2.5"
+        "laminas/laminas-console": "^2.5"
     },
     "conflict": {
-        "zendframework/zend-expressive": "<3.0",
-        "zendframework/zend-mvc": "<3.0"
+        "mezzio/mezzio": "<3.0",
+        "laminas/laminas-mvc": "<3.0"
     },
     "require-dev": {
         "kahlan/kahlan": "^4.0",
         "php-coveralls/php-coveralls": "^2.1",
         "phpstan/phpstan": "^0.10.8",
         "phpstan/phpstan-webmozart-assert": "^0.10.0",
-        "zendframework/zend-coding-standard": "^1.0",
-        "zendframework/zend-expressive": "^3.0",
-        "zendframework/zend-mvc": "^3.0"
+        "laminas/laminas-coding-standard": "^1.0",
+        "mezzio/mezzio": "^3.0",
+        "laminas/laminas-mvc": "^3.0"
     },
     "config": {
         "bin-dir": "bin",

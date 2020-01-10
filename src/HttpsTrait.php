@@ -6,9 +6,9 @@ namespace ForceHttpsModule;
 
 use Psr\Http\Message\ResponseInterface;
 use Webmozart\Assert\Assert;
-use Zend\Expressive\Router\RouteResult;
-use Zend\Http\PhpEnvironment\Response;
-use Zend\Router\RouteMatch;
+use Mezzio\Router\RouteResult;
+use Laminas\Http\PhpEnvironment\Response;
+use Laminas\Router\RouteMatch;
 
 trait HttpsTrait
 {
