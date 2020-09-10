@@ -205,6 +205,62 @@ describe('ForceHttps', function () {
 
             });
 
+            it('not redirect if force_all_routes is true and route name in exclude_specific_routes config', function () {
+
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'exclude_specific_routes' => [
+                        'checkout'
+                    ],
+                    'force_specific_routes' => [],
+                ]);
+
+                allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
+                allow($this->request)->toReceive('getUri')->andReturn($this->uri);
+                allow($this->uri)->toReceive('getScheme')->andReturn('http');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('checkout');
+                allow($this->uri)->toReceive('toString')->andReturn('http://example.com/about');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('send');
+
+                $listener->forceHttpsScheme($this->mvcEvent);
+                expect($this->mvcEvent)->toReceive('getResponse');
+            });
+
+
+            it('redirect if force_all_routes is true and route name not in exclude_specific_routes config', function () {
+
+                $listener = new ForceHttps([
+                    'enable'                => true,
+                    'force_all_routes'      => true,
+                    'exclude_specific_routes' => [
+                        'sale'
+                    ],
+                    'force_specific_routes' => [],
+                ]);
+
+                allow($this->mvcEvent)->toReceive('getRequest')->andReturn($this->request);
+                allow($this->request)->toReceive('getUri')->andReturn($this->uri);
+                allow($this->uri)->toReceive('getScheme')->andReturn('http');
+                allow($this->mvcEvent)->toReceive('getRouteMatch')->andReturn($this->routeMatch);
+                allow($this->routeMatch)->toReceive('getMatchedRouteName')->andReturn('checkout');
+                allow($this->uri)->toReceive('setScheme')->with('https')->andReturn($this->uri);
+                allow($this->uri)->toReceive('toString')->andReturn('https://example.com/about');
+                allow($this->mvcEvent)->toReceive('getResponse')->andReturn($this->response);
+                allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
+                allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
+                allow($this->response)->toReceive('send');
+
+                $closure = function () use ($listener) {
+                    $listener->forceHttpsScheme($this->mvcEvent);
+                };
+                expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
+
+                expect($this->mvcEvent)->toReceive('getResponse');
+            });
+
             it('redirect if force_all_routes is true', function () {
 
                 $listener = new ForceHttps([

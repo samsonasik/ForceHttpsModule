@@ -35,6 +35,11 @@ trait HttpsTrait
         }
 
         if ($this->config['force_all_routes']) {
+            if (! empty($this->config['exclude_specific_routes'])
+                && \in_array($match->getMatchedRouteName(), $this->config['exclude_specific_routes'])) {
+                return false;
+            }
+
             return true;
         }
 
