@@ -21,6 +21,7 @@ Features
 
 - [x] Enable/disable force https.
 - [x] Force Https to All routes.
+- [x] Force Https to All routes except exclusion list.
 - [x] Force Https to specific routes only.
 - [x] Keep headers, request method, and request body.
 - [x] Enable/disable HTTP Strict Transport Security Header and set its value.
@@ -76,6 +77,11 @@ return [
             // only works if previous's config 'force_all_routes' => false
             'checkout',
             'payment'
+        ],
+        'exclude_specific_routes' => [
+            // a lists of specific routes to not be https
+            // only works if previous config 'force_all_routes' => true
+            'non-https-route',
         ],
         // set HTTP Strict Transport Security Header
         'strict_transport_security' => [
