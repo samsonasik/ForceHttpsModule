@@ -40,15 +40,17 @@ trait HttpsTrait
         $matchedRouteName = $match->getMatchedRouteName();
 
         if ($this->config['force_all_routes']) {
-            if (! empty($this->config['exclude_specific_routes'])
-                && \in_array($matchedRouteName, $this->config['exclude_specific_routes'])) {
+            if (
+                ! empty($this->config['exclude_specific_routes'])
+                && in_array($matchedRouteName, $this->config['exclude_specific_routes'])
+            ) {
                 return false;
             }
 
             return true;
         }
 
-        if (! \in_array($matchedRouteName, $this->config['force_specific_routes'])) {
+        if (! in_array($matchedRouteName, $this->config['force_specific_routes'])) {
             return false;
         }
 
