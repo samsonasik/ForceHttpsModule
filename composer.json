@@ -24,7 +24,7 @@
         }
     ],
     "require": {
-        "php": "^7.1|~8.0",
+        "php": "^7.3|~8.0",
         "webmozart/assert": "^1.4",
         "laminas/laminas-console": "^2.5"
     },
