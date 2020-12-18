@@ -111,6 +111,6 @@ class ForceHttps extends AbstractListenerAggregate
      */
     private function isInConsole(): bool
     {
-        return PHP_SAPI === 'cli';
+        return PHP_SAPI === 'cli' || defined('STDIN');
     }
 }
