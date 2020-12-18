@@ -12,8 +12,10 @@ use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 
-use const PHP_SAPI;
+use function defined;
 use function sprintf;
+
+use const PHP_SAPI;
 
 class ForceHttps extends AbstractListenerAggregate
 {
