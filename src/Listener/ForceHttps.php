@@ -108,9 +108,8 @@ class ForceHttps extends AbstractListenerAggregate
 
     /**
      * Check if currently running in console
-     * @internal
      */
-    public function isInConsole(): bool
+    private function isInConsole(): bool
     {
         return PHP_SAPI === 'cli';
     }
