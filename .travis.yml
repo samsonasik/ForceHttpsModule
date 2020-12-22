@@ -8,7 +8,13 @@ php:
 before_script:
   - mkdir -p build/logs
   - composer self-update
-  - travis_retry composer install --prefer-source --no-interaction
+  - |
+    if [ $(phpenv version-name) != '8.0' ]; then
+      travis_retry composer install --prefer-source --no-interaction
+    fi
+    if [ $(phpenv version-name) == '8.0' ]; then
+      travis_retry composer install --prefer-source --no-interaction --ignore-platform-req=php
+    fi
   - composer dump-autoload -o
 
 script:
