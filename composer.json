@@ -32,7 +32,7 @@
         "laminas/laminas-mvc": "<3.0"
     },
     "require-dev": {
-        "kahlan/kahlan": "^4.0",
+        "kahlan/kahlan": "^5.0",
         "php-coveralls/php-coveralls": "^2.1",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-webmozart-assert": "^0.12",
