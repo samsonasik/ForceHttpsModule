@@ -1,22 +1,35 @@
 language: php
 
 php:
-  - 7.1
-  - 7.2
   - 7.3
   - 7.4
+  - 8.0
+
+env:
+  - XDEBUG_MODE=coverage
 
 before_script:
   - mkdir -p build/logs
   - composer self-update
-  - travis_retry composer install --prefer-source --no-interaction
+  - |
+    if [ $(phpenv version-name) != '8.0' ]; then
+      travis_retry composer install --prefer-source --no-interaction
+    fi
+    if [ $(phpenv version-name) == '8.0' ]; then
+      travis_retry composer install --prefer-source --no-interaction --ignore-platform-req=php
+    fi
   - composer dump-autoload -o
 
 script:
   - composer cs-check
   - bin/phpstan analyse src/ --level=max
-  - bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml
-  - bin/php-coveralls -v --exclude-no-stmt
+  - |
+    if [ $(phpenv version-name) != '8.0' ]; then
+      bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml && bin/php-coveralls -v --exclude-no-stmt
+    fi
+    if [ $(phpenv version-name) == '8.0' ]; then
+      bin/kahlan --reporter=verbose
+    fi
 
 notifications:
     email: false

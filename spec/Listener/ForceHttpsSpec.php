@@ -24,7 +24,7 @@ describe('ForceHttps', function () {
 
         it('not attach on route on console', function () {
 
-            Console::overrideIsConsole(true);
+            allow(ForceHttps::class)->toReceive('isInConsole')->andReturn(true);
             $listener = new ForceHttps([
                 'enable'                => true,
                 'force_all_routes'      => true,
@@ -40,7 +40,7 @@ describe('ForceHttps', function () {
 
         it('not attach when not enabled', function () {
 
-            Console::overrideIsConsole(false);
+            allow(ForceHttps::class)->toReceive('isInConsole')->andReturn(false);
             $listener = new ForceHttps([
                 'enable'                => false,
                 'force_all_routes'      => true,
@@ -56,7 +56,7 @@ describe('ForceHttps', function () {
 
         it('attach on route event on non-console and enable', function () {
 
-            Console::overrideIsConsole(false);
+            allow(ForceHttps::class)->toReceive('isInConsole')->andReturn(false);
             $listener = new ForceHttps([
                 'enable'                => true,
                 'force_all_routes'      => true,

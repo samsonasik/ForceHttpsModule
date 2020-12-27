@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ForceHttpsModule\Listener;
 
 use ForceHttpsModule\HttpsTrait;
-use Laminas\Console\Console;
 use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Http\PhpEnvironment\Request;
@@ -13,7 +12,10 @@ use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 
+use function defined;
 use function sprintf;
+
+use const PHP_SAPI;
 
 class ForceHttps extends AbstractListenerAggregate
 {
@@ -32,7 +34,7 @@ class ForceHttps extends AbstractListenerAggregate
      */
     public function attach(EventManagerInterface $events, $priority = 1): void
     {
-        if (Console::isConsole() || ! $this->config['enable']) {
+        if ($this->isInConsole() || ! $this->config['enable']) {
             return;
         }
 
@@ -104,5 +106,13 @@ class ForceHttps extends AbstractListenerAggregate
         $response->send();
 
         exit(0);
+    }
+
+    /**
+     * Check if currently running in console
+     */
+    private function isInConsole(): bool
+    {
+        return PHP_SAPI === 'cli' || defined('STDIN');
     }
 }
