@@ -22,7 +22,7 @@ script:
   - bin/phpstan analyse src/ --level=max
   - |
     if [ $(phpenv version-name) != '8.0' ]; then
-      bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml && bin/php-coveralls -v --exclude-no-stmt
+      export XDEBUG_MODE=coverage bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml && bin/php-coveralls -v --exclude-no-stmt
     fi
     if [ $(phpenv version-name) == '8.0' ]; then
       bin/kahlan --reporter=verbose
