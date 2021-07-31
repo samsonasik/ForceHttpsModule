@@ -40,21 +40,10 @@ trait HttpsTrait
         $matchedRouteName = $match->getMatchedRouteName();
 
         if ($this->config['force_all_routes']) {
-            if (
-                ! empty($this->config['exclude_specific_routes'])
-                && in_array($matchedRouteName, $this->config['exclude_specific_routes'])
-            ) {
-                return false;
-            }
-
-            return true;
+            return ! (! empty($this->config['exclude_specific_routes'])
+            && in_array($matchedRouteName, $this->config['exclude_specific_routes']));
         }
-
-        if (! in_array($matchedRouteName, $this->config['force_specific_routes'])) {
-            return false;
-        }
-
-        return true;
+        return (bool) in_array($matchedRouteName, $this->config['force_specific_routes']);
     }
 
     /**
@@ -111,8 +100,7 @@ trait HttpsTrait
     private function getFinalhttpsRequestUri(string $httpsRequestUri): string
     {
         $httpsRequestUri = $this->withWwwPrefixWhenRequired($httpsRequestUri);
-        $httpsRequestUri = $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
 
-        return $httpsRequestUri;
+        return $this->withoutWwwPrefixWhenNotRequired($httpsRequestUri);
     }
 }

@@ -2,13 +2,15 @@
 
 namespace ForceHttpsModule;
 
+use ForceHttpsModule\Listener\ForceHttps;
+use ForceHttpsModule\Listener\ForceHttpsFactory;
 return [
     'service_manager' => [
         'factories' => [
-            Listener\ForceHttps::class => Listener\ForceHttpsFactory::class,
+            ForceHttps::class => ForceHttpsFactory::class,
         ],
     ],
     'listeners' => [
-        Listener\ForceHttps::class,
+        ForceHttps::class,
     ],
 ];
