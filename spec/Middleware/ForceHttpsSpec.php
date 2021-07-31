@@ -17,23 +17,23 @@ describe('ForceHttps', function () {
 
     describe('->invoke()', function () {
 
-        given('response', function () {
+        given('response', function (): object {
             return Double::instance(['implements' => ResponseInterface::class]);
         });
 
-        given('request', function () {
+        given('request', function (): object {
             return Double::instance(['implements' => ServerRequestInterface::class]);
         });
 
-        given('uri', function () {
+        given('uri', function (): object {
             return Double::instance(['implements' => UriInterface::class]);
         });
 
-        given('router', function () {
+        given('router', function (): object {
             return Double::instance(['implements'  => RouterInterface::class]);
         });
 
-        it('not redirect on not-enable', function () {
+        it('not redirect on not-enable', function (): void {
 
             $listener = new ForceHttps(['enable' => false], $this->router);
 
@@ -45,7 +45,7 @@ describe('ForceHttps', function () {
             expect($this->response)->not->toReceive('withStatus');
         });
 
-        it('not redirect on router not match', function () {
+        it('not redirect on router not match', function (): void {
 
             $match = RouteResult::fromRouteFailure(null);
             allow($this->router)->toReceive('match')->andReturn($match);
@@ -62,7 +62,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('not redirect on router not match and config allow_404 is false', function () {
+        it('not redirect on router not match and config allow_404 is false', function (): void {
 
             $match = RouteResult::fromRouteFailure(null);
             allow($this->router)->toReceive('match')->andReturn($match);
@@ -85,7 +85,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('not redirect on https and match but no strict_transport_security config', function () {
+        it('not redirect on https and match but no strict_transport_security config', function (): void {
 
             $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
@@ -104,7 +104,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('not redirect on http and match, with force_all_routes is false and matched route name not in force_specific_routes config', function () {
+        it('not redirect on http and match, with force_all_routes is false and matched route name not in force_specific_routes config', function (): void {
 
             $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
             allow($this->router)->toReceive('match')->andReturn($match);
@@ -133,7 +133,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('not redirect on https and match, with strict_transport_security config, but disabled', function () {
+        it('not redirect on https and match, with strict_transport_security config, but disabled', function (): void {
 
             $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
@@ -163,7 +163,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('not redirect on https and match, with strict_transport_security config, and enabled', function () {
+        it('not redirect on https and match, with strict_transport_security config, and enabled', function (): void {
 
             $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
@@ -192,7 +192,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('return Response with 308 status on http and match', function () {
+        it('return Response with 308 status on http and match', function (): void {
 
             $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
@@ -223,7 +223,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('return Response with 308 status on http and not match, but allow_404 is true', function () {
+        it('return Response with 308 status on http and not match, but allow_404 is true', function (): void {
 
             $match = RouteResult::fromRouteFailure(null);
 
@@ -250,7 +250,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('return Response with 308 status with include www prefix on http and match with configurable "add_www_prefix"', function () {
+        it('return Response with 308 status with include www prefix on http and match with configurable "add_www_prefix"', function (): void {
 
             $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
@@ -282,7 +282,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('return Response with 308 status with remove www prefix on http and match with configurable "remove_www_prefix"', function () {
+        it('return Response with 308 status with remove www prefix on http and match with configurable "remove_www_prefix"', function (): void {
 
             $match = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 

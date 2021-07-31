@@ -10,21 +10,21 @@ use Mezzio\Router\RouterInterface;
 
 describe('ForceHttpsFactory', function () {
 
-    beforeAll(function () {
+    beforeAll(function (): void {
         $this->factory = new ForceHttpsFactory();
     });
 
     describe('->__invoke', function () {
 
-        given('container', function () {
+        given('container', function (): object {
             return Double::instance(['implements' => ContainerInterface::class]);
         });
 
-        given('router', function () {
+        given('router', function (): object {
             return Double::instance(['implements' => RouterInterface::class]);
         });
 
-        it('returns ' . ForceHttps::class . ' instance with default config', function () {
+        it('returns ' . ForceHttps::class . ' instance with default config', function (): void {
 
             $config = [];
             allow($this->container)->toReceive('get')->with('config')->andReturn($config);
@@ -36,7 +36,7 @@ describe('ForceHttpsFactory', function () {
 
         });
 
-        it('returns ' . ForceHttps::class . ' instance with module config', function () {
+        it('returns ' . ForceHttps::class . ' instance with module config', function (): void {
 
             $config = [
                 'force-https-module' => [

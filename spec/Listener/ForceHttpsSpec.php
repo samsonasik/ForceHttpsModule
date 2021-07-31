@@ -14,15 +14,15 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 use Laminas\Uri\Uri;
 
-describe('ForceHttps', function () {
+describe('ForceHttps', function (): void {
 
-    beforeAll(function () {
+    beforeAll(function (): void {
         $this->eventManager =  Double::instance(['implements' => EventManagerInterface::class]);
     });
 
-    describe('->attach()', function () {
+    describe('->attach()', function (): void {
 
-        it('not attach on route on console', function () {
+        it('not attach on route on console', function (): void {
 
             allow(ForceHttps::class)->toReceive('isInConsole')->andReturn(true);
             $listener = new ForceHttps([
@@ -38,7 +38,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('not attach when not enabled', function () {
+        it('not attach when not enabled', function (): void {
 
             allow(ForceHttps::class)->toReceive('isInConsole')->andReturn(false);
             $listener = new ForceHttps([
@@ -54,7 +54,7 @@ describe('ForceHttps', function () {
 
         });
 
-        it('attach on route event on non-console and enable', function () {
+        it('attach on route event on non-console and enable', function (): void {
 
             allow(ForceHttps::class)->toReceive('isInConsole')->andReturn(false);
             $listener = new ForceHttps([
@@ -74,9 +74,9 @@ describe('ForceHttps', function () {
 
     });
 
-    describe('->forceHttpsScheme()', function () {
+    describe('->forceHttpsScheme()', function (): void {
 
-        beforeEach(function () {
+        beforeEach(function (): void {
             $this->mvcEvent             = Double::instance(['extends' => MvcEvent::class, 'methods' => '__construct']);
             $this->response             = Double::instance(['extends' => Response::class]);
             $this->request              = Double::instance(['extends' => Request::class]);
@@ -86,9 +86,9 @@ describe('ForceHttps', function () {
             Quit::disable();
         });
 
-        context('on current scheme is https', function () {
+        context('on current scheme is https', function (): void {
 
-            it('not redirect if uri already has https scheme and without strict_transport_security', function () {
+            it('not redirect if uri already has https scheme and without strict_transport_security', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -109,7 +109,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('not redirect if router not match', function () {
+            it('not redirect if router not match', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -132,9 +132,9 @@ describe('ForceHttps', function () {
 
         });
 
-        context('on current scheme is http', function () {
+        context('on current scheme is http', function (): void {
 
-            it('not redirect if force_all_routes is false and route name not in force_specific_routes config', function () {
+            it('not redirect if force_all_routes is false and route name not in force_specific_routes config', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -157,7 +157,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('not redirect on router not match', function () {
+            it('not redirect on router not match', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -174,7 +174,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('redirect if force_all_routes is false and route name in force_specific_routes config', function () {
+            it('redirect if force_all_routes is false and route name in force_specific_routes config', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -196,7 +196,7 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
 
-                $closure = function () use ($listener) {
+                $closure = function () use ($listener): void {
                     $listener->forceHttpsScheme($this->mvcEvent);
                 };
                 expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
@@ -205,7 +205,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('not redirect if force_all_routes is true and route name in exclude_specific_routes config', function () {
+            it('not redirect if force_all_routes is true and route name in exclude_specific_routes config', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -230,7 +230,7 @@ describe('ForceHttps', function () {
             });
 
 
-            it('redirect if force_all_routes is true and route name not in exclude_specific_routes config', function () {
+            it('redirect if force_all_routes is true and route name not in exclude_specific_routes config', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -253,7 +253,7 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
 
-                $closure = function () use ($listener) {
+                $closure = function () use ($listener): void {
                     $listener->forceHttpsScheme($this->mvcEvent);
                 };
                 expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
@@ -261,7 +261,7 @@ describe('ForceHttps', function () {
                 expect($this->mvcEvent)->toReceive('getResponse');
             });
 
-            it('redirect if force_all_routes is true', function () {
+            it('redirect if force_all_routes is true', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -287,7 +287,7 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
 
-                $closure = function () use ($listener) {
+                $closure = function () use ($listener): void {
                     $listener->forceHttpsScheme($this->mvcEvent);
                 };
                 expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
@@ -296,7 +296,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('redirect if force_all_routes is true and strict_transport_security config exists', function () {
+            it('redirect if force_all_routes is true and strict_transport_security config exists', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -320,7 +320,7 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
 
-                $closure = function () use ($listener) {
+                $closure = function () use ($listener): void {
                     $listener->forceHttpsScheme($this->mvcEvent);
                 };
                 expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
@@ -331,7 +331,7 @@ describe('ForceHttps', function () {
             });
 
 
-            it('redirect no router not match, but allow_404 is true', function () {
+            it('redirect no router not match, but allow_404 is true', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'    => true,
@@ -349,7 +349,7 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/404');
                 allow($this->response)->toReceive('send');
 
-                $closure = function () use ($listener) {
+                $closure = function () use ($listener): void {
                     $listener->forceHttpsScheme($this->mvcEvent);
                 };
                 expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
@@ -359,7 +359,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('redirect with www prefix with configurable "add_www_prefix" on force_all_routes', function () {
+            it('redirect with www prefix with configurable "add_www_prefix" on force_all_routes', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -384,7 +384,7 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('getHeaders', 'addHeaderLine')->with('Location', 'https://example.com/about');
                 allow($this->response)->toReceive('send');
 
-                $closure = function () use ($listener) {
+                $closure = function () use ($listener): void {
                     $listener->forceHttpsScheme($this->mvcEvent);
                 };
                 expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
@@ -394,7 +394,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('redirect without www prefix for already has www prefix with configurable "remove_www_prefix" on force_all_routes', function () {
+            it('redirect without www prefix for already has www prefix with configurable "remove_www_prefix" on force_all_routes', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -424,7 +424,7 @@ describe('ForceHttps', function () {
                 allow($this->response)->toReceive('setStatusCode')->with(308)->andReturn($this->response);
                 allow($this->response)->toReceive('send');
 
-                $closure = function () use ($listener) {
+                $closure = function () use ($listener): void {
                     $listener->forceHttpsScheme($this->mvcEvent);
                 };
                 expect($closure)->toThrow(new QuitException('Exit statement occurred', 0));
@@ -433,7 +433,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('not redirect with set strict_transport_security exists and uri already has https scheme', function () {
+            it('not redirect with set strict_transport_security exists and uri already has https scheme', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -459,7 +459,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('set Strict-Transport-Security if force_specific_routes has its value, match and strict_transport_security config exists', function () {
+            it('set Strict-Transport-Security if force_specific_routes has its value, match and strict_transport_security config exists', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,
@@ -492,7 +492,7 @@ describe('ForceHttps', function () {
 
             });
 
-            it('set Strict-Transport-Security to expire if force_specific_routes has its value, match and strict_transport_security config exists', function () {
+            it('set Strict-Transport-Security to expire if force_specific_routes has its value, match and strict_transport_security config exists', function (): void {
 
                 $listener = new ForceHttps([
                     'enable'                => true,

@@ -22,6 +22,9 @@ class ForceHttps implements MiddlewareInterface
     /** @var RouterInterface */
     private $router;
 
+    /**
+     * @param mixed[] $config
+     */
     public function __construct(array $config, RouterInterface $router)
     {
         $this->config = $config;
@@ -31,9 +34,9 @@ class ForceHttps implements MiddlewareInterface
     private function setHttpStrictTransportSecurity(
         string $uriScheme,
         ResponseInterface $response,
-        RouteResult $match
+        RouteResult $routeResult
     ): ResponseInterface {
-        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match)) {
+        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $routeResult)) {
             return $response;
         }
 
@@ -47,16 +50,18 @@ class ForceHttps implements MiddlewareInterface
         return $response->withHeader('Strict-Transport-Security', 'max-age=0');
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-    {
-        $response = $handler->handle($request);
+    public function process(
+        ServerRequestInterface $serverRequest,
+        RequestHandlerInterface $requestHandler
+    ): ResponseInterface {
+        $response = $requestHandler->handle($serverRequest);
         if (! $this->config['enable']) {
             return $response;
         }
 
-        $match = $this->router->match($request);
+        $match = $this->router->match($serverRequest);
 
-        $uri       = $request->getUri();
+        $uri       = $serverRequest->getUri();
         $uriScheme = $uri->getScheme();
 
         $response = $this->setHttpStrictTransportSecurity($uriScheme, $response, $match);

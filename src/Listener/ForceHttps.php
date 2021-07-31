@@ -24,6 +24,9 @@ class ForceHttps extends AbstractListenerAggregate
     /** @var array */
     private $config;
 
+    /**
+     * @param mixed[] $config
+     */
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -32,22 +35,22 @@ class ForceHttps extends AbstractListenerAggregate
     /**
      * @param int $priority
      */
-    public function attach(EventManagerInterface $events, $priority = 1): void
+    public function attach(EventManagerInterface $eventManager, $priority = 1): void
     {
         if ($this->isInConsole() || ! $this->config['enable']) {
             return;
         }
 
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttpsScheme']);
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'forceHttpsScheme'], 1000);
+        $this->listeners[] = $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'forceHttpsScheme']);
+        $this->listeners[] = $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'forceHttpsScheme'], 1000);
     }
 
     private function setHttpStrictTransportSecurity(
         string $uriScheme,
         Response $response,
-        ?RouteMatch $match
+        ?RouteMatch $routeMatch
     ): Response {
-        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $match)) {
+        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $routeMatch)) {
             return $response;
         }
 
@@ -69,26 +72,26 @@ class ForceHttps extends AbstractListenerAggregate
     /**
      * Force Https Scheme handle.
      */
-    public function forceHttpsScheme(MvcEvent $e): void
+    public function forceHttpsScheme(MvcEvent $mvcEvent): void
     {
         /** @var Request $request */
-        $request = $e->getRequest();
+        $request = $mvcEvent->getRequest();
         /** @var Response $response */
-        $response = $e->getResponse();
+        $response = $mvcEvent->getResponse();
 
-        $uri = $request->getUri();
+        $http = $request->getUri();
         /** @var string  $uriScheme*/
-        $uriScheme = $uri->getScheme();
+        $uriScheme = $http->getScheme();
 
         /** @var RouteMatch|null $routeMatch */
-        $routeMatch = $e->getRouteMatch();
+        $routeMatch = $mvcEvent->getRouteMatch();
         $response   = $this->setHttpStrictTransportSecurity($uriScheme, $response, $routeMatch);
         if (! $this->isGoingToBeForcedToHttps($routeMatch)) {
             return;
         }
 
         if ($this->isSchemeHttps($uriScheme)) {
-            $uriString       = $uri->toString();
+            $uriString       = $http->toString();
             $httpsRequestUri = $this->getFinalhttpsRequestUri($uriString);
 
             if ($uriString === $httpsRequestUri) {
@@ -97,7 +100,7 @@ class ForceHttps extends AbstractListenerAggregate
         }
 
         $httpsRequestUri = $httpsRequestUri
-            ?? $this->getFinalhttpsRequestUri((string) $uri->setScheme('https'));
+            ?? $this->getFinalhttpsRequestUri((string) $http->setScheme('https'));
 
         // 308 keeps headers, request method, and request body
         $response->setStatusCode(308);
