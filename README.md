@@ -2,8 +2,8 @@ ForceHttpsModule
 ================
 
 [![Latest Version](https://img.shields.io/github/release/samsonasik/ForceHttpsModule.svg?style=flat-square)](https://github.com/samsonasik/ForceHttpsModule/releases)
-[![Build Status](https://travis-ci.com/samsonasik/ForceHttpsModule.svg?branch=master)](https://travis-ci.org/samsonasik/ForceHttpsModule)
-[![Coverage Status](https://coveralls.io/repos/github/samsonasik/ForceHttpsModule/badge.svg?branch=master)](https://coveralls.io/github/samsonasik/ForceHttpsModule?branch=master)
+![ci build](https://github.com/samsonasik/ForceHttpsModule/workflows/ci%20build/badge.svg)
+[![Code Coverage](https://codecov.io/gh/samsonasik/ForceHttpsModule/branch/master/graph/badge.svg)](https://codecov.io/gh/samsonasik/ForceHttpsModule)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 [![Downloads](https://poser.pugx.org/samsonasik/force-https-module/downloads)](https://packagist.org/packages/samsonasik/force-https-module)
 
