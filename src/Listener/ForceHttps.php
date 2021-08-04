@@ -45,28 +45,12 @@ class ForceHttps extends AbstractListenerAggregate
         $this->listeners[] = $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'forceHttpsScheme'], 1000);
     }
 
-    private function setHttpStrictTransportSecurity(
-        string $uriScheme,
-        Response $response,
-        ?RouteMatch $routeMatch
-    ): Response {
-        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $routeMatch)) {
-            return $response;
-        }
-
-        if ($this->config['strict_transport_security']['enable'] === true) {
-            $response->getHeaders()
-                     ->addHeaderLine(sprintf(
-                         'Strict-Transport-Security: %s',
-                         $this->config['strict_transport_security']['value']
-                     ));
-            return $response;
-        }
-
-        // set max-age = 0 to strictly expire it,
-        $response->getHeaders()
-                 ->addHeaderLine('Strict-Transport-Security: max-age=0');
-        return $response;
+    /**
+     * Check if currently running in console
+     */
+    private function isInConsole(): bool
+    {
+        return PHP_SAPI === 'cli' || defined('STDIN');
     }
 
     /**
@@ -111,11 +95,27 @@ class ForceHttps extends AbstractListenerAggregate
         exit(0);
     }
 
-    /**
-     * Check if currently running in console
-     */
-    private function isInConsole(): bool
-    {
-        return PHP_SAPI === 'cli' || defined('STDIN');
+    private function setHttpStrictTransportSecurity(
+        string $uriScheme,
+        Response $response,
+        ?RouteMatch $routeMatch
+    ): Response {
+        if ($this->isSkippedHttpStrictTransportSecurity($uriScheme, $routeMatch)) {
+            return $response;
+        }
+
+        if ($this->config['strict_transport_security']['enable'] === true) {
+            $response->getHeaders()
+                     ->addHeaderLine(sprintf(
+                         'Strict-Transport-Security: %s',
+                         $this->config['strict_transport_security']['value']
+                     ));
+            return $response;
+        }
+
+        // set max-age = 0 to strictly expire it,
+        $response->getHeaders()
+                 ->addHeaderLine('Strict-Transport-Security: max-age=0');
+        return $response;
     }
 }
