@@ -15,9 +15,7 @@ describe('ForceHttpsFactory', function () {
 
     describe('->__invoke', function () {
 
-        given('container', function (): object {
-            return Double::instance(['implements' => ContainerInterface::class]);
-        });
+        given('container', fn(): object => Double::instance(['implements' => ContainerInterface::class]));
 
         it('returns ' . ForceHttps::class . ' instance with default config', function (): void {
 

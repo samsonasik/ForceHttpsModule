@@ -19,8 +19,7 @@ class ForceHttps implements MiddlewareInterface
     /** @var array */
     private $config;
 
-    /** @var RouterInterface */
-    private $router;
+    private RouterInterface $router;
 
     /**
      * @param mixed[] $config
@@ -78,8 +77,7 @@ class ForceHttps implements MiddlewareInterface
             }
         }
 
-        $httpsRequestUri = $httpsRequestUri
-            ?? $this->getFinalhttpsRequestUri((string) $uri->withScheme('https'));
+        $httpsRequestUri ??= $this->getFinalhttpsRequestUri((string) $uri->withScheme('https'));
 
         // 308 keeps headers, request method, and request body
         $response = $response->withStatus(308);

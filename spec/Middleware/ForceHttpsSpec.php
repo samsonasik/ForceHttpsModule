@@ -17,21 +17,13 @@ describe('ForceHttps', function () {
 
     describe('->invoke()', function () {
 
-        given('response', function (): object {
-            return Double::instance(['implements' => ResponseInterface::class]);
-        });
+        given('response', fn(): object => Double::instance(['implements' => ResponseInterface::class]));
 
-        given('request', function (): object {
-            return Double::instance(['implements' => ServerRequestInterface::class]);
-        });
+        given('request', fn(): object => Double::instance(['implements' => ServerRequestInterface::class]));
 
-        given('uri', function (): object {
-            return Double::instance(['implements' => UriInterface::class]);
-        });
+        given('uri', fn(): object => Double::instance(['implements' => UriInterface::class]));
 
-        given('router', function (): object {
-            return Double::instance(['implements'  => RouterInterface::class]);
-        });
+        given('router', fn(): object => Double::instance(['implements'  => RouterInterface::class]));
 
         it('not redirect on not-enable', function (): void {
 

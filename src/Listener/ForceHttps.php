@@ -83,8 +83,7 @@ class ForceHttps extends AbstractListenerAggregate
             }
         }
 
-        $httpsRequestUri = $httpsRequestUri
-            ?? $this->getFinalhttpsRequestUri((string) $http->setScheme('https'));
+        $httpsRequestUri ??= $this->getFinalhttpsRequestUri((string) $http->setScheme('https'));
 
         // 308 keeps headers, request method, and request body
         $response->setStatusCode(308);
