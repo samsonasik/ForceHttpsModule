@@ -24,7 +24,7 @@
         }
     ],
     "require": {
-        "php": "^7.3|~8.0",
+        "php": "^7.3|^8.0",
         "webmozart/assert": "^1.9"
     },
     "conflict": {
@@ -32,14 +32,14 @@
         "laminas/laminas-mvc": "<3.0"
     },
     "require-dev": {
-        "kahlan/kahlan": "^5.0",
+        "kahlan/kahlan": "dev-moving-to-github-action",
         "laminas/laminas-coding-standard": "^2.0",
         "laminas/laminas-mvc": "^3.0",
         "mezzio/mezzio": "^3.0",
         "php-coveralls/php-coveralls": "^2.1",
-        "phpstan/phpstan": "^1.0",
+        "phpstan/phpstan": "^1.1",
         "phpstan/phpstan-webmozart-assert": "^1.0",
-        "rector/rector": "dev-main"
+        "rector/rector": "0.12.7"
     },
     "config": {
         "bin-dir": "bin",

@@ -13,7 +13,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+<<<<<<< HEAD
         php-versions: ['7.3', '7.4', '8.0']
+=======
+        php-versions: ['8.0', '8.1']
+>>>>>>> 15d7e94 (apply php 8.1 support)
     steps:
       - name: Setup PHP Action
         uses: shivammathur/setup-php@v2
