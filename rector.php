@@ -1,26 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
-use Rector\CodeQuality\Rector\Include_\AbsolutizeRequireAndIncludePathRector;
-use Rector\Core\Configuration\Option;
+use Rector\Config\RectorConfig;
 use Rector\Php56\Rector\FunctionLike\AddDefaultValueForUndefinedVariableRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(LevelSetList::UP_TO_PHP_74);
-    $containerConfigurator->import(SetList::CODE_QUALITY);
-    $containerConfigurator->import(SetList::NAMING);
-    $containerConfigurator->import(SetList::TYPE_DECLARATION);
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->sets([
+        LevelSetList::UP_TO_PHP_74,
+        SetList::CODE_QUALITY,
+        SetList::NAMING,
+        SetList::TYPE_DECLARATION,
+    ]);
 
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [__DIR__ . '/config', __DIR__ . '/src', __DIR__ . '/spec']);
-
-    $parameters->set(Option::AUTO_IMPORT_NAMES, true);
-
-    $parameters->set(Option::SKIP, [
-        AbsolutizeRequireAndIncludePathRector::class,
+    $rectorConfig->paths([__DIR__ . '/config', __DIR__ . '/src', __DIR__ . '/spec', __DIR__ . '/rector.php']);
+    $rectorConfig->importNames();
+    $rectorConfig->skip([
         CallableThisArrayToAnonymousFunctionRector::class,
         AddDefaultValueForUndefinedVariableRector::class,
     ]);
