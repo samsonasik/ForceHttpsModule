@@ -9,6 +9,7 @@ use Rector\Set\ValueObject\SetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->sets([
+        SetList::DEAD_CODE,
         LevelSetList::UP_TO_PHP_74,
         SetList::CODE_QUALITY,
         SetList::NAMING,
