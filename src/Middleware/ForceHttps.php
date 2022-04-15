@@ -16,8 +16,7 @@ class ForceHttps implements MiddlewareInterface
 {
     use HttpsTrait;
 
-    /** @var array */
-    private $config;
+    private array $config;
 
     private RouterInterface $router;
 

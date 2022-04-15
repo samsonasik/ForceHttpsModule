@@ -13,9 +13,9 @@ use Mezzio\Router\Route;
 use Mezzio\Router\RouteResult;
 use Mezzio\Router\RouterInterface;
 
-describe('ForceHttps', function () {
+describe('ForceHttps', function (): void {
 
-    describe('->invoke()', function () {
+    describe('->invoke()', function (): void {
 
         given('response', fn(): object => Double::instance(['implements' => ResponseInterface::class]));
 

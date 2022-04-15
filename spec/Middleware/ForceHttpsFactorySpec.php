@@ -8,13 +8,13 @@ use Kahlan\Plugin\Double;
 use Psr\Container\ContainerInterface;
 use Mezzio\Router\RouterInterface;
 
-describe('ForceHttpsFactory', function () {
+describe('ForceHttpsFactory', function (): void {
 
     beforeAll(function (): void {
         $this->factory = new ForceHttpsFactory();
     });
 
-    describe('->__invoke', function () {
+    describe('->__invoke', function (): void {
 
         given('container', fn(): object => Double::instance(['implements' => ContainerInterface::class]));
 

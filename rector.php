@@ -14,6 +14,7 @@ return static function (RectorConfig $rectorConfig): void {
         SetList::CODE_QUALITY,
         SetList::NAMING,
         SetList::TYPE_DECLARATION,
+        SetList::TYPE_DECLARATION_STRICT,
     ]);
 
     $rectorConfig->paths([__DIR__ . '/config', __DIR__ . '/src', __DIR__ . '/spec', __DIR__ . '/rector.php']);

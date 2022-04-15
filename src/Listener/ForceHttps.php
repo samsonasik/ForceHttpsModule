@@ -21,8 +21,7 @@ class ForceHttps extends AbstractListenerAggregate
 {
     use HttpsTrait;
 
-    /** @var array */
-    private $config;
+    private array $config;
 
     /**
      * @param mixed[] $config
