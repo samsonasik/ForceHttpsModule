@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
 use Rector\Config\RectorConfig;
-use Rector\Php56\Rector\FunctionLike\AddDefaultValueForUndefinedVariableRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 
@@ -21,6 +20,5 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
     $rectorConfig->skip([
         CallableThisArrayToAnonymousFunctionRector::class,
-        AddDefaultValueForUndefinedVariableRector::class,
     ]);
 };
