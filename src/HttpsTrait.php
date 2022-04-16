@@ -15,10 +15,10 @@ use function substr_replace;
 trait HttpsTrait
 {
     /** @var bool */
-    private $needsWwwPrefix;
+    private $needsWwwPrefix = false;
 
     /** @var bool */
-    private $alreadyHasWwwPrefix;
+    private $alreadyHasWwwPrefix = false;
 
     private function isSchemeHttps(string $uriScheme): bool
     {
@@ -43,6 +43,7 @@ trait HttpsTrait
             return ! (! empty($this->config['exclude_specific_routes'])
             && in_array($matchedRouteName, $this->config['exclude_specific_routes']));
         }
+
         return in_array($matchedRouteName, $this->config['force_specific_routes']);
     }
 
