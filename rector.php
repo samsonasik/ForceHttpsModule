@@ -6,6 +6,7 @@ use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
 use Rector\CodingStyle\Rector\ArrowFunction\StaticArrowFunctionRector;
 use Rector\CodingStyle\Rector\Closure\StaticClosureRector;
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 
@@ -30,5 +31,8 @@ return static function (RectorConfig $rectorConfig): void {
         StaticClosureRector::class       => [
             __DIR__ . '/spec',
         ],
+        RemoveAlwaysTrueIfConditionRector::class => [
+            __DIR__ . '/src/HttpsTrait.php',
+        ]
     ]);
 };
