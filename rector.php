@@ -20,7 +20,12 @@ return static function (RectorConfig $rectorConfig): void {
         SetList::CODING_STYLE,
     ]);
 
-    $rectorConfig->paths([__DIR__ . '/config', __DIR__ . '/src', __DIR__ . '/spec', __DIR__ . '/rector.php']);
+    $rectorConfig->paths([
+        __DIR__ . '/config',
+        __DIR__ . '/src',
+        __DIR__ . '/spec',
+        __DIR__ . '/rector.php'
+    ]);
     $rectorConfig->importNames();
     $rectorConfig->skip([
         CallableThisArrayToAnonymousFunctionRector::class,
