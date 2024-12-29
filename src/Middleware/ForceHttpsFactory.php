@@ -11,7 +11,7 @@ class ForceHttpsFactory
 {
     public function __invoke(ContainerInterface $container): ForceHttps
     {
-        $config           = $container->get('config');
+        $config = $container->get('config');
         /** @var RouterInterface $router */
         $router           = $container->get(RouterInterface::class);
         $forceHttpsConfig = $config['force-https-module'] ?? ['enable' => false];
