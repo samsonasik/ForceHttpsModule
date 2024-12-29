@@ -302,10 +302,11 @@ describe('ForceHttps', function (): void {
             $routeResult = RouteResult::fromRoute(new Route('/about', Double::instance(['implements' => MiddlewareInterface::class])));
 
             allow($this->router)->toReceive('match')->andReturn($routeResult);
+            allow($this->uri)->toReceive('__toString')->andReturn('https://www.example.com/about');
             allow($this->request)->toReceive('getUri')->andReturn($this->uri);
             allow($this->uri)->toReceive('getScheme')->andReturn('http');
             allow($this->uri)->toReceive('withScheme')->andReturn($this->uri);
-            allow($this->uri)->toReceive('__toString')->andReturn('https://www.example.com/about');
+            allow($this->uri)->toReceive('__toString')->andReturn('https://example.com/about');
 
             $handler = Double::instance(['implements' => RequestHandlerInterface::class]);
             allow($handler)->toReceive('handle')->with($this->request)->andReturn($this->response);
