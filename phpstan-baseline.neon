@@ -121,12 +121,6 @@ parameters:
 			path: src/Middleware/ForceHttpsFactory.php
 
 		-
-			message: '#^Parameter \#2 \$router of class ForceHttpsModule\\Middleware\\ForceHttps constructor expects Mezzio\\Router\\RouterInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Middleware/ForceHttpsFactory.php
-
-		-
 			message: '#^Method ForceHttpsModule\\Module\:\:getConfig\(\) should return array\<mixed\> but returns mixed\.$#'
 			identifier: return.type
 			count: 1
