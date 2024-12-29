@@ -320,6 +320,7 @@ describe('ForceHttps', function (): void {
                         'enable' => true,
                         'value'  => 'max-age=31536000',
                     ],
+                    'add_www_prefix' => false,
                     'remove_www_prefix' => true,
                 ],
                 $this->router
