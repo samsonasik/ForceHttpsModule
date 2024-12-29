@@ -28,7 +28,7 @@ trait HttpsTrait
     private function isGoingToBeForcedToHttps(RouteMatch|RouteResult|null $match = null): bool
     {
         if ($match === null || ($match instanceof RouteResult && $match->isFailure())) {
-            return (bool) $this->config['allow_404'] ?? false;
+            return (bool) ($this->config['allow_404'] ?? false);
         }
 
         $matchedRouteName = $match->getMatchedRouteName();
