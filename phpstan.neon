@@ -1,6 +1,3 @@
 includes:
 	- vendor/phpstan/phpstan-webmozart-assert/extension.neon
-
-parameters:
-	checkMissingIterableValueType: false
-
+	- phpstan-baseline.neon
