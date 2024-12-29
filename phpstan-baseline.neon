@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Call to static method Webmozart\\Assert\\Assert\:\:notNull\(\) with Laminas\\Router\\RouteMatch\|Mezzio\\Router\\RouteResult will always evaluate to true\.$#'
-			identifier: staticMethod.alreadyNarrowedType
-			count: 1
-			path: src/Listener/ForceHttps.php
-
-		-
 			message: '#^Cannot access offset ''enable'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -59,12 +53,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Listener/ForceHttpsFactory.php
-
-		-
-			message: '#^Call to static method Webmozart\\Assert\\Assert\:\:notNull\(\) with Laminas\\Router\\RouteMatch\|Mezzio\\Router\\RouteResult will always evaluate to true\.$#'
-			identifier: staticMethod.alreadyNarrowedType
-			count: 1
-			path: src/Middleware/ForceHttps.php
 
 		-
 			message: '#^Cannot access offset ''enable'' on mixed\.$#'

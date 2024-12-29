@@ -6,7 +6,6 @@ namespace ForceHttpsModule;
 
 use Laminas\Router\RouteMatch;
 use Mezzio\Router\RouteResult;
-use Webmozart\Assert\Assert;
 
 use function in_array;
 use function strpos;
@@ -32,7 +31,6 @@ trait HttpsTrait
             return $this->config['allow_404'] ?? false;
         }
 
-        Assert::notNull($match);
         $matchedRouteName = $match->getMatchedRouteName();
 
         if ($this->config['force_all_routes']) {
