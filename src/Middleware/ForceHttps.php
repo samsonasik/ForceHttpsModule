@@ -16,17 +16,12 @@ class ForceHttps implements MiddlewareInterface
 {
     use HttpsTrait;
 
-    private array $config;
-
-    private RouterInterface $router;
-
     /**
      * @param mixed[] $config
      */
-    public function __construct(array $config, RouterInterface $router)
+    public function __construct(private array $config, private RouterInterface $router)
     {
         $this->config = $config;
-        $this->router = $router;
     }
 
     private function setHttpStrictTransportSecurity(

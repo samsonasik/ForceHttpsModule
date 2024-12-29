@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.4', '8.0', '8.1']
+        php-versions: ['8.2', '8.3', '8.4']
     steps:
       - name: Setup PHP Action
         uses: shivammathur/setup-php@v2
@@ -30,11 +30,12 @@ jobs:
         run: "composer cs-check"
       - name: "Code analyze"
         run: |
-          bin/phpstan analyse src/ --level=8 -c phpstan.neon
+          bin/phpstan analyse src/ --level=max -c phpstan.neon
           bin/rector process --dry-run
       - name: "Run test suite"
         run: "mkdir -p build/logs && bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml"
       - name: Upload coverage to Codecov
+        if: github.event.pull_request.head.repo.full_name == 'samsonasik/ForceHttpsModule'
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

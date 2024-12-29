@@ -24,21 +24,21 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
-        "webmozart/assert": "^1.9"
+        "php": "^8.2",
+        "webmozart/assert": "^1.11"
     },
     "conflict": {
         "mezzio/mezzio": "<3.0",
         "laminas/laminas-mvc": "<3.0"
     },
     "require-dev": {
-        "kahlan/kahlan": "^5.2",
-        "laminas/laminas-coding-standard": "^2.0",
-        "laminas/laminas-mvc": "^3.0",
-        "mezzio/mezzio": "^3.0",
-        "php-coveralls/php-coveralls": "^2.1",
-        "phpstan/phpstan": "^1.1",
-        "phpstan/phpstan-webmozart-assert": "^1.0",
+        "kahlan/kahlan": "^6.0",
+        "laminas/laminas-coding-standard": "^2.5",
+        "laminas/laminas-mvc": "^3.8",
+        "mezzio/mezzio": "^3.20.1",
+        "php-coveralls/php-coveralls": "^2.7",
+        "phpstan/phpstan": "^2.0.4",
+        "phpstan/phpstan-webmozart-assert": "^2.0",
         "rector/rector": "dev-main"
     },
     "config": {
