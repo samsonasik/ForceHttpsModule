@@ -7,3 +7,4 @@
 /phpcs.xml export-ignore
 /kahlan-config.php export-ignore
 /rector.php export-ignore
+/phpstan-baseline.neon export-ignore
