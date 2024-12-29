@@ -12,7 +12,9 @@ Introduction
 
 ForceHttpsModule is a configurable module for force https in your [Laminas Mvc](https://docs.laminas.dev/tutorials/) and [Mezzio](https://docs.mezzio.dev/mezzio/) Application.
 
-> This is README for version ^4.1 which only support Laminas Mvc version 3 and Mezzio version 3 with php ^7.4|~8.0.
+> This is README for version ^5.0 which only support Laminas Mvc version 3 and Mezzio version 3 with php ^8.2.
+
+> For ^4.1.x, you can read at [version 4.1.x readme](https://github.com/samsonasik/ForceHttpsModule/blob/4.1.x/README.md) which only support Laminas Mvc version 3 and Mezzio version 3 with php ^7.4|~8.0
 
 > For ~4.0.0, you can read at [version 4.0.x readme](https://github.com/samsonasik/ForceHttpsModule/blob/4.0.x/README.md) which only support Laminas Mvc version 3 and Mezzio version 3 with php ^7.3|~8.0
 
