@@ -13,8 +13,8 @@ parameters:
 			path: src/Listener/ForceHttps.php
 
 		-
-			message: '#^Method ForceHttpsModule\\Listener\\ForceHttps\:\:isGoingToBeForcedToHttps\(\) should return bool but returns mixed\.$#'
-			identifier: return.type
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
 			count: 1
 			path: src/Listener/ForceHttps.php
 
@@ -67,8 +67,8 @@ parameters:
 			path: src/Middleware/ForceHttps.php
 
 		-
-			message: '#^Method ForceHttpsModule\\Middleware\\ForceHttps\:\:isGoingToBeForcedToHttps\(\) should return bool but returns mixed\.$#'
-			identifier: return.type
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
 			count: 1
 			path: src/Middleware/ForceHttps.php
 
