@@ -6,7 +6,6 @@ use ForceHttpsModule\Listener\ForceHttps;
 use Kahlan\Plugin\Double;
 use Kahlan\Plugin\Quit;
 use Kahlan\QuitException;
-use Laminas\Console\Console;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Http\PhpEnvironment\Response;

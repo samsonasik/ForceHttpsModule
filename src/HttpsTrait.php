@@ -14,11 +14,9 @@ use function substr_replace;
 
 trait HttpsTrait
 {
-    /** @var bool */
-    private $needsWwwPrefix = false;
+    private bool $needsWwwPrefix = false;
 
-    /** @var bool */
-    private $alreadyHasWwwPrefix = false;
+    private bool $alreadyHasWwwPrefix = false;
 
     private function isSchemeHttps(string $uriScheme): bool
     {
@@ -27,10 +25,8 @@ trait HttpsTrait
 
     /**
      * Check Config if is going to be forced to https.
-     *
-     * @param  RouteMatch|RouteResult|null $match
      */
-    private function isGoingToBeForcedToHttps($match = null): bool
+    private function isGoingToBeForcedToHttps(RouteMatch|RouteResult|null $match = null): bool
     {
         if ($match === null || ($match instanceof RouteResult && $match->isFailure())) {
             return $this->config['allow_404'] ?? false;
@@ -49,11 +45,11 @@ trait HttpsTrait
 
     /**
      * Check if Setup Strict-Transport-Security need to be skipped.
-     *
-     * @param RouteMatch|RouteResult|null $match
      */
-    private function isSkippedHttpStrictTransportSecurity(string $uriScheme, $match = null): bool
-    {
+    private function isSkippedHttpStrictTransportSecurity(
+        string $uriScheme,
+        RouteMatch|RouteResult|null $match = null
+    ): bool {
         return ! $this->isSchemeHttps($uriScheme) ||
             ! $this->isGoingToBeForcedToHttps($match) ||
             ! isset(
