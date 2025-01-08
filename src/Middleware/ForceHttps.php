@@ -21,7 +21,6 @@ class ForceHttps implements MiddlewareInterface
      */
     public function __construct(private array $config, private RouterInterface $router)
     {
-        $this->config = $config;
     }
 
     private function setHttpStrictTransportSecurity(
