@@ -28,7 +28,7 @@ trait HttpsTrait
     private function isGoingToBeForcedToHttps(RouteMatch|RouteResult|null $match = null): bool
     {
         if ($match === null || ($match instanceof RouteResult && $match->isFailure())) {
-            return $this->config['allow_404'] ?? false;
+            return (bool) ($this->config['allow_404'] ?? false);
         }
 
         $matchedRouteName = $match->getMatchedRouteName();
@@ -61,7 +61,7 @@ trait HttpsTrait
      */
     private function withWwwPrefixWhenRequired(string $httpsRequestUri): string
     {
-        $this->needsWwwPrefix      = $this->config['add_www_prefix'] ?? false;
+        $this->needsWwwPrefix      = (bool) ($this->config['add_www_prefix'] ?? false);
         $this->alreadyHasWwwPrefix = strpos($httpsRequestUri, 'www.', 8) === 8;
 
         if (! $this->needsWwwPrefix || $this->alreadyHasWwwPrefix) {

@@ -13,12 +13,6 @@ parameters:
 			path: src/Listener/ForceHttps.php
 
 		-
-			message: '#^Method ForceHttpsModule\\Listener\\ForceHttps\:\:isGoingToBeForcedToHttps\(\) should return bool but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Listener/ForceHttps.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -27,12 +21,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Listener/ForceHttps.php
-
-		-
-			message: '#^Property ForceHttpsModule\\Listener\\ForceHttps\:\:\$needsWwwPrefix \(bool\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Listener/ForceHttps.php
 
@@ -61,12 +49,6 @@ parameters:
 			path: src/Middleware/ForceHttps.php
 
 		-
-			message: '#^Method ForceHttpsModule\\Middleware\\ForceHttps\:\:isGoingToBeForcedToHttps\(\) should return bool but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Middleware/ForceHttps.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -75,12 +57,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$value of method Psr\\Http\\Message\\MessageInterface\:\:withHeader\(\) expects array\<string\>\|string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Middleware/ForceHttps.php
-
-		-
-			message: '#^Property ForceHttpsModule\\Middleware\\ForceHttps\:\:\$needsWwwPrefix \(bool\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Middleware/ForceHttps.php
 
