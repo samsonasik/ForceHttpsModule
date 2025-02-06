@@ -11,7 +11,7 @@ class ForceHttpsFactory
     public function __invoke(ContainerInterface $container): ForceHttps
     {
         $config           = $container->get('config');
-        $forceHttpsConfig = $config['force-https-module'] ?? ['enable' => false];
+        $forceHttpsConfig = (array) ($config['force-https-module'] ?? ['enable' => false]);
 
         return new ForceHttps($forceHttpsConfig);
     }

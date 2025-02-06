@@ -31,12 +31,6 @@ parameters:
 			path: src/Listener/ForceHttpsFactory.php
 
 		-
-			message: '#^Parameter \#1 \$config of class ForceHttpsModule\\Listener\\ForceHttps constructor expects array\<mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Listener/ForceHttpsFactory.php
-
-		-
 			message: '#^Cannot access offset ''enable'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -63,12 +57,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''force\-https\-module'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Middleware/ForceHttpsFactory.php
-
-		-
-			message: '#^Parameter \#1 \$config of class ForceHttpsModule\\Middleware\\ForceHttps constructor expects array\<mixed\>, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Middleware/ForceHttpsFactory.php
 
