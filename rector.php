@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Rector\Php81\Rector\Array_\FirstClassCallableRector;
+use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 
 return RectorConfig::configure()
     ->withPhpSets(php82: true)
-    ->withPreparedSets(deadCode: true, codeQuality: true, naming: true, typeDeclarations: true, codingStyle: true)
+    ->withPreparedSets(deadCode: true, codeQuality: true, codingStyle: true, typeDeclarations: true, naming: true)
     ->withImportNames(removeUnusedImports: true)
     ->withPaths([
         __DIR__ . '/config',
@@ -17,5 +17,5 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withSkip([
-        FirstClassCallableRector::class,
+        ArrayToFirstClassCallableRector::class,
     ]);
