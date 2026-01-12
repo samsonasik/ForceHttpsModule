@@ -8,12 +8,13 @@ on:
 
 jobs:
   build:
-    name: PHP ${{ matrix.php-versions }}
+    name: PHP ${{ matrix.php-versions }} (${{ matrix.deps }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         php-versions: ['8.2', '8.3', '8.4']
+        deps: ['latest', 'lowest']
     steps:
       - name: Setup PHP Action
         uses: shivammathur/setup-php@v2
@@ -24,8 +25,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - run: "composer validate"
-      - name: "Install dependencies"
-        run: "composer install --prefer-dist"
+      - name: "Install dependencies (latest)"
+        if: matrix.deps == 'latest'
+        run: "composer install --no-interaction --no-progress --prefer-dist"
+      - name: "Install dependencies (lowest)"
+        if: matrix.deps == 'lowest'
+        run: "composer update --no-interaction --no-progress --prefer-dist --prefer-lowest --prefer-stable"
       - name: "CS Check"
         run: "composer cs-check"
       - name: "Code analyze"

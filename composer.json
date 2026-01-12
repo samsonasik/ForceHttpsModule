@@ -25,7 +25,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "webmozart/assert": "^1.11"
+        "webmozart/assert": "^1.11 || ^2.1"
     },
     "conflict": {
         "mezzio/mezzio": "<3.0",
