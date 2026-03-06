@@ -116,7 +116,7 @@ return [
 ```php
 // config/modules.config.php or config/application.config.php
 return [
-    'Application'
+    'Application',
     'ForceHttpsModule', // register here
 ],
 ```
