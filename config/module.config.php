@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ForceHttpsModule;
 
 use ForceHttpsModule\Listener\ForceHttps;
