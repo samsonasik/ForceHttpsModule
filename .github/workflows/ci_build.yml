@@ -37,6 +37,7 @@ jobs:
         run: |
           bin/phpstan analyse src/ --level=max -c phpstan.neon
           bin/rector process --dry-run
+          bin/structarmed analyze
       - name: "Run test suite"
         run: "mkdir -p build/logs && bin/kahlan --coverage=4 --reporter=verbose --clover=build/logs/clover.xml"
       - name: Upload coverage to Codecov

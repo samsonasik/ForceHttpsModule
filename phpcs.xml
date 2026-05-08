@@ -4,4 +4,6 @@
 
     <!-- Paths to check -->
     <file>src</file>
+    <file>rector.php</file>
+    <file>structarmed.php</file>
 </ruleset>
