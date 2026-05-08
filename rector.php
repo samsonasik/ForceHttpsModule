@@ -13,7 +13,7 @@ return RectorConfig::configure()
         __DIR__ . '/config',
         __DIR__ . '/src',
         __DIR__ . '/spec',
-        __DIR__ . '/rector.php'
+        __DIR__ . '/rector.php',
     ])
     ->withRootFiles()
     ->withSkip([
