@@ -32,6 +32,7 @@
         "laminas/laminas-mvc": "<3.0"
     },
     "require-dev": {
+        "boundwize/structarmed": "^0.0.3",
         "kahlan/kahlan": "^6.0",
         "laminas/laminas-coding-standard": "^3.0",
         "laminas/laminas-mvc": "^3.8",
