@@ -34,8 +34,8 @@ trait HttpsTrait
         $matchedRouteName = $match->getMatchedRouteName();
 
         if ($this->config['force_all_routes']) {
-            return ! (! empty($this->config['exclude_specific_routes'])
-            && in_array($matchedRouteName, $this->config['exclude_specific_routes'], true));
+            return empty($this->config['exclude_specific_routes'])
+                || ! in_array($matchedRouteName, $this->config['exclude_specific_routes'], true);
         }
 
         return in_array($matchedRouteName, $this->config['force_specific_routes'], true);
